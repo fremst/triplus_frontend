@@ -8,7 +8,7 @@ import InputText from "primevue/inputtext";
 import Button from "primevue/button";
 
 //테마설정
-import "primevue/resources/themes/saga-blue/theme.css";
+import "primevue/resources/themes/lara-light-teal/theme.css";
 import "primevue/resources/primevue.min.css";
 import "primeicons/primeicons.css";
 
