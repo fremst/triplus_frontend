@@ -63,9 +63,12 @@ export default {
 }
 </script>
 
-<style scoped lang="scss">
-.card ::v-deep .tabmenudemo-content {
-    text-align: center;
+<style lang="scss">
+.p-tabmenu .p-tabmenu-nav {
+  width: 100%;
+  justify-content: center;
+}
+.tabmenudemo-content {
     padding: 2rem 1rem;
     background-color: #91D9CC;
 }

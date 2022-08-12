@@ -1,51 +1,66 @@
 <template>
+  <div class="wrap">
     <div class="place">
-        <h2>인기여행지</h2>
-        <ul>
-            <li>
-                <a href="/">
-                    <img :src="require('@/assets/image/jeju.png')" class="places"/>
-                </a> 
-            </li>
-            <li>
-                <a href="/">
-                    <img :src="require('@/assets/image/부산.png')" class="places"/>
-                </a> 
-            </li> 
-            <li>
-                <a href="/">
-                    <img :src="require('@/assets/image/전주.png')" class="places"/>
-                </a> 
-            </li> 
-            <li>
-                <a href="/">
-                    <img :src="require('@/assets/image/강릉.png')" class="places"/>
-                </a> 
-            </li>         
-        </ul>
+      <h2 class="main-title">인기 여행지</h2>
+      <ul>
+        <li>
+          <a href="/">
+            <img :src="require('@/assets/image/jeju.png')" class="places"/>
+          </a>
+        </li>
+        <li>
+          <a href="/">
+            <img :src="require('@/assets/image/부산.png')" class="places"/>
+          </a>
+        </li>
+        <li>
+          <a href="/">
+            <img :src="require('@/assets/image/전주.png')" class="places"/>
+          </a>
+        </li>
+        <li class="lastImg">
+          <a href="/">
+            <img :src="require('@/assets/image/강릉.png')" class="places"/>
+          </a>
+        </li>
+      </ul>
     </div>
+  </div>
 </template>
 <script>
-export default({
-    name: 'MainPlace'
+export default ({
+  name: 'MainPlace'
 })
 </script>
 <style scoped>
+.wrap {
+  width:100%;
+}
+.place {
+  width: 1080px;
+  margin : 0 auto;
+}
 ul {
-    list-style: none;
-    align-content: center;
+  list-style: none;
+  align-content: center;
+  display: flex;
+  justify-content: space-between;
 }
 li {
-    float: left;
+  width: calc((100% - (16px * 3)) / 4);
 }
-h2 {
-    text-align: left;
-    margin-left:80px;
+
+.main-title {
+  text-align: left;
+  margin: 20px 0;
+  font-weight: bold;
+  font-size: 30px;
 }
+
 .places {
-  height: 150px;
-  width: 150px;
-  margin-right: 100px;
-  border-radius: 100px;
+  width: 250px;
+  border-radius: 50%;
+  display: flex;
+  justify-content:space-between;
 }
 </style>

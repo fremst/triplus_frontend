@@ -4,8 +4,8 @@
             <MainSlider />
             <MainPlace />
             <MainMagazine/>
-            <MainRrecommHotel />
-            <MainEvent />
+            <MainRecommHotel />
+<!--            <MainEvent />-->
         </div>
     </div>
 </template>
@@ -13,8 +13,8 @@
 import MainSlider from "@/components/home/MainSlider.vue"
 import MainPlace from "@/components/home/MainPlace.vue"
 import MainMagazine from "@/components/home/MainMagazine.vue"
-import MainRrecommHotel from "@/components/home/MainRecommand.vue"
-import MainEvent from "@/components/home/MainEvent.vue"
+import MainRecommHotel from "@/components/home/MainRecommand.vue"
+// import MainEvent from "@/components/home/MainEvent.vue"
 
 export default {
     name: "MainView",
@@ -22,8 +22,8 @@ export default {
         MainSlider,
         MainPlace,
         MainMagazine,
-        MainRrecommHotel,
-        MainEvent
+        MainRecommHotel,
+        // MainEvent
     },
 	data() {
 		//

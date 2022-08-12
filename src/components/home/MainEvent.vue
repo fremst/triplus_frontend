@@ -1,50 +1,61 @@
 <template>
+  <div class="wrap">
     <div class="event">
-        <ul>
-            <li>
-                <a href="/">
-                    <img :src="require('@/assets/event/1.png')" class="events"/>
-                </a> 
-            </li>
-            <li>
-                <a href="/">
-                    <img :src="require('@/assets/event/2.png')" class="events"/>
-                </a> 
-            </li> 
-            <li>
-                <a href="/">
-                    <img :src="require('@/assets/event/3.png')" class="events"/>
-                </a> 
-            </li> 
-            <li>
-                <a href="/">
-                    <img :src="require('@/assets/event/4.png')" class="events"/>
-                </a> 
-            </li>         
-        </ul>
+      <ul>
+        <li>
+          <a href="/">
+            <img :src="require('@/assets/event/1.png')" class="events"/>
+          </a>
+        </li>
+        <li>
+          <a href="/">
+            <img :src="require('@/assets/event/2.png')" class="events"/>
+          </a>
+        </li>
+        <li>
+          <a href="/">
+            <img :src="require('@/assets/event/3.png')" class="events"/>
+          </a>
+        </li>
+        <li>
+          <a href="/">
+            <img :src="require('@/assets/event/4.png')" class="events"/>
+          </a>
+        </li>
+      </ul>
     </div>
+  </div>
 </template>
 <script>
-export default({
-    name: 'MainEvent'
+export default ({
+  name: 'MainEvent'
 })
 </script>
 <style scoped>
+.wrap {
+  width: 100%;
+}
+
+.event {
+  width: 1080px;
+  margin: 0 auto;
+}
+
 ul {
-    list-style: none;
-    align-content: center;
+  list-style: none;
+  align-content: center;
+  display: flex;
 }
-li {
-    float: left;
-}
+
 h2 {
-    text-align: left;
-    margin-left:80px;
+  text-align: left;
+  margin-left: 80px;
 }
+
 .events {
-  height: 150px;
-  width: 150px;
-  margin-right: 100px;
+  height: 200px;
+  width: 200px;
+  margin-right: 16px;
   border-radius: 10px;
 }
 </style>

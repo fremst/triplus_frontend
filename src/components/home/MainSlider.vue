@@ -1,12 +1,9 @@
 <template>
  <div class="card">
-    <Galleria :value="images" :responsiveOptions="responsiveOptions" :numVisible="5" :circular="true" containerStyle="max-width: 640px"
+    <Galleria :value="images" :responsiveOptions="responsiveOptions" :numVisible="5" :circular="true" containerStyle="min-width: 1080px;"
         :showItemNavigators="true" :showThumbnails="false" :showItemNavigatorsOnHover="true" :showIndicators="true">
         <template #item="slotProps">
-            <img :src="slotProps.item.itemImageSrc" :alt="slotProps.item.alt" style="width: 100%; display: block;" />
-        </template>
-        <template #thumbnail="slotProps">
-            <img :src="slotProps.item.thumbnailImageSrc" :alt="slotProps.item.alt" style="display: block;" />
+          <img :src="require(`@/assets/slide/${slotProps.item.itemImageSrc}`)" :alt="slotProps.item.alt" style=" display: block;" />
         </template>
     </Galleria>
 </div>
@@ -14,7 +11,7 @@
 
 <script>
 import Galleria from 'primevue/galleria';
-import PhotoService from '../../service/PhotoService';
+import GalleriaImages from '@/service/demo/photos.json';
 
 export default ({
     name: 'MainSlider',
@@ -38,56 +35,37 @@ export default ({
                     numVisible: 1
                 }
 			],
-            data:[
-                    {
-                        "itemImageSrc": "src/assets/slide/triplus-slide01.png",
-                        "alt": "Description for Image 1",
-                        "title": "Title 1"
-                    },
-                    {
-                        "itemImageSrc": "src/assets/slide/triplus-slide02.png",
-                        "alt": "Description for Image 2",
-                        "title": "Title 2"
-                    },
-                    {
-                        "itemImageSrc": "src/assets/slide/triplus-slide03.png",
-
-                        "alt": "Description for Image 3",
-                        "title": "Title 3"
-                    },
-                    {
-                        "itemImageSrc": "src/assets/slide/triplus-slide04.png",
-
-                        "alt": "Description for Image 4",
-                        "title": "Title 4"
-                    },
-                    {
-                        "itemImageSrc": "src/assets/slide/triplus-slide05.png",
-                        "alt": "Description for Image 5",
-                        "title": "Title 5"
-                    }
-                ],
         }
     },
     galleriaService: null,
-	created() {
-		this.galleriaService = new PhotoService();
-	},
 	mounted() {
-		this.galleriaService.getImages().then(data => this.images = data);
+		// this.galleriaService.getImages().then(data => this.images = data);
+        this.images=GalleriaImages.data;
     },
 })
 </script>
-<style lang="scss" scoped>
-::v-deep(.custom-indicator-galleria) {
+<style lang="scss">
+//인디케이터 css
+.custom-indicator-galleria {
     .indicator-text {
         color: #e9ecef;
         cursor: pointer;
     }
-    .p-highlight {
+   .p-highlight {
         .indicator-text {
             color: var(--primary-color);
         }
     }
 }
+
+//css 적용
+  .p-galleria-item-wrapper {
+    width: 100%;
+    justify-content: center;
+  }
+  .p-galleria-item-container {
+    margin: 0 auto;
+    width: 1080px;
+    position: relative;
+  }
 </style>
