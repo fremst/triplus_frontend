@@ -27,6 +27,7 @@
             <Column field="wdate" header="작성일" style="width: 100px;"></Column>
             <Column field="hit" header="조회수" style="width: 100px;"></Column>
         </DataTable>
+        <Paginator :rows="10" :pageLinkSize="9" :totalRecords="pageCount"></Paginator>
       </div>
       <div class="board-footer">
         <Button color="#67AB9F">전체 글 보기(?)</Button>
@@ -39,12 +40,13 @@
   import axios from 'axios'
   import DataTable from 'primevue/datatable';
   import Column from 'primevue/column';
+  import Paginator from 'primevue/paginator';
 
   export default
   {
     name: 'QnABoard',
     components: {
-      DataTable, Column
+      DataTable, Column, Paginator
     },
     props: {
       title: String, // 타이틀
@@ -55,9 +57,8 @@
       return {
         searchOpt: ["제목", "내용", "제목/내용"],
         list: [],
-        curPage: 1,
-        pageCur: 1, // 현재 페이지 인덱스
-        pageEnd: 10 // 최대 페이지 수
+        pageIndex: 1, // 현재 페이지 인덱스
+        pageCount: 160 // 페이지 개수
       }
     },
     created() {
@@ -66,22 +67,6 @@
     mounted() {
     },
     methods: {
-      // 페이징: 최소값
-      getPageMin() {
-        return Math.max((this.pageCur - this.pageCur % 10), 0);
-      },
-      // 페이징: 최대값
-      getPageMax() {
-        return Math.min((this.pageCur - this.pageCur % 10) + 10, this.pageEnd);
-      },
-      // 페이징: 이전 페이지로 갈 수 있는지 여부
-      hasPrev() {
-        return (this.pageCur - this.pageCur % 10) > 0;
-      },
-      // 페이징: 다음 페이지로 갈 수 있는지 여부
-      hasNext() {
-        return (this.pageCur - this.pageCur % 10) > 0;
-      },
       onSearch() {
         alert("미구현");
       },

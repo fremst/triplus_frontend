@@ -1,19 +1,3 @@
-<!--
-  220810 김주현
-  가장 기본적인 게시판 상세보기 폼입니다.
-  
-  [ 프로퍼티 ]
-  detailLnk : String
-    게시글 조회를 시도할 때 GET 요청을 보낼 URL을 설정합니다.
-  title : String
-    폼 좌상단의 대문짝만한 문구
-  article : Object { number, title, id, date, content }
-    게시글을 표현합니다.
-    게시글 수정/삭제를 시도할 때, [ 해당링크 + "?num=" + number ] 의 형태로 GET/POST 요청을 보냅니다.
-  updateLink, deleteLink, listLink : String
-    각각 수정/삭제/목록으로 향하는 URL을 설정합니다.
--->
-
 <template>
   <div class="main">
     <div class="board">
@@ -21,48 +5,49 @@
         <h1>{{title}}</h1>
       </div>
       <div class="board-main">
-        <table class="article-header" >
+        <table class="article-header">
           <tr>
             <th style="text-align: start; padding-left: 20px;">{{article.title}}</th>
-            <th width="200px">{{article.id}}</th>
-            <th width="200px">{{article.date}}</th>
+            <th width="200px">{{article.writerId}}</th>
+            <th width="200px">{{article.wdate}}</th>
           </tr>
         </table>
         <div class="article-main">
-          <div v-html="article.content"></div>
+          <div v-html="article.contents"></div>
         </div>
-        <div class="article-footer" />
+        <div class="article-footer"></div>
       </div>
       <div class="board-footer">
           <!-- TODO 버튼 구현 -->
-        <v-btn color="#67AB9F" @click="onUpdate">수정</v-btn>
-        <v-btn color="#67AB9F" @click="onDelete">삭제</v-btn>
-        <v-btn color="#67AB9F" @click="onList">목록으로</v-btn>
+        <Button @click="onUpdate">수정</Button>
+        <Button @click="onDelete">삭제</Button>
+        <Button @click="onList">목록으로</Button>
       </div>
     </div>
   </div>
 </template>
 <script>
+  import axios from 'axios';
+
   export default
   {
-    name: 'CommonBoard',
+    name: 'QnADetail',
     props: {
       title: String, // 타이틀
-      article: { // 게시글 number, title, id, date, content
-        number: Number,
-        title: String,
-        id: String,
-        date: String,
-        content: String
-      },
+      detailLink: String, // 상세보기 링크
       updateLink: String, // 수정 링크
       deleteLink: String, // 삭제 링크
       listLink: String, // 목록 링크
     },
-    computed: {
-      icon() {
-        return this.icons[this.iconIndex];
-      }
+    data() {
+      return {
+        article: {
+          title: "",
+          writerId: "",
+          wdate: "",
+          contents: ""
+        }
+      };
     },
     methods: {
       onUpdate() {
@@ -72,15 +57,30 @@
         alert("미구현");
       },
       onList() {
-        alert("미구현");
+        this.$router.push(this.listLink);
       },
+      getArticle() {
+        this.article = axios.get(this.detailLink, {
+          headers: {
+            'Access-Control-Allow-Origin': '*'
+          },
+          params: {
+            num: this.$route.query.num
+          }
+        }).then(function(resp) {
+          console.log(resp);
+          this.article = resp.data;
+        }.bind(this));
+      }
+    },
+    created() {
+      this.getArticle();
     }
   }
 </script>
 <style scoped>
   * {
     padding: 20px;
-    font-family: 'Helvetica';
     margin: 0px; 
     padding: 0px;
   }
@@ -88,13 +88,6 @@
     color: #333;
     font-weight: bold;
     text-decoration: none;
-  }
-  button, input[type="submit"] {
-    border: none;
-    font-weight: bold;
-    color: white;
-    background-color: #67AB9F;
-    padding: 5px;
   }
   .main {
     display: flex;
