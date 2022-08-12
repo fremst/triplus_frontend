@@ -1,8 +1,8 @@
 <template>
   <div class="home">
-    <QnADetail 
+    <QnADetail
       :title="title"
-      :article="article"
+      :detailLink="detailLink"
       :updateLink="updateLink"
       :deleteLink="deleteLink"
       :listLink="listLink"/>
@@ -28,10 +28,14 @@ export default {
         date: "1970.01.01",
         content: "<p>testtest</p><p>testtest2</p><p>testtest3</p>"
       },
+      detailLink: "http://localhost:8082/triplus/api/service/qna/detail",
       updateLink: "/service/qna/write",
       deleteLink: "/service/qna/delete",
       listLink: "/service/qna/",
     };
+  },
+  created() {
+    console.log(this.$route.query.num);
   }
 }
 </script>
