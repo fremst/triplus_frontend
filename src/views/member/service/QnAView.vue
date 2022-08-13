@@ -1,6 +1,10 @@
 <template>
   <div class="home">
-    <QnABoard :title="title" :listLink="listLink" :detailLink="detailLink"/>
+    <QnABoard
+      :title="title"
+      :listLink="listLink"
+      :detailLink="detailLink"
+      :writeLink="writeLink"/>
   </div>
   <Button @click="getList">aaa</Button>
 </template>
@@ -20,6 +24,7 @@ export default {
     return {
       listLink: "http://localhost:8082/triplus/api/service/qna/list",
       detailLink: "/service/qna/detail",
+      writeLink: "/service/qna/write",
       title: "이곳에 타이틀 입력",
       pageCur: 6,
       pageEnd: 70

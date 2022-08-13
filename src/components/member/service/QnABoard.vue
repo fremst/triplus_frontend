@@ -30,7 +30,7 @@
         <Paginator :rows="10" :pageLinkSize="9" :totalRecords="pageCount"></Paginator>
       </div>
       <div class="board-footer">
-        <Button color="#67AB9F">전체 글 보기(?)</Button>
+        <Button color="#67AB9F" @click="onWrite">문의글 작성하기</Button>
         <Button color="#67AB9F">공지 등록(??)</Button>
       </div>
     </div>
@@ -52,6 +52,7 @@
       title: String, // 타이틀
       listLink: String, // 목록 링크
       detailLink: String, // 자세히 보기 링크
+      writeLink: String, // 쓰기 링크
     },
     data() {
       return {
@@ -69,6 +70,9 @@
     methods: {
       onSearch() {
         alert("미구현");
+      },
+      onWrite() {
+        this.$router.push(this.writeLink)
       },
       onPageChange(n) {
         this.curPage = n;
