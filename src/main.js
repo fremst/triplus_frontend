@@ -4,8 +4,12 @@ import router from "./router";
 import store from "./store";
 
 import PrimeVue from "primevue/config";
+// import InputText from "primevue/inputtext";
 import Button from "primevue/button";
 import DataView from "primevue/dataview";
+import InputNumber from 'primevue/inputnumber';
+import Galleria from 'primevue/galleria';
+import ScrollTop from 'primevue/scrolltop';
 
 //테마설정
 import "primevue/resources/themes/lara-light-teal/theme.css";
@@ -25,5 +29,8 @@ app.use(PrimeVue);
 // app.component("InputText", InputText);
 app.component("Button", Button);
 app.component("DataView", DataView);
+app.component("InputNumber", InputNumber);
+app.component("Galleria", Galleria);
+app.component("ScrollTop",ScrollTop)
 
 app.mount("#app");
