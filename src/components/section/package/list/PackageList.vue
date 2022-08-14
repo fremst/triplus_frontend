@@ -15,7 +15,7 @@
       <template #list="slotProps">
         <div class="col-12">
           <div class="product-list-item">
-            <img :src="require(`@/assets/section/package/images/${slotProps.data.tImg}`)" :alt="slotProps.data.title"/>
+            <img :src="require(`@/assets/section/package/images/${slotProps.data.timg}`)" :alt="slotProps.data.title"/>
 
             <div class="product-list-detail">
               <div class="product-name">{{slotProps.data.title}}</div><br>
@@ -41,7 +41,7 @@
               <span :class="'product-badge status-'+recStatusEng(slotProps.data.recStatus)">{{slotProps.data.recStatus}}</span>
             </div>
             <div class="product-grid-item-content">
-              <img :src="require(`@/assets/section/package/images/${slotProps.data.tImg}`)" :alt="slotProps.data.title"/>
+              <img :src="require(`@/assets/section/package/images/${slotProps.data.timg}`)" :alt="slotProps.data.title"/>
               <div class="product-name">{{slotProps.data.title}}</div><br>
               <div class="product-description">성인 {{formatCurrency(slotProps.data.adultPrice)}} / 아동 {{formatCurrency(slotProps.data.adultPrice)}}</div>
               <Button icon="pi pi-search" label="상세보기" :disabled="slotProps.data.recStatus === 'completed'"></Button>
@@ -58,7 +58,7 @@
 <script>
 import Dropdown from "primevue/dropdown";
 import DataViewLayoutOptions from "primevue/dataviewlayoutoptions"
-import Products from "@/assets/section/package/products.json"
+import axios from 'axios';
 
 export default {
   data() {
@@ -75,8 +75,13 @@ export default {
     }
   },
   mounted() {
-    console.log(Products.data);
-    this.products = Products.data;
+    axios.get("http://localhost:8082/triplus/api/section/package/", {
+      headers: {
+        'Access-Control-Allow-Origin': '*'
+      },
+    }).then(function(resp) {
+      this.products=resp.data;
+    }.bind(this));
   },
   methods: {
     onSortChange(event){
