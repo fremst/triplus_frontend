@@ -11,6 +11,9 @@ import InputNumber from 'primevue/inputnumber';
 import Galleria from 'primevue/galleria';
 import ScrollTop from 'primevue/scrolltop';
 
+import RadioButton from 'primevue/radiobutton';
+import Dropdown from 'primevue/dropdown';
+
 //테마설정
 import "primevue/resources/themes/lara-light-teal/theme.css";
 import "primevue/resources/primevue.min.css";
@@ -32,5 +35,8 @@ app.component("DataView", DataView);
 app.component("InputNumber", InputNumber);
 app.component("Galleria", Galleria);
 app.component("ScrollTop",ScrollTop)
+
+app.component("RadioButton", RadioButton);
+app.component("Dropdown", Dropdown);
 
 app.mount("#app");
