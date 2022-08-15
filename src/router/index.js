@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
 import HomeView from "../views/HomeView.vue";
+import PackageReservationView from "@/views/section/package/PackageReservationView"
 
 const routes = [
   {
@@ -14,7 +15,12 @@ const routes = [
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
     component: () => import(/* webpackChunkName: "about" */ "../views/HomeView.vue")
-  }
+  },
+  {
+    path: "/section/packages/:brdNum/reservation",
+    name: "package-reservation",
+    component: PackageReservationView
+  },
 ];
 
 const router = createRouter({
