@@ -1,0 +1,19 @@
+{
+    "data":[
+        {
+            "itemImageSrc": "/demo/images/galleria/galleria1.jpg",
+            "alt": "Description for Image 1",
+            "title": "Title 1"
+        },
+        {
+            "itemImageSrc": "/demo/images/galleria/galleria2.jpg",
+            "alt": "Description for Image 2",
+            "title": "Title 2"
+        },
+        {
+            "itemImageSrc": "/demo/images/galleria/galleria3.jpg",
+            "alt": "Description for Image 3",
+            "title": "Title 3"
+        }
+    ]
+}
