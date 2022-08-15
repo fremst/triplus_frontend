@@ -10,24 +10,24 @@
       <div class="board-main">
         <div class="">
           <label for="aTitle"><h2>제목</h2></label>
-          <InputText id="aTitle" type="username" v-model="aTitle" area-describedby="aTitle-help" class="p-invalid"/>
-          <small id="aTitle-help" class="p-error">쓰슈.</small>
+          <InputText id="aTitle" type="username" v-model="aTitle" area-describedby="aTitle-help" :class="[{ 'p-invalid': !checkTitle() }]"/>
+          <small v-if="!checkTitle()" id="aTitle-help" class="p-error">쓰슈.</small>
         </div>
         <div class="">
           <label for="email"><h2>임시 이메일</h2></label>
-          <InputText id="email" type="email" v-model="tempEmail" area-describedby="email-help" class="p-invalid"/>
-          <small id="email-help" class="p-error">쓰슈.</small>
+          <InputText id="email" type="email" v-model="tempEmail" area-describedby="email-help" :class="[{ 'p-invalid': !checkEmail() }]"/>
+          <small v-if="!checkEmail()" id="email-help" class="p-error">쓰슈.</small>
         </div>
         <div class="">
           <label for="pwd"><h2>임시 비밀번호</h2></label>
-          <Password id="pwd" v-model="tempPwd" area-describedby="pwd-help" class="p-invalid"/>
-          <small id="pwd-help" class="p-error">쓰슈.</small>
+          <Password id="pwd" v-model="tempPwd" area-describedby="pwd-help" :class="[{ 'p-invalid': !checkPwd() }]"/>
+          <small id="pwd-help" v-if="!checkPwd()" class="p-error">쓰슈.</small>
         </div>
         <div class="">
           <label for="category"><h2>문의 유형</h2></label>
-          <Dropdown id="category" v-model="category" area-describedby="category-help" class="p-invalid"
+          <Dropdown id="category" v-model="category" area-describedby="category-help" :class="[{ 'p-invalid': !checkCategory() }]"
             :options="categories" optionLabel="name" placeholder="카테고리 선택" />
-          <small id="category-help" class="p-error">고르슈.</small>
+          <small id="category-help" v-if="!checkCategory()" class="p-error">고르슈.</small>
         </div>
         <h2>내용</h2>
         <Editor v-model="content" editorStyle="height: 320px">
@@ -35,12 +35,13 @@
       </div>
       <div class="board-footer">
           <Button @click="onCancel">취소</Button>
-          <Button @click="onSubmit">작성</Button>
+          <Button @click="onSubmit" :disabled="submitting">작성</Button>
       </div>
     </div>
   </div>
 </template>
 <script>
+  import axios from 'axios';
   import Dropdown from 'primevue/dropdown';
   import Editor from 'primevue/editor';
   import InputText from 'primevue/inputtext';
@@ -55,7 +56,8 @@
     props: {
       title: String, // 글쓰기 타이틀(제목 아님)
       submitLink: String, // 쓰기 링크
-      cancelLink: String // 취소 링크
+      cancelLink: String, // 취소 링크
+      detailLink: String
     },
     data() {
       return {
@@ -71,6 +73,7 @@
         content: "",
         tempEmail: "",
         tempPwd: "",
+        submitting: false
       }
     },
     methods: {
@@ -78,11 +81,59 @@
         this.content = content;
       },
       onSubmit() {
-        console.log(this.content);
-        console.log(this.submitLink);
+
+        if (this.submitting)
+          return;
+        this.submitting = true;
+
+        const writeParam = new URLSearchParams();
+        writeParam.append('writerId', "guest");
+        writeParam.append('answerNum', 0);
+        writeParam.append('title', this.aTitle);
+        writeParam.append('category', this.category.code);
+        writeParam.append('tempEmail', this.tempEmail);
+        writeParam.append('tempPwd', this.tempPwd);
+        writeParam.append('contents', this.content);
+
+        axios.post(this.submitLink, writeParam, {
+          headers: {
+            'Access-Control-Allow-Origin': '*'
+          }
+        }).then(function(resp) {
+          console.log(resp);
+          if (resp.data.result == true)
+          {
+            alert("문의글 작성 성공");
+            this.$router.push(this.getDetailLink(resp.data.brdNum));
+          }
+          else
+          {
+            alert(resp.data.reason);
+            this.$router.push(this.cancelLink);
+          }
+
+        }.bind(this));
       },
       onCancel() {
-        console.log(this.cancelLink);
+        this.$router.push(this.cancelLink);
+      },
+      checkTitle() {
+        return this.aTitle.length > 4;
+      },
+      checkEmail() {
+        return this.tempEmail.length > 8;
+      },
+      checkPwd() {
+        return this.tempPwd.length > 8 && this.tempPwd.length < 20;
+      },
+      checkCategory() {
+        return this.category != "";
+      },
+      checkContent() {
+        return this.content.length > 40;
+      },
+      getDetailLink(brdNum) {
+        return `${this.detailLink}?num=${brdNum}`;
       }
     }
   }
