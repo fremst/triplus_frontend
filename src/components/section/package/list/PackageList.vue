@@ -1,6 +1,6 @@
 <template>
   <div class="card">
-    <DataView :value="products" :layout="layout" :paginator="true" :rows="9" :sortOrder="sortOrder" :sortField="sortField">
+    <DataView :value="packages" :layout="layout" :paginator="true" :rows="9" :sortOrder="sortOrder" :sortField="sortField">
       <template #header>
         <div class="grid grid-nogutter">
           <div class="col-6" style="text-align: left">
@@ -15,7 +15,7 @@
       <template #list="slotProps">
         <div class="col-12">
           <div class="product-list-item">
-            <img :src="require(`@/assets/section/package/images/${slotProps.data.timg}`)" :alt="slotProps.data.title"/>
+            <img :src="require(`@/assets/section/package/images/${slotProps.data.tImg}`)" :alt="slotProps.data.title"/>
 
             <div class="product-list-detail">
               <div class="product-name">{{slotProps.data.title}}</div><br>
@@ -23,7 +23,8 @@
               <i class="pi pi-map-marker"></i><span class="product-category">{{slotProps.data.region}}</span>
             </div>
             <div class="product-list-action">
-              <Button icon="pi pi-user-plus" label="참여하기" :disabled="slotProps.data.recStatus === 'OUTOFSTOCK'"></Button>
+              <Button icon="pi pi-search" label="상세보기" :disabled="slotProps.data.recStatus === 'completed'"
+                      @click="$router.push(`/section/packages/${slotProps.data.brdNum}`)"></Button>
               <span :class="'product-badge status-'+recStatusEng(slotProps.data.recStatus)">{{slotProps.data.recStatus}}</span>
             </div>
           </div>
@@ -41,10 +42,11 @@
               <span :class="'product-badge status-'+recStatusEng(slotProps.data.recStatus)">{{slotProps.data.recStatus}}</span>
             </div>
             <div class="product-grid-item-content">
-              <img :src="require(`@/assets/section/package/images/${slotProps.data.timg}`)" :alt="slotProps.data.title"/>
+              <img :src="require(`@/assets/section/package/images/${slotProps.data.tImg}`)" :alt="slotProps.data.title"/>
               <div class="product-name">{{slotProps.data.title}}</div><br>
               <div class="product-description">성인 {{formatCurrency(slotProps.data.adultPrice)}} / 아동 {{formatCurrency(slotProps.data.adultPrice)}}</div>
-              <Button icon="pi pi-search" label="상세보기" :disabled="slotProps.data.recStatus === 'completed'"></Button>
+              <Button icon="pi pi-search" label="상세보기" :disabled="slotProps.data.recStatus === 'completed'"
+              @click="$router.push(`/section/packages/${slotProps.data.brdNum}`)"></Button>
             </div>
             <div class="product-grid-item-bottom">
             </div>
@@ -58,12 +60,10 @@
 <script>
 import Dropdown from "primevue/dropdown";
 import DataViewLayoutOptions from "primevue/dataviewlayoutoptions"
-import axios from 'axios';
 
 export default {
   data() {
     return {
-      products: null,
       layout: 'grid',
       sortKey: null,
       sortOrder: null,
@@ -74,14 +74,8 @@ export default {
       ]
     }
   },
-  mounted() {
-    axios.get("http://localhost:8082/triplus/api/section/package/", {
-      headers: {
-        'Access-Control-Allow-Origin': '*'
-      },
-    }).then(function(resp) {
-      this.products=resp.data;
-    }.bind(this));
+  props:{
+    packages: Object,
   },
   methods: {
     onSortChange(event){
@@ -157,6 +151,7 @@ export default {
   font-size: 14pt;
 }
 .product-badge {
+  text-align: center;
   border-radius: 2px;
   padding: .25em .5rem;
   text-transform: uppercase;

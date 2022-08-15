@@ -1,19 +1,19 @@
 <template>
   <div class="wrapper">
     <div class="inner">
-      <h1>빵의 도시 대전! 먹방 투어 (2박3일)</h1>
+      <h1>{{packageDetails.title}}</h1>
         <div class="galleria">
-          <PackageDetailGalleria>
+          <PackageDetailGalleria :packageDetails="packageDetails">
           </PackageDetailGalleria>
         </div>
         <br>
         <div class="info">
           <div>
-            <PackageDetailItemInfo>
+            <PackageDetailItemInfo :packageDetails="packageDetails">
             </PackageDetailItemInfo>
           </div>
           <div>
-            <PackageDetailForm>
+            <PackageDetailForm :packageDetails="packageDetails">
             </PackageDetailForm>
           </div>
         </div>
@@ -27,13 +27,37 @@
 import PackageDetailGalleria from "@/components/section/package/detail/PackageDetailGalleria"
 import PackageDetailItemInfo from "@/components/section/package/detail/PackageDetailItemInfo";
 import PackageDetailForm from "@/components/section/package/detail/PackageDetailForm";
+import axios from 'axios';
+
 export default {
+  data(){
+    return {
+      packageDetails: {},
+    }
+  },
+  computed: {
+    brdNum(){
+      return this.$route.params.brdNum;
+    }
+  },
+  created() {
+    axios.get(`http://localhost:8082/triplus/api/section/packages/${this.brdNum}`, {
+      headers: {
+        'Access-Control-Allow-Origin': '*'
+      },
+    }).then(function(resp) {
+      this.packageDetails=resp.data;
+    }.bind(this)).catch(err=> {
+      console.log(err)});
+  },
   components:{
     PackageDetailGalleria,
     PackageDetailItemInfo,
     PackageDetailForm
   }
+
 }
+
 </script>
 
 <style scoped>
@@ -43,6 +67,7 @@ export default {
 .inner{
   width: 1080px;
   margin: auto;
+  text-align: center;
 }
 .galleria{
   width: 925px;

@@ -4,34 +4,18 @@
       <table class="table-reg">
         <tr class="tr-info">
           <td class="td-title">
-            출발
+            출&emsp;발
           </td>
           <td class="td-content">
-            2022. 08. 04. (목) 07:00<br>
+            {{new Date(packageDetails.sdate).toLocaleDateString()}}<br>
           </td>
         </tr>
         <tr class="tr-info">
           <td class="td-title">
-            도착
+            도&emsp;착
           </td>
           <td class="td-content">
-            2022. 08. 06. (토) 20:00<br>
-          </td>
-        </tr>
-        <tr class="tr-info">
-          <td class="td-title">
-            교통
-          </td>
-          <td class="td-content">
-            버스
-          </td>
-        </tr>
-        <tr class="tr-info">
-          <td class="td-title">
-            남은 인원
-          </td>
-          <td class="td-content">
-            24명<br>
+            {{new Date(packageDetails.edate).toLocaleDateString()}}<br>
           </td>
         </tr>
       </table>
@@ -42,23 +26,23 @@
         <tr class="tr-price">
           <td class="td-classification">성인</td>
           <td rowspan="2" class="td-content">
-            <InputNumber inputStyle="width: 60px; text-align: center" v-model="value1" :min="1" :max="100" showButtons buttonLayout="horizontal" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"/><br>
+            <InputNumber inputStyle="width: 60px; text-align: center" v-model="adultCnt" :min="1" :max="100" showButtons buttonLayout="horizontal" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"/><br>
           </td>
         </tr>
         <tr class="tr-price">
           <td>
-            <span class="price">30,900원</span>
+            <span class="price">{{packageDetails.adultPrice.toLocaleString()}} 원</span>
           </td>
         </tr>
         <tr class="tr-price">
           <td class="td-classification">아동</td>
           <td rowspan="2" class="td-content">
-            <InputNumber inputStyle="width: 60px; text-align: center" v-model="value2" :min="0" :max="100" showButtons buttonLayout="horizontal" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"/><br>
+            <InputNumber inputStyle="width: 60px; text-align: center" v-model="childCnt" :min="0" :max="100" showButtons buttonLayout="horizontal" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"/><br>
           </td>
         </tr>
         <tr class="tr-price">
           <td>
-            <span class="price">28,900원</span>
+            <span class="price">{{packageDetails.childPrice.toLocaleString()}} 원</span>
           </td>
         </tr>
       </table>
@@ -71,12 +55,13 @@
             총 금액
           </td>
           <td class="td-content">
-            <span class="totPrice">30,900원</span>
+            <span class="totPrice">{{totPrice}} 원</span>
           </td>
         </tr>
       </table>
     </div>
-    <Button label="예약하기" />
+    <Button label="예약하기"
+     @click="$router.push(`/section/packages/${this.brdNum}/reservation`)"/>
   </div>
 </template>
 
@@ -85,36 +70,24 @@ export default {
   data() {
     return {
       sales: null,
-      value1: 1,
-      value2: 0,
+      adultCnt: 1,
+      childCnt: 0,
     }
   },
-  created() {
-    this.sales = [
-      {product: '패키지 가격', thisYearSale: 30900, lastYearProfit: 28900, thisYearProfit: 0},
-    ];
-  },
-  methods: {
-    formatCurrency(value) {
-      return value.toLocaleString('en-US', {style: 'currency', currency: 'USD'});
-    }
+  props: {
+    packageDetails: Object,
   },
   computed: {
-    lastYearTotal() {
-      let total = 0;
-      for(let sale of this.sales) {
-        total += sale.lastYearProfit;
-      }
-
-      return this.formatCurrency(total);
+    brdNum(){
+      return this.$route.params.brdNum;
     },
-    thisYearTotal() {
-      let total = 0;
-      for(let sale of this.sales) {
-        total += sale.thisYearProfit;
+    totPrice(){
+      let result = ((this.packageDetails.adultPrice*this.adultCnt)+(this.packageDetails.childPrice*this.childCnt));
+      if(result!=null){
+        return result.toLocaleString();
+      }else{
+        return this.packageDetails.adultPrice;
       }
-
-      return this.formatCurrency(total);
     }
   }
 }
@@ -130,10 +103,12 @@ export default {
   width: 350px;
 }
 .tr-price{
+  text-align: center;
   height: 10px;
 }
 .td-title{
   text-align: left;
+  padding-left: 20px;
 }
 .td-content{
   text-align: right;
