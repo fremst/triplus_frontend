@@ -18,13 +18,13 @@ const routes = [
     component: () => import(/* webpackChunkName: "about" */ "../views/HomeView.vue")
   },
   {
-    path: "/section/package/list",
-    name: "packagelist",
+    path: "/section/packages",
+    name: "package-list",
     component: PackageListView
   },
   {
-    path: "/section/package/detail",
-    name: "packagedetail",
+    path: "/section/packages/:brdNum",
+    name: "package-detail",
     component: PackageDetailView
   },
 ];

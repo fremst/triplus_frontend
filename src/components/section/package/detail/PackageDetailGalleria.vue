@@ -31,6 +31,9 @@ export default {
       ]
     }
   },
+  props: {
+    packageDetails: Object,
+  },
   mounted() {
     this.images = Photos.data;
   }
