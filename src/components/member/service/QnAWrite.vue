@@ -81,7 +81,6 @@
         this.content = content;
       },
       onSubmit() {
-
         if (this.submitting)
           return;
         this.submitting = true;
@@ -134,6 +133,9 @@
       },
       getDetailLink(brdNum) {
         return `${this.detailLink}?num=${brdNum}`;
+      },
+      onCancel() {
+        console.log(this.cancelLink);
       }
     }
   }
