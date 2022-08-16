@@ -1,20 +1,15 @@
 <template>
   <div class="wrap">
     <div class="header">
-      <a href="/about">
         <div class="loginLink">
-          로그인/회원가입
+          <a href="/member/login">로그인/회원가입</a>
           <Sidebar v-model:visible="visibleRight" position="right">
-            Content<br>
-            로그인/회원가입<br>
-            로그인/회원가입<br>
-            로그인/회원가입<br>
-            로그인/회원가입<br>
-            로그인/회원가입
+            Content<br><br>
+            <a href="/service/notice/list">공지사항</a><br><br>
+            <a href="/service/qna/">Q & A</a>
           </Sidebar>
           <Button icon="pi pi-bars" @click="visibleRight = true"/>
         </div>
-      </a>
       <a href="/" class="logo">
         <img :src="require('@/assets/logo.png')"/>
       </a>

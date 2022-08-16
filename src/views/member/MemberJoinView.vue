@@ -60,13 +60,8 @@
         <Button label="회원가입" @click="test"/>
       </div>
 
-
-      </div>
-
-
-
     </div>
-
+  </div>
 </template>
 
 <script>
@@ -179,8 +174,6 @@ export default {
 
   margin: 50px auto;
 }
-
-
 
 .id-txt, .pwd-txt, .name-txt, .phone-txt, .addr-txt, .detail-txt, .email-txt, .bDate-txt{
   width: 400px;

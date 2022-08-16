@@ -1,7 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
 
-import HomeView from "../views/HomeView.vue";
-
 import QnAView from "../views/member/service/QnAView.vue";
 import QnAWriteView from "../views/member/service/QnAWriteView.vue";
 import QnADetailView from "../views/member/service/QnADetailView.vue";
@@ -9,6 +7,8 @@ import QnADetailView from "../views/member/service/QnADetailView.vue";
 import PackageListView from "@/views/section/package/PackageListView";
 import PackageDetailView from "@/views/section/package/PackageDetailView";
 import PackageReservationView from "@/views/section/package/PackageReservationView"
+
+import AccommodationView from "@/views/section/place/AccommodationView";
 
 import MemberJoinView from "@/views/member/MemberJoinView";
 import tosView from "@/views/member/TosView";
@@ -72,6 +72,11 @@ const routes = [
     component: MemberJoinView
   },
   {
+    path: "/member/login",
+    name: "member-login",
+    component: LoginView
+  },
+  {
     path: "/memberjoin/tos",
     name: "tos",
     component: tosView
@@ -105,7 +110,13 @@ const routes = [
     path: "/section/packages/:brdNum/reservation",
     name: "package-reservation",
     component: PackageReservationView
+   },
+   {
+    path: "/section/place/accommodation",
+    name: "accommodation",
+    component: AccommodationView
    }
+
 ];
 
 const router = createRouter({

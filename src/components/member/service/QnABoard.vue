@@ -106,7 +106,7 @@
 <style scoped>
   * {
     padding: 20px;
-    margin: 0px; 
+    margin: 0px;
     padding: 0px;
   }
   a {
@@ -144,7 +144,6 @@
   .board-main {
     display: flex;
     flex-direction: column;
-    justify-content: top;
     width: 100%;
     align-items: center;
     padding: 20px;
@@ -153,10 +152,9 @@
     display: flex;
     width: 100%;
     justify-content: end;
-    align-items: right;
   }
   .board-search * {
-    margin: 0px 0px 0px 0px;
+    margin: 0;
   }
   .board-search input[type="submit"] {
     width: 100px;

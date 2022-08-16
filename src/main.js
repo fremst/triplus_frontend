@@ -4,6 +4,7 @@ import router from "./router";
 import store from "./store";
 
 import PrimeVue from "primevue/config";
+
 import Button from "primevue/button";
 import AutoComplete from "primevue/autocomplete";
 import Accordion from "primevue/accordion";
@@ -11,7 +12,6 @@ import AccordionTab from "primevue/accordiontab";
 import Avatar from "primevue/avatar";
 import AvatarGroup from "primevue/avatargroup";
 import Badge from "primevue/badge";
-import BadgeDirective from "primevue/badgedirective";
 import BlockUI from "primevue/blockui";
 import Breadcrumb from "primevue/breadcrumb";
 import Calendar from "primevue/calendar";
@@ -64,7 +64,6 @@ import ProgressBar from "primevue/progressbar";
 import ProgressSpinner from "primevue/progressspinner";
 import Rating from "primevue/rating";
 import RadioButton from "primevue/radiobutton";
-import Ripple from "primevue/ripple";
 import Row from "primevue/row";
 import SelectButton from "primevue/selectbutton";
 import ScrollPanel from "primevue/scrollpanel";
@@ -89,21 +88,23 @@ import Tag from "primevue/tag";
 import Terminal from "primevue/terminal";
 import Timeline from "primevue/timeline";
 import ToggleButton from "primevue/togglebutton";
-import Tooltip from "primevue/tooltip";
 import Tree from "primevue/tree";
 import TreeSelect from "primevue/treeselect";
 import TreeTable from "primevue/treetable";
 import TriStateCheckbox from "primevue/tristatecheckbox";
 import VirtualScroller from "primevue/virtualscroller";
 
+
 //테마설정
-import "primeflex/primeflex.css";
 import "primevue/resources/themes/lara-light-teal/theme.css";
 import "primevue/resources/primevue.min.css";
 import "primeicons/primeicons.css";
 
 //primeFlex CSS설정
+import "primeflex/primeflex.css";
 import "/node_modules/primeflex/primeflex.css";
+
+// import "./index.css";
 
 const app = createApp(App);
 

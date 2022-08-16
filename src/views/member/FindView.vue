@@ -132,7 +132,6 @@ export default {
 }
 </script>
 
-
 <style lang="scss" scoped>
 .find{
   width: 900px;
@@ -148,7 +147,6 @@ export default {
 .p-tabview-nav-container{
   margin: 0 auto;
 }
-
 
 .tabview-custom {
     i, span {
@@ -182,20 +180,17 @@ export default {
   padding: 3px;
 }
 
-
 input[type='text']{
   width: 250px;
   height: 30px;
   border-radius: 5px;
 }
 
-
 input[type='button']{
   margin-left: 5px;
   font-weight: bold;
   border-radius: 5px;
 }
-
 
 label{
   display: inline-block;

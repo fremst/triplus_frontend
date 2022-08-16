@@ -1,8 +1,8 @@
 <template>
 <div class="showId">
 
-  
-  <div><h2>아이디찾기</h2>
+  <div>
+    <h2>아이디찾기</h2>
     <div><span>고객님의 정보와 일치하는 아이디입니다</span></div>
     <div class="contents">
       
@@ -10,7 +10,6 @@
     </div>
     <Button type="button" label="로그인 하기" class="p-button-primary" @click="loginForm" />
   </div>
-  
   
 </div>
 </template>
@@ -67,10 +66,7 @@ export default {
 .contents{
   height: 150px;
   border: 1px solid black;
-  
 
 }
-
-
 
 </style>

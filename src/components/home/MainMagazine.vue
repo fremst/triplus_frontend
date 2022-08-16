@@ -108,7 +108,6 @@ h2 {
   margin-left: 80px;
 }
 
-
 .magazine {
   width: 300px;
   margin-right: 16px;

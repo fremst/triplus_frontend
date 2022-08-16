@@ -123,7 +123,7 @@
 <style scoped>
   * {
     padding: 20px;
-    margin: 0px; 
+    margin: 0px;
     padding: 0px;
   }
   a {
@@ -163,14 +163,13 @@
   .board-main {
     display: flex;
     flex-direction: column;
-    justify-content: top;
     width: 100%;
     align-items: center;
     padding: 20px;
   }
   .article-header {
     width: 100%;
-    margin: 0px 0px 0px 0px;
+    margin: 0;
     text-align: center;
     border-top: 1px solid gray;
     border-collapse: collapse;
@@ -186,12 +185,12 @@
   .article-main {
     display: flex;
     width: 100%;
-    margin: 20px 0px;
-    padding: 0px 20px;
+    margin: 20px 0;
+    padding: 0 20px;
   }
   .article-footer {
     width: 100%;
-    margin: 0px 0px 20px 0px;
+    margin: 0 0 20px 0;
     border-top: 1px solid gray;
   }
   .board-footer {

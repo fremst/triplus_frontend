@@ -25,7 +25,7 @@ export default {
                 {
                     label: '패키지',
                     icon: 'pi pi-fw pi-briefcase',
-                    to: '/section/Pakage'
+                    to: '/section/packages'
                 },
                 {
                     label: '매거진',

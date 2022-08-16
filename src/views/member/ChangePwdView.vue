@@ -60,10 +60,6 @@ export default {
             }
           }.bind(this));
         }
-
-
-
-
       }
     }
 
@@ -71,7 +67,3 @@ export default {
 
 }
 </script>
-
-<style scoped>
-
-</style>

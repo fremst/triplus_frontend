@@ -1,4 +1,3 @@
-
 <template>
   <div class="login">
     <div class="login-title"><h2>로그인</h2></div>
@@ -30,7 +29,6 @@
 <script>
 
 import axios from 'axios';
-
 
 export default {
   name: "LoginView",
