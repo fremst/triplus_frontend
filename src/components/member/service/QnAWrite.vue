@@ -133,9 +133,6 @@
       },
       getDetailLink(brdNum) {
         return `${this.detailLink}?num=${brdNum}`;
-      },
-      onCancel() {
-        console.log(this.cancelLink);
       }
     }
   }

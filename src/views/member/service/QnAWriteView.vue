@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <QnAWrite :title="title" :submitLink="submitLink" :cancelLink="cancelLink"/>
+    <QnAWrite :title="title" :submitLink="submitLink" :cancelLink="cancelLink" :detailLink="detailLink"/>
   </div>
 </template>
 
