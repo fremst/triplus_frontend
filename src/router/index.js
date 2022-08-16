@@ -1,12 +1,17 @@
 import { createRouter, createWebHistory } from "vue-router";
 
 import HomeView from "../views/HomeView.vue";
-import memberJoinView from "@/views/member/MemberJoinView";
+
+import QnAView from "../views/member/service/QnAView.vue";
+import QnAWriteView from "../views/member/service/QnAWriteView.vue";
+import QnADetailView from "../views/member/service/QnADetailView.vue";
 
 import PackageListView from "@/views/section/package/PackageListView";
 import PackageDetailView from "@/views/section/package/PackageDetailView";
 import PackageReservationView from "@/views/section/package/PackageReservationView"
 
+import MemberJoinView from "@/views/member/MemberJoinView";
+import tosView from "@/views/member/TosView";
 import LoginView from "@/views/member/LoginView";
 import FindView from "@/views/member/FindView";
 import showIDView from "@/views/member/ShowIDView";
@@ -42,6 +47,21 @@ const routes = [
     component: () => import("@/views/admin/service/NoticeUpdateView.vue")
   },
   {
+    path: "/service/qna",
+    name: "qna",
+    component: QnAView
+  },
+  {
+    path: "/service/qna/write",
+    name: "qna-write",
+    component: QnAWriteView
+  },
+  {
+    path: "/service/qna/detail",
+    name: "qna-detail",
+    component: QnADetailView
+  },
+  {
     path: '/member/find',
     name: 'find',
     component: FindView
@@ -49,7 +69,27 @@ const routes = [
   {
     path: "/memberjoin",
     name: "memberjoin",
-    component: memberJoinView
+    component: MemberJoinView
+  },
+  {
+    path: "/memberjoin/tos",
+    name: "tos",
+    component: tosView
+  },
+  {
+    path: '/member/showid',
+    name: 'showId',
+    component: showIDView
+  },
+  {
+    path: '/member/showpwd',
+    name: 'showPwd',
+    component: showPwdView
+  },
+  {
+    path: '/member/changepwd',
+    name: 'changePwd',
+    component: changePwdView
   },
   {
     path: "/section/packages",
@@ -65,22 +105,7 @@ const routes = [
     path: "/section/packages/:brdNum/reservation",
     name: "package-reservation",
     component: PackageReservationView
-   },
-   {
-    path: '/member/showid',
-    name: 'showId',
-    component: showIDView
-  },
-  {
-    path: '/member/showpwd',
-    name: 'showPwd',
-    component: showPwdView
-  },
-  {
-    path: '/member/changepwd',
-    name: 'changePwd',
-    component: changePwdView
-  },
+   }
 ];
 
 const router = createRouter({
