@@ -1,22 +1,50 @@
 import { createRouter, createWebHistory } from "vue-router";
+
 import HomeView from "../views/HomeView.vue";
+
 import QnAView from "../views/member/service/QnAView.vue";
 import QnAWriteView from "../views/member/service/QnAWriteView.vue";
 import QnADetailView from "../views/member/service/QnADetailView.vue";
 
+import PackageListView from "@/views/section/package/PackageListView";
+import PackageDetailView from "@/views/section/package/PackageDetailView";
+import PackageReservationView from "@/views/section/package/PackageReservationView"
+
+import MemberJoinView from "@/views/member/MemberJoinView";
+import tosView from "@/views/member/TosView";
+import LoginView from "@/views/member/LoginView";
+import FindView from "@/views/member/FindView";
+import showIDView from "@/views/member/ShowIDView";
+import showPwdView from "@/views/member/ShowPwdView";
+import changePwdView from "@/views/member/ChangePwdView";
+
+import MainView from "../views/MainView.vue";
+
 const routes = [
   {
     path: "/",
-    name: "home",
-    component: HomeView
+    name: "main",
+    component: MainView
   },
   {
-    path: "/about",
-    name: "about",
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ "../views/HomeView.vue")
+    path:"/service/notice/list",
+    name:"notice",
+    component: () => import("@/views/admin/service/NoticeListView.vue")
+  },
+  {
+    path:"/service/notice/write",
+    name:"notice-write",
+    component: () => import("@/views/admin/service/NoticeWriteView.vue")
+  },
+  {
+    path:"/service/notice/detail",
+    name:"notice-detail",
+    component: () => import("@/views/admin/service/NoticeDetailView.vue")
+  },
+  {
+    path:"/service/notice/update",
+    name:"notice-update",
+    component: () => import("@/views/admin/service/NoticeUpdateView.vue")
   },
   {
     path: "/service/qna",
@@ -32,7 +60,52 @@ const routes = [
     path: "/service/qna/detail",
     name: "qna-detail",
     component: QnADetailView
-  }
+  },
+  {
+    path: '/member/find',
+    name: 'find',
+    component: FindView
+  },
+  {
+    path: "/memberjoin",
+    name: "memberjoin",
+    component: MemberJoinView
+  },
+  {
+    path: "/memberjoin/tos",
+    name: "tos",
+    component: tosView
+  },
+  {
+    path: '/member/showid',
+    name: 'showId',
+    component: showIDView
+  },
+  {
+    path: '/member/showpwd',
+    name: 'showPwd',
+    component: showPwdView
+  },
+  {
+    path: '/member/changepwd',
+    name: 'changePwd',
+    component: changePwdView
+  },
+  {
+    path: "/section/packages",
+    name: "package-list",
+    component: PackageListView
+  },
+  {
+    path: "/section/packages/:brdNum",
+    name: "package-detail",
+    component: PackageDetailView
+   },
+   {
+    path: "/section/packages/:brdNum/reservation",
+    name: "package-reservation",
+    component: PackageReservationView
+   }
 ];
 
 const router = createRouter({
