@@ -30,7 +30,7 @@ export default {
       },
       detailLink: "http://localhost:8082/triplus/api/service/qna/detail",
       updateLink: "/service/qna/write",
-      deleteLink: "/service/qna/delete",
+      deleteLink: "http://localhost:8082/triplus/api/service/qna/delete",
       listLink: "/service/qna/",
     };
   },

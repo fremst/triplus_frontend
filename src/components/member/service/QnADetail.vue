@@ -19,19 +19,32 @@
       </div>
       <div class="board-footer">
           <!-- TODO 버튼 구현 -->
-        <Button @click="onUpdate">수정</Button>
-        <Button @click="onDelete">삭제</Button>
+        <Dialog header="비밀번호 입력" v-model:visible="displayUpdate">
+          <Password id="pwd" v-model="pwd" :feedback="false"/>
+          <Button @click="onUpdate">수정</Button>
+        </Dialog>
+        <Button @click="viewUpdate">수정</Button>
+        <Dialog header="비밀번호 입력" v-model:visible="displayDelete">
+          <Password id="pwd" v-model="pwd" :feedback="false"/>
+          <Button class="p-button-danger" @click="onDelete">삭제</Button>
+        </Dialog>
+        <Button class="p-button-danger" @click="viewDelete">삭제</Button>
         <Button @click="onList">목록으로</Button>
       </div>
     </div>
   </div>
 </template>
 <script>
+  import Dialog from 'primevue/dialog';
+  import Password from 'primevue/password';
   import axios from 'axios';
 
   export default
   {
     name: 'QnADetail',
+    components: {
+      Dialog, Password
+    },
     props: {
       title: String, // 타이틀
       detailLink: String, // 상세보기 링크
@@ -46,15 +59,44 @@
           writerId: "",
           wdate: "",
           contents: ""
-        }
+        },
+        displayUpdate: false,
+        displayDelete: false,
+        pwd: ""
       };
     },
     methods: {
       onUpdate() {
-        alert("미구현");
+        this.displayUpdate = !this.displayUpdate;
+      },
+      viewUpdate() {
+        this.displayUpdate = !this.displayUpdate;
       },
       onDelete() {
-        alert("미구현");
+        const writeParam = new URLSearchParams();
+        writeParam.append('brdNum', this.$route.query.num);
+        writeParam.append('pwd', this.pwd);
+
+        axios.post(this.deleteLink, writeParam, {
+          headers: {
+            'Access-Control-Allow-Origin': '*'
+          }
+        }).then(function(resp) {
+          console.log(resp);
+          if (resp.data.result == true)
+          {
+            alert("문의글이 제거되었습니다.");
+            this.$router.push(this.listLink);
+          }
+          else
+          {
+            alert(resp.data.reason);
+          }
+
+        }.bind(this));
+      },
+      viewDelete() {
+        this.displayDelete = !this.displayDelete;
       },
       onList() {
         this.$router.push(this.listLink);
