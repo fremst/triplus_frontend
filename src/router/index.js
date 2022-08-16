@@ -22,9 +22,24 @@ const routes = [
     component: MainView
   },
   {
-    path: "/member/login",
-    name: "login",
-    component: LoginView
+    path:"/service/notice/list",
+    name:"notice",
+    component: () => import("@/views/admin/service/NoticeListView.vue")
+  },
+  {
+    path:"/service/notice/write",
+    name:"notice-write",
+    component: () => import("@/views/admin/service/NoticeWriteView.vue")
+  },
+  {
+    path:"/service/notice/detail",
+    name:"notice-detail",
+    component: () => import("@/views/admin/service/NoticeDetailView.vue")
+  },
+  {
+    path:"/service/notice/update",
+    name:"notice-update",
+    component: () => import("@/views/admin/service/NoticeUpdateView.vue")
   },
   {
     path: '/member/find',
