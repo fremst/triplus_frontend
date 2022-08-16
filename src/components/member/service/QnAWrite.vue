@@ -8,22 +8,22 @@
         <h1>{{title}}</h1>
       </div>
       <div class="board-main">
-        <div class="">
+        <div class="board-input">
           <label for="aTitle"><h2>제목</h2></label>
           <InputText id="aTitle" type="username" v-model="aTitle" area-describedby="aTitle-help" :class="[{ 'p-invalid': !checkTitle() }]"/>
           <small v-if="!checkTitle()" id="aTitle-help" class="p-error">내용을 입력하세요.</small>
         </div>
-        <div class="">
+        <div class="board-input">
           <label for="email"><h2>임시 이메일</h2></label>
           <InputText id="email" type="email" v-model="tempEmail" area-describedby="email-help" :class="[{ 'p-invalid': !checkEmail() }]"/>
           <small v-if="!checkEmail()" id="email-help" class="p-error">내용을 입력하세요.</small>
         </div>
-        <div class="">
+        <div class="board-input">
           <label for="pwd"><h2>임시 비밀번호</h2></label>
           <Password id="pwd" v-model="tempPwd" area-describedby="pwd-help" :class="[{ 'p-invalid': !checkPwd() }]"/>
           <small id="pwd-help" v-if="!checkPwd()" class="p-error">내용을 입력하세요.</small>
         </div>
-        <div class="">
+        <div class="board-input">
           <label for="category"><h2>문의 유형</h2></label>
           <Dropdown id="category" v-model="category" area-describedby="category-help" :class="[{ 'p-invalid': !checkCategory() }]"
             :options="categories" optionLabel="name" placeholder="카테고리 선택" />
@@ -188,6 +188,9 @@
   .board-main * {
     width: 100%;
     text-align: left;
+  }
+  .board-input {
+    min-height: 90px;
   }
   .board-footer {
     display: flex;
