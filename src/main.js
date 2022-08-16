@@ -113,12 +113,6 @@ app.use(ToastService);
 app.use(store);
 app.use(router);
 
-app.directive("tooltip", Tooltip);
-app.directive("badge", BadgeDirective);
-app.directive("ripple", Ripple);
-
-app.use(PrimeVue);
-
 // PrimeVue의 컴포넌트를 전역으로 사용하고 싶을땐 여기에 등록해서 사용한다.
 app.component("Accordion", Accordion);
 app.component("AccordionTab", AccordionTab);
