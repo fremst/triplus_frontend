@@ -1,16 +1,4 @@
 <!--
-  220810 김주현
-  가장 기본적인 입력 폼입니다.
-
-  [ 프로퍼티 ]
-  title : String
-    폼 좌상단 대문짝만한 문구
-  category : Array[String]
-    카테고리 드롭다운 메뉴를 표현합니다. (미구현)
-  submitLink : String
-    작성 버튼을 눌렀을 때 POST 요청을 보낼 URL을 설정합니다. (미구현)
-  cancelLink : String
-    취소 버튼을 눌렀을 때 GET 요청을 보낼 URL을 설정합니다. (미구현)
 -->
 
 <template>
@@ -20,35 +8,72 @@
         <h1>{{title}}</h1>
       </div>
       <div class="board-main">
-        <v-text-field
-          label="제목"
-          name="title"
-          clearable
-          style="width: 100%" />
+        <div class="">
+          <label for="aTitle"><h2>제목</h2></label>
+          <InputText id="aTitle" type="username" v-model="aTitle" area-describedby="aTitle-help" :class="[{ 'p-invalid': !checkTitle() }]"/>
+          <small v-if="!checkTitle()" id="aTitle-help" class="p-error">쓰슈.</small>
+        </div>
+        <div class="">
+          <label for="email"><h2>임시 이메일</h2></label>
+          <InputText id="email" type="email" v-model="tempEmail" area-describedby="email-help" :class="[{ 'p-invalid': !checkEmail() }]"/>
+          <small v-if="!checkEmail()" id="email-help" class="p-error">쓰슈.</small>
+        </div>
+        <div class="">
+          <label for="pwd"><h2>임시 비밀번호</h2></label>
+          <Password id="pwd" v-model="tempPwd" area-describedby="pwd-help" :class="[{ 'p-invalid': !checkPwd() }]"/>
+          <small id="pwd-help" v-if="!checkPwd()" class="p-error">쓰슈.</small>
+        </div>
+        <div class="">
+          <label for="category"><h2>문의 유형</h2></label>
+          <Dropdown id="category" v-model="category" area-describedby="category-help" :class="[{ 'p-invalid': !checkCategory() }]"
+            :options="categories" optionLabel="name" placeholder="카테고리 선택" />
+          <small id="category-help" v-if="!checkCategory()" class="p-error">고르슈.</small>
+        </div>
+        <h2>내용</h2>
+        <Editor v-model="content" editorStyle="height: 320px">
+        </Editor>
       </div>
       <div class="board-footer">
-          <v-btn color="#999999" style="color: white;" @click="onCancel">취소</v-btn>
-          <v-btn color="#67AB9F" style="color: white;" @click="onSubmit">작성</v-btn>
+          <Button @click="onCancel">취소</Button>
+          <Button @click="onSubmit" :disabled="submitting">작성</Button>
       </div>
     </div>
   </div>
 </template>
 <script>
+  import axios from 'axios';
+  import Dropdown from 'primevue/dropdown';
+  import Editor from 'primevue/editor';
+  import InputText from 'primevue/inputtext';
+  import Password from 'primevue/password';
 
   export default
   {
     name: 'QnAWrite',
     components: {
+      Dropdown, Editor, InputText, Password
     },
     props: {
       title: String, // 글쓰기 타이틀(제목 아님)
-      category: Array, // 카테고리
       submitLink: String, // 쓰기 링크
-      cancelLink: String // 취소 링크
+      cancelLink: String, // 취소 링크
+      detailLink: String
     },
     data() {
       return {
-        content: ""
+        category: "", // 카테고리
+        categories: [
+          {name: '일정 기능', code: 'SCHEDULER'},
+          {name: '패키지', code: 'PACKAGE'},
+          {name: '고객 지원', code: 'CUSTOMER SERVICE'},
+          {name: '나도 잘 모름', code: 'I DONT KNOW'},
+          {name: '기타', code: 'ETC'},
+        ],
+        aTitle: "",
+        content: "",
+        tempEmail: "",
+        tempPwd: "",
+        submitting: false
       }
     },
     methods: {
@@ -56,8 +81,58 @@
         this.content = content;
       },
       onSubmit() {
-        console.log(this.content);
-        console.log(this.submitLink);
+        if (this.submitting)
+          return;
+        this.submitting = true;
+
+        const writeParam = new URLSearchParams();
+        writeParam.append('writerId', "guest");
+        writeParam.append('answerNum', 0);
+        writeParam.append('title', this.aTitle);
+        writeParam.append('category', this.category.code);
+        writeParam.append('tempEmail', this.tempEmail);
+        writeParam.append('tempPwd', this.tempPwd);
+        writeParam.append('contents', this.content);
+
+        axios.post(this.submitLink, writeParam, {
+          headers: {
+            'Access-Control-Allow-Origin': '*'
+          }
+        }).then(function(resp) {
+          console.log(resp);
+          if (resp.data.result == true)
+          {
+            alert("문의글 작성 성공");
+            this.$router.push(this.getDetailLink(resp.data.brdNum));
+          }
+          else
+          {
+            alert(resp.data.reason);
+            this.$router.push(this.cancelLink);
+          }
+
+        }.bind(this));
+      },
+      onCancel() {
+        this.$router.push(this.cancelLink);
+      },
+      checkTitle() {
+        return this.aTitle.length > 4;
+      },
+      checkEmail() {
+        return this.tempEmail.length > 8;
+      },
+      checkPwd() {
+        return this.tempPwd.length > 8 && this.tempPwd.length < 20;
+      },
+      checkCategory() {
+        return this.category != "";
+      },
+      checkContent() {
+        return this.content.length > 40;
+      },
+      getDetailLink(brdNum) {
+        return `${this.detailLink}?num=${brdNum}`;
       },
       onCancel() {
         console.log(this.cancelLink);
@@ -111,8 +186,12 @@
     flex-direction: column;
     justify-content: top;
     width: 100%;
-    align-items: center;
+    align-items: flex-start;
     padding: 20px;
+  }
+  .board-main * {
+    width: 100%;
+    text-align: left;
   }
   .board-footer {
     display: flex;

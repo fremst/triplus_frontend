@@ -16,8 +16,9 @@ export default {
   data() {
     return {
       title: "이곳에 타이틀 입력",
-      submitLink: "/service/qna/write",
+      submitLink: "http://localhost:8082/triplus/api/service/qna/write",
       cancelLink: "/service/qna",
+      detailLink: "/service/qna/detail",
     };
   }
 }
