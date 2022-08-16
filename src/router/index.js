@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 
 import HomeView from "../views/HomeView.vue";
+import memberJoinView from "@/views/member/MemberJoinView";
 
 import PackageListView from "@/views/section/package/PackageListView";
 import PackageDetailView from "@/views/section/package/PackageDetailView";
@@ -29,6 +30,11 @@ const routes = [
     path: '/member/find',
     name: 'find',
     component: FindView
+  },
+  {
+    path: "/memberjoin",
+    name: "memberjoin",
+    component: memberJoinView
   },
   {
     path: "/section/packages",
