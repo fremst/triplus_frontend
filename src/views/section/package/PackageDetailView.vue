@@ -2,22 +2,22 @@
   <div class="wrapper">
     <div class="inner">
       <h1>{{packageDetails.title}}</h1>
-        <div class="galleria">
-          <PackageDetailGalleria :packageDetails="packageDetails">
-          </PackageDetailGalleria>
+      <div class="galleria">
+        <PackageDetailGalleria :pkgImgs="pkgImgs">
+        </PackageDetailGalleria>
+      </div>
+      <br>
+      <div class="info">
+        <div>
+          <PackageDetailItemInfo :packageDetails="packageDetails">
+          </PackageDetailItemInfo>
         </div>
-        <br>
-        <div class="info">
-          <div>
-            <PackageDetailItemInfo :packageDetails="packageDetails">
-            </PackageDetailItemInfo>
-          </div>
-          <div>
-            <PackageDetailForm :packageDetails="packageDetails">
-            </PackageDetailForm>
-          </div>
+        <div>
+          <PackageDetailForm :packageDetails="packageDetails">
+          </PackageDetailForm>
         </div>
-        <img :src="require(`@/assets/section/package/images/haenam.png`)" style="width: 925px"/>
+      </div>
+       <img :src="require(`@/assets/section/package/images/haenam.png`)" alt="이미지 없음" style="width: 925px"/>
       <ScrollTop />
     </div>
   </div>
@@ -33,6 +33,7 @@ export default {
   data(){
     return {
       packageDetails: {},
+      pkgImgs: {},
     }
   },
   computed: {
@@ -46,9 +47,16 @@ export default {
         'Access-Control-Allow-Origin': '*'
       },
     }).then(function(resp) {
-      this.packageDetails=resp.data;
+
+      this.packageDetails = Object.assign(resp.data.dto, resp.data.map);
+      this.pkgImgs = resp.data.map.pkgImgs;
+
     }.bind(this)).catch(err=> {
-      console.log(err)});
+
+        console.log(err)
+
+      }
+    );
   },
   components:{
     PackageDetailGalleria,
@@ -64,21 +72,25 @@ export default {
 .wrapper{
   width: 100%;
 }
+
 .inner{
   width: 1080px;
   margin: auto;
   text-align: center;
 }
+
 .galleria{
   width: 925px;
   margin: auto;
 }
+
 .info{
   width: 925px;
   margin: auto;
   display: flex;
   justify-content: space-between;
 }
+
 .p-scrolltop{
   right: 20vw;
 }

@@ -20,12 +20,18 @@ export default {
   mounted() {
     axios.get("http://localhost:8082/triplus/api/section/packages", {
       headers: {
+
         'Access-Control-Allow-Origin': '*'
+
       },
     }).then(function(resp) {
+
       this.packages=resp.data;
+
     }.bind(this)).catch(err=> {
+
       console.log(err)});
+
   },
   components:{
     PackageList
