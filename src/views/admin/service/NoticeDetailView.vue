@@ -1,11 +1,11 @@
 <template>
     <div class="home">
         <NoticeDetail
-            :title="title"
-            :detailLink="detailLink"
-            :updateLink="updateLink"
-            :deleteLink="deleteLink"
-            :listLink="listLink"
+                :title="title"
+                :detailLink="detailLink"
+                :updateLink="updateLink"
+                :deleteLink="deleteLink"
+                :listLink="listLink"
         />
     </div>
 </template>
@@ -26,15 +26,15 @@
                     wdate: "1970.01.01",
                     contents: "<p>testtest</p><p>testtest2</p><p>testtest3</p>"
                 },
-                detailLink: "http://localhost:8082/triplus/api/service/notice/detail",
-                updateLink: "/service/notice/update",
-                deleteLink: "http://localhost:8082/triplus/api/service/notice/delete",
-                listLink: "/service/notice"
+                detailLink: `http://localhost:8082/triplus/api/service/notices/`,
+                updateLink: "/service/notices/update",
+                deleteLink: "http://localhost:8082/triplus/api/service/notices/",
+                listLink: "/service/notices"
             };
         },
-        created() {
-            console.log(this.$route.query.num);
-  }
+        // created() {
+        //     console.log(this.$route.query.num);
+        // }
     }
 </script>
 

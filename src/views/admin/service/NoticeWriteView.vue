@@ -1,10 +1,10 @@
 <template>
     <div class="home">
         <NoticeWrite
-        :title="title" 
-        :submitLink="submitLink" 
-        :cancelLink="cancelLink"
-        :detailLink="detailLink"
+                :title="title"
+                :submitLink="submitLink"
+                :cancelLink="cancelLink"
+                :detailLink="detailLink"
         />
     </div>
 </template>
@@ -18,9 +18,9 @@
         data(){
             return{
                 title: "공지 등록",
-                submitLink: "http://localhost:8082/triplus/api/service/notice/write",
-                cancelLink: "/service/notice",
-                detailLink: "/service/notice/detail",
+                submitLink: "http://localhost:8082/triplus/api/service/notices/write",
+                cancelLink: "/service/notices",
+                detailLink: "/service/notices/detail",
             }
         }
     }

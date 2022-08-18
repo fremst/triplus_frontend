@@ -14,8 +14,7 @@
                     <Column field="brdNum" header="글번호" style="width: 100px;" ></Column>
                     <Column field="title" header="제목" alignHeader="center" >
                         <template #body="slotProps">
-                       <a :href="getDetailLink(slotProps.data.brdNum)" v-text="slotProps.data.title"/>
-<!--                            <a href="#" @click.prevent="getDetailLink(slotProps.data.brdNum)" v-text="slotProps.data.title"/>-->
+                            <a href="#" @click.prevent="onDetail(slotProps.data.brdNum)" v-text="slotProps.data.title"></a>
                         </template>
                     </Column>
                     <Column field="writerId" header="작성자" style="width: 100px;"></Column>
@@ -59,23 +58,23 @@
             this.list=this.getList();
         },
         mounted() {
-            
+
         },
         methods:{
             onSearch(){
                 alert("미구현");
             },
             onWrite(){
-                this.$router.push(this.writeLink)
+                this.$router.push({name:'notice-write'})
             },
             onPageChange(n){
                 this.curPage = n;
                 console.log(`${this.detailLink}?page=${this.curPage}`)
             },
             getList(){
-                this.list= axios.get(this.listLink,{
+                this.list= axios.get('http://localhost:8082/triplus/api/service/notices',{
                     headers: {
-                      'Access-Control-Allow-Origin': '*'
+                        'Access-Control-Allow-Origin': '*'
                     },
                     params:{}
                 }).then(function(resp){
@@ -86,11 +85,14 @@
                     }
                 }.bind(this));
             },
-            getDetailLink(brdNum){
-               // console.log(this.detailLink);
-                // console.log(brdNum);
-                return `${this.detailLink}?num=${brdNum}`;
-
+            // getDetailLink(brdNum){
+            //     return `${this.detailLink}?num=${brdNum}`;
+            //     // this.$router.push({name:"notice-detail",params:{}})
+            //
+            // },
+            onDetail(brdNum){
+                console.log(brdNum);
+                this.$router.push({name:"notice-detail",params:{brdNum:brdNum}})
             },
             getDate(ms) {
                 let date = new Date(ms);
@@ -101,83 +103,83 @@
 </script>
 
 <style scoped>
-  * {
-    padding: 20px;
-    margin: 0px;
-    padding: 0px;
-  }
-  a {
-    text-decoration: none;
-  }
-  .main {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    background-color: white;
-  }
-  .board {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    width: 1080px;
-    border: 1px solid lightgray;
-  }
-  .board-header {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    width: 100%;
-    height: 100px;
-    align-items: flex-start;
-    padding: 20px;
-  }
-  .board-header h1 {
-    font-size: 50px;
-    font-weight: bold;
-    color: #222;
-  }
-  .board-main {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    align-items: center;
-    padding: 20px;
-  }
-  .board-search {
-    display: flex;
-    width: 100%;
-    justify-content: end;
-  }
-  .board-search * {
-    margin: 0;
-  }
-  .board-search input[type="submit"] {
-    width: 100px;
-  }
-  .board-table {
-    width: 100%;
-    margin: 0px 0px 20px 0px;
-    text-align: center;
-    border-top: 1px solid gray;
-    border-collapse: collapse;
-  }
-  .board-page .currentPage {
-    color: #67AB9F;
-  }
-  .board-page * {
-    margin: 0px 4px;
-  }
-  .board-footer {
-    display: flex;
-    flex-direction: row;
-    justify-content: end;
-    width: 100%;
-    align-items: center;
-    padding: 20px;
-  }
-  .board-footer * {
-    margin: 0px 4px;
-  }
+    * {
+        padding: 20px;
+        margin: 0px;
+        padding: 0px;
+    }
+    a {
+        text-decoration: none;
+    }
+    .main {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background-color: white;
+    }
+    .board {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        width: 1080px;
+        border: 1px solid lightgray;
+    }
+    .board-header {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        width: 100%;
+        height: 100px;
+        align-items: flex-start;
+        padding: 20px;
+    }
+    .board-header h1 {
+        font-size: 50px;
+        font-weight: bold;
+        color: #222;
+    }
+    .board-main {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        align-items: center;
+        padding: 20px;
+    }
+    .board-search {
+        display: flex;
+        width: 100%;
+        justify-content: end;
+    }
+    .board-search * {
+        margin: 0;
+    }
+    .board-search input[type="submit"] {
+        width: 100px;
+    }
+    .board-table {
+        width: 100%;
+        margin: 0px 0px 20px 0px;
+        text-align: center;
+        border-top: 1px solid gray;
+        border-collapse: collapse;
+    }
+    .board-page .currentPage {
+        color: #67AB9F;
+    }
+    .board-page * {
+        margin: 0px 4px;
+    }
+    .board-footer {
+        display: flex;
+        flex-direction: row;
+        justify-content: end;
+        width: 100%;
+        align-items: center;
+        padding: 20px;
+    }
+    .board-footer * {
+        margin: 0px 4px;
+    }
 </style>

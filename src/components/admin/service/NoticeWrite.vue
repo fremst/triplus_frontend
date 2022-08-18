@@ -1,37 +1,37 @@
 <template>
- <div class="main">
-    <div class="board">
-      <div class="board-header">
-        <h1>{{title}}</h1>
-      </div>
-      <div class="board-main">
-        <div class="board-input">
-          <label for="aTitle"><h2>제목</h2></label>
-          <InputText id="aTitle" type="username" v-model="aTitle" placeholder="제목을 입력하세요"/>
-        </div>
+    <div class="main">
+        <div class="board">
+            <div class="board-header">
+                <h1>{{title}}</h1>
+            </div>
+            <div class="board-main">
+                <div class="board-input">
+                    <label for="aTitle"><h2>제목</h2></label>
+                    <InputText id="aTitle" type="username" v-model="aTitle" placeholder="제목을 입력하세요"/>
+                </div>
 
-        <div class="board-input">
-          <label for="category"><h2>공지 유형</h2></label>
-          <Dropdown id="category" v-model="category"
-            :options="categories" optionLabel="name" placeholder="카테고리 선택" />
+                <div class="board-input">
+                    <label for="category"><h2>공지 유형</h2></label>
+                    <Dropdown id="category" v-model="category"
+                              :options="categories" optionLabel="name" placeholder="카테고리 선택" />
+                </div>
+                <h2>내용</h2>
+                <Editor v-model="contents" editorStyle="height: 320px">
+                </Editor>
+            </div>
+            <div class="board-footer">
+                <Button @click="onCancel">취소</Button>
+                <Button @click="onSubmit">등록</Button>
+            </div>
         </div>
-        <h2>내용</h2>
-        <Editor v-model="contents" editorStyle="height: 320px">
-        </Editor>
-      </div>
-      <div class="board-footer">
-          <Button @click="onCancel">취소</Button>
-          <Button @click="onSubmit">등록</Button>
-      </div>
     </div>
-  </div>
 </template>
 
 <script>
-  import axios from 'axios';
-  import Dropdown from 'primevue/dropdown';
-  import Editor from 'primevue/editor';
-  import InputText from 'primevue/inputtext';
+    import axios from 'axios';
+    import Dropdown from 'primevue/dropdown';
+    import Editor from 'primevue/editor';
+    import InputText from 'primevue/inputtext';
 
     export default {
         name: "NoticeWrite.vue",
@@ -61,27 +61,27 @@
                 writeParam.append('category', this.category.code);
                 writeParam.append('contents', this.contents);
 
-                axios.post('http://localhost:8082/triplus/api/service/notice/write/', writeParam, {
+                axios.post('http://localhost:8082/triplus/api/service/notices/write', writeParam, {
                     headers:{
                         'Access-Control-Allow-Origin' : '*'
                     }
                 }).then(function(resp) {
                     if (resp.data.result == true) {
                         alert("공지사항 작성 성공");
-                        this.$router.push({name:"notice"});
+                        this.$router.push({name:"notices"});
                     } else {
                         alert(resp.data.reason);
-                        this.$router.push({name:"notice"});
+                        this.$router.push({name:"notices"});
                     }
                 }.bind(this));
             },
             onCancel() {
-                this.$router.push({name:"notice"});
+                this.$router.push({name:"notices"});
             }
         }
     }
 
-    
+
 </script>
 
 <style scoped>

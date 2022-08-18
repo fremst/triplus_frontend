@@ -27,73 +27,68 @@
 </template>
 
 <script>
-    import axios from 'axios'
-    export default {
-        name: "NoticeDetail.vue",
-        props:{
-            title: String,
-            detailLink: String,
-            updateLink: String,
-            deleteLink: String,
-            listLink: String,
-        },
-        data(){
-            return{
-                article:{
-                    title:"",
-                    writerId:"",
-                    wdate:"",
-                    contents:""
-                }
-            }
-        },
-      created(){
-        console.log("111");
-        this.getArticle();
-      },
-        methods:{
-            onUpdate(){
-                this.$router.push(this.updateLink);
-            },
-            onList(){
-                this.$router.push(this.listLink);
-            },
-            onDelete(){
-                const writeParam = new URLSearchParams();
-                writeParam.append("brdNum",this.$route.query.num);
-                axios.post(this.deleteLink, writeParam,{
-                    headers: {
-                      'Access-Control-Allow-Origin': '*'
-                    }
-                }).then(function(resp){
-                    if(resp.data.result == true){
-                        alert("공지 삭제 완료!");
-                        this.$router.push(this.listLink);
-                    }else{
-                        alert('삭제 실패');
-                    }
-                }.bind(this));
-            },
-            getArticle(){
-              this.article = axios.get(this.detailLink, {
-                headers: {
-                    'Access-Control-Allow-Origin': '*'
-                },
-                params: {
-                    num: this.$route.query.num
-                }
-              }).then(function(resp) {
-                 console.log(resp);
-                 this.article = resp.data;
-                }.bind(this));                
-            }
-
+  import axios from 'axios'
+  export default {
+    name: "NoticeDetail.vue",
+    props:{
+      title: String,
+      detailLink: String,
+      updateLink: String,
+      deleteLink: String,
+      listLink: String,
+    },
+    data(){
+      return{
+        article:{
+          brdNum:0,
+          title:"",
+          writerId:"",
+          wdate:"",
+          contents:""
         }
+      }
+    },
+    created(){
+      this.getArticle();
+    },
+    methods:{
+      onUpdate(){
+        this.$router.push({name:'notice-update'});
+      },
+      onList(){
+        this.$router.push({name:'notices'});
+      },
+      onDelete(){
+        axios.delete(`http://localhost:8082/triplus/api/service/notices/${this.$route.params.brdNum}`,{
+          headers: {
+            'Access-Control-Allow-Origin': '*'
+          }
+        }).then(function(resp){
+          if(resp.data=='success'){
+            alert("공지 삭제 완료!");
+            this.$router.push({name:'notices'})
+          }else{
+            alert('삭제 실패');
+          }
+        }.bind(this));
+      },
+      getArticle(){
+        this.article = axios.get(`http://localhost:8082/triplus/api/service/notices/${this.$route.params.brdNum}`, {
+          headers: {
+            'Access-Control-Allow-Origin': '*'
+          },
+        }).then(function(resp) {
+          console.log(resp);
+          this.article = resp.data;
+        }.bind(this));
+      }
+
     }
+  }
 </script>
 
 <style scoped>
-* {
+  * {
     padding: 20px;
     margin: 0px;
     padding: 0px;
@@ -177,13 +172,13 @@
   .board-footer * {
     margin: 0px 4px;
   }
-    #updateBtn{
-        margin-right: 10px;
-    }
-    #deleteBtn{
-        margin-right: 10px;
-    }
-    #btnGroup{
-        padding-left: 800px;
-    }
+  #updateBtn{
+    margin-right: 10px;
+  }
+  #deleteBtn{
+    margin-right: 10px;
+  }
+  #btnGroup{
+    padding-left: 800px;
+  }
 </style>
