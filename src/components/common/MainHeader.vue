@@ -5,7 +5,7 @@
           <a href="/member/login">로그인/회원가입</a>
           <Sidebar v-model:visible="visibleRight" position="right">
             Content<br><br>
-            <a href="/service/notice/list">공지사항</a><br><br>
+            <a href="/service/notice/">공지사항</a><br><br>
             <a href="/service/qna/">Q & A</a>
           </Sidebar>
           <Button icon="pi pi-bars" @click="visibleRight = true"/>
