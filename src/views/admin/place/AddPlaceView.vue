@@ -8,72 +8,72 @@
             <h3>제목</h3>
             <span class="p-label">
               <CascadeSelect
-                  v-model="selectedOptions"
-                  :class="{ 'p-invalid': submitted && !this.selectedOptions }"
-                  :optionGroupChildren="['subCategory']"
-                  :options="options"
-                  optionGroupLabel="name"
-                  optionLabel="subname"
-                  placeholder="카테고리"
-                  style="min-width: 11rem; margin-right: 10px"
+                v-model="selectedOptions"
+                :class="{ 'p-invalid': submitted && !this.selectedOptions }"
+                :optionGroupChildren="['subCategory']"
+                :options="options"
+                optionGroupLabel="name"
+                optionLabel="subname"
+                placeholder="카테고리"
+                style="min-width: 11rem; margin-right: 10px"
               />
               <small v-if="submitted && !this.region" class="p-error">카테고리를 선택해 주세요.</small>
-              <label for="multiselect"/>
+              <label for="multiselect" />
             </span>
             <InputText
-                v-model="title"
-                :class="{ 'p-invalid': submitted && !this.title }"
-                class="form-control field md:col-4"
-                placeholder="제목을 입력해주세요."
-                style="width: 350px"
+              v-model="title"
+              :class="{ 'p-invalid': submitted && !this.title }"
+              class="form-control field md:col-4"
+              placeholder="제목을 입력해주세요."
+              style="width: 350px"
             />
             <small v-if="submitted && !this.title" class="p-error">제목을 입력해 주세요.</small>
           </div>
           <div>
             <h3>지역번호</h3>
             <InputText
-                v-model="region"
-                :class="{ 'p-invalid': submitted && !this.region }"
-                class="form-control field md:col-4"
+              v-model="region"
+              :class="{ 'p-invalid': submitted && !this.region }"
+              class="form-control field md:col-4"
             />
             <small v-if="submitted && !this.region" class="p-error">지역번호를 입력해 주세요.</small>
 
             <h3>전화번호</h3>
             <InputText
-                v-model="tel"
-                :class="{ 'p-invalid': submitted && !this.tel }"
-                class="form-control field col-4"
+              v-model="tel"
+              :class="{ 'p-invalid': submitted && !this.tel }"
+              class="form-control field col-4"
             />
             <small v-if="submitted && !this.tel" class="p-error">전화번호를 입력해 주세요.</small>
           </div>
           <h3>주소</h3>
           <InputText
-              v-model="addr"
-              :class="{ 'p-invalid': submitted && !this.addr }"
-              class="form-control field col-4"
-              placeholder="주소를 입력해주세요."
+            v-model="addr"
+            :class="{ 'p-invalid': submitted && !this.addr }"
+            class="form-control field col-4"
+            placeholder="주소를 입력해주세요."
           />
           <small v-if="submitted && !this.tel" class="p-error">주소를 입력해 주세요.</small>
 
           <h3>경도</h3>
-          <InputText v-model="mapx" class="form-control field col-4" placeholder="경도를 입력해주세요."/>
+          <InputText v-model="mapx" class="form-control field col-4" placeholder="경도를 입력해주세요." />
           <h3>위도</h3>
-          <InputText v-model="mapy" class="form-control field col-4" placeholder="위도를 입력해주세요."/>
+          <InputText v-model="mapy" class="form-control field col-4" placeholder="위도를 입력해주세요." />
           <h3>홈페이지</h3>
-          <InputText v-model="homepage" class="form-control field col-4" placeholder="홈페이지를 입력해주세요."/>
+          <InputText v-model="homepage" class="form-control field col-4" placeholder="홈페이지를 입력해주세요." />
           <h3>상세 이미지</h3>
           <InputText
-              v-model="firstimage"
-              class="form-control field col-4"
-              placeholder="상세이미지URL을 입력해주세요."
+            v-model="firstimage"
+            class="form-control field col-4"
+            placeholder="상세이미지URL을 입력해주세요."
           />
           <h3>상세설명</h3>
-          <Textarea v-model="overview" class="form-control field col-4" cols="50" rows="5"/>
+          <Textarea v-model="overview" class="form-control field col-4" cols="50" rows="5" />
         </div>
       </div>
       <div class="button-group">
-        <Button class="p-button-primary mr-2" label="Save" @click="onSave"/>
-        <Button class="p-button-secondary mr-2" label="Cancel" @click="onCancel"/>
+        <Button class="p-button-primary mr-2" label="Save" @click="onSave" />
+        <Button class="p-button-secondary mr-2" label="Cancel" @click="onCancel" />
       </div>
     </div>
   </div>
@@ -198,6 +198,7 @@ export default {
   },
   methods: {
     onSave() {
+      this.submitted = true;
       const addPlaceParam = new URLSearchParams();
       addPlaceParam.append("userId", "admin");
       addPlaceParam.append("mcatName", this.selectedOptions.value);
@@ -213,32 +214,20 @@ export default {
       addPlaceParam.append("overview", this.overview);
 
       axios
-          .post("http://localhost:8082/triplus/api/section/places/", addPlaceParam, {
-            headers: {
-              "Access-Control-Allow-Origin": "*"
+        .post("http://localhost:8082/triplus/api/section/places/", addPlaceParam, {
+          headers: {
+            "Access-Control-Allow-Origin": "*"
+          }
+        })
+        .then(
+          function (resp) {
+            if (resp.data.result === "success") {
+              alert("장소추가 성공");
+            } else {
+              alert("장소추가 실패");
             }
-          })
-          .then(
-              function (resp) {
-                if (resp.data.result === "success") {
-                  alert("장소추가 성공");
-                } else {
-                  alert("장소추가 실패");
-                }
-              }.bind(this)
-          );
-
-      console.log(this.selectedOptions.value);
-      console.log(this.selectedOptions.subname);
-      console.log(this.title);
-      console.log(this.region);
-      console.log(this.tel);
-      console.log(this.addr);
-      console.log(this.mapx);
-      console.log(this.mapy);
-      console.log(this.homepage);
-      console.log(this.firstimage);
-      console.log(this.overview);
+          }.bind(this)
+        );
     },
     onCancel() {
       this.title = "";
