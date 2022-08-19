@@ -26,6 +26,11 @@ export default ({
   font-family: Avenir, Helvetica, Arial, sans-serif;
 }
 
+* {
+  margin: 0;
+  padding: 0;
+}
+
 .content {
   min-height: 100px;
 }

@@ -30,7 +30,6 @@ import joinCompleteView from "@/views/member/JoinCompleteView";
 
 import MainView from "../views/MainView.vue";
 
-
 const routes = [
   {
     path: "/",
@@ -91,7 +90,7 @@ const routes = [
     path: "/memberjoin",
     name: "memberjoin",
     component: MemberJoinView,
-    meta:{member:true}
+    // meta:{member:true}
   },
   {
     path: "/member/login",
@@ -142,9 +141,8 @@ const routes = [
       path: "/section/packages/reservation/complete/:oid",
       name: "package-reservation-complete",
       component: PackageReservationCompleteView
+
    },
-   {
-  },
   // {
   //   path: "/section/place/attraction",
   //   name: "attraction-list",
@@ -195,6 +193,5 @@ router.beforeEach(function (to, from, next){
   }
 
 });
-
 
 export default router;

@@ -18,6 +18,11 @@
             <img :src="require('@/assets/hotel/3.png')" class="hotels"/>
           </a>
         </li>
+        <li>
+          <a href="/">
+            <img :src="require('@/assets/hotel/4.png')" class="hotels last-img"/>
+          </a>
+        </li>
       </ul>
     </div>
   </div>
@@ -50,8 +55,13 @@ ul {
 
 .hotels {
   width: 250px;
-  margin-right: 100px;
+  margin-right: 25px;
   margin-bottom: 100px;
   border-radius: 20px;
 }
+
+.last-img {
+  margin-right: 0;
+}
+
 </style>

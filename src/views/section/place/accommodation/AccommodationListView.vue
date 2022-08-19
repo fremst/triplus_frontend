@@ -40,7 +40,7 @@
           <Column :sortable="true" field="title" header="숙소명" style="min-width: 16rem; text-align: center">
             <template #body="slotProps">
               <span class="product-category">
-                <router-link to="/section/places/accommodation/${slotProps.data.brdNum}">
+                <router-link :to="`/section/place/accommodation/`+slotProps.data.brdNum">
                   {{ slotProps.data.title }}
                 </router-link>
               </span>
@@ -118,18 +118,20 @@ export default {
   },
   mounted() {
     this.getList();
-    this.parseCategory();
+    // this.parseCategory();
   },
   methods: {
     getList() {
       axios
-        .get("localhost:8082/triplus/api/section/places/accommodation", this.data, {
+        .get("localhost:8082/triplus/api/section/places", this.data, {
+        // .get("localhost:8082/triplus/api/section/places/accommodation", this.data, {
           headers: {
             "Access-Control-Allow-Origin": "*"
-          }
+          },
         })
         .then(res => {
-          this.products = res.data.response.body.items.item;
+          console.log(res);
+          this.products = res.data;
         })
         .catch(err => {
           console.log(err.response);
