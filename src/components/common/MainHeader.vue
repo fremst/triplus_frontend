@@ -11,7 +11,6 @@
          <a  href="/member/login">로그인/회원가입</a>
       </div>
 
-
           <Sidebar v-model:visible="visibleRight" position="right">
             <div class="user" v-if="user===null">
               <a  href="/member/login"><h1>로그인/회원가입</h1></a>
@@ -30,11 +29,7 @@
                   <li><h3>&nbsp;내 예약</h3></li>
                 </ol>
               </div>
-
-
-
             </div>
-
 
             <div class="user"  v-if="user!=null">
               <h1>{{user}} 님 환영합니다.</h1>
@@ -61,9 +56,6 @@
             <a href="/service/qna/">Q & A</a><br><br>
             <a href="#" @click.prevent="logout">로그아웃</a>
         </div>
-
-
-
           </Sidebar>
           <Button icon="pi pi-bars" @click="visibleRight = true"/>
         </div>

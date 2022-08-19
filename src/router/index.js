@@ -29,22 +29,22 @@ const routes = [
     component: MainView
   },
   {
-    path:"/service/notice/list",
-    name:"notice",
+    path:"/service/notices",
+    name:"notices",
     component: () => import("@/views/admin/service/NoticeListView.vue")
   },
   {
-    path:"/service/notice/write",
+    path:"/service/notices/write",
     name:"notice-write",
     component: () => import("@/views/admin/service/NoticeWriteView.vue")
   },
   {
-    path:"/service/notice/detail",
+    path:"/service/notices/:brdNum",
     name:"notice-detail",
     component: () => import("@/views/admin/service/NoticeDetailView.vue")
   },
   {
-    path:"/service/notice/update",
+    path:"/service/notices/:brdNum/update",
     name:"notice-update",
     component: () => import("@/views/admin/service/NoticeUpdateView.vue")
   },
