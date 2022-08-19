@@ -71,7 +71,8 @@ const routes = [
   {
     path: "/memberjoin",
     name: "memberjoin",
-    component: MemberJoinView
+    component: MemberJoinView,
+    meta:{member:true}
   },
   {
     path: "/member/login",
@@ -130,5 +131,21 @@ const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes
 });
+
+
+//라우터 전역 가드 test
+router.beforeEach(function (to, from, next){
+  if(to.matched.some(function(info){
+    return info.meta.member;
+
+  })){ // 회원만 가능페이지 라우터 meta 속성의 member(boolean) true 설정 예시) memberjoin
+    alert('회원만 이용가능 로그인해주세요');
+    next('/member/login'); // 리다이렉트
+  }else{
+     next();
+  }
+
+});
+
 
 export default router;
