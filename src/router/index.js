@@ -17,8 +17,10 @@ import FindView from "@/views/member/FindView";
 import showIDView from "@/views/member/ShowIDView";
 import showPwdView from "@/views/member/ShowPwdView";
 import changePwdView from "@/views/member/ChangePwdView";
+import joinCompleteView from "@/views/member/JoinCompleteView";
 
 import MainView from "../views/MainView.vue";
+
 
 const routes = [
   {
@@ -97,6 +99,11 @@ const routes = [
     component: changePwdView
   },
   {
+    path: '/memberjoin/complete',
+    name: 'join-complete',
+    component: joinCompleteView
+  },
+    {
     path: "/section/packages",
     name: "package-list",
     component: PackageListView
