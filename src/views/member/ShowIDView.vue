@@ -25,6 +25,7 @@ export default {
       id:"",
       regDate:"",
       name1:this.$route.params.name1
+
     }
   },
   mounted(){

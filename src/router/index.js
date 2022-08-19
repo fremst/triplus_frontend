@@ -1,5 +1,8 @@
 import { createRouter, createWebHistory } from "vue-router";
 
+import AddPlaceView from "@/views/admin/place/AddPlaceView";
+import ModifyPlaceView from "@/views/admin/place/ModifyPlaceView";
+
 import QnAView from "../views/member/service/QnAView.vue";
 import QnAWriteView from "../views/member/service/QnAWriteView.vue";
 import QnADetailView from "../views/member/service/QnADetailView.vue";
@@ -9,7 +12,12 @@ import PackageDetailView from "@/views/section/package/PackageDetailView";
 import PackageReservationView from "@/views/section/package/PackageReservationView";
 import PackageReservationCompleteView from "@/views/section/package/PackageReservationCompleteView";
 
-import AccommodationView from "@/views/section/place/AccommodationView";
+// import AttractionListView from "@/views/section/place/attraction/AttractionListView";
+// import AttractionDetailView from "@/views/section/place/attraction/AttractionDetailView";
+// import RestaurantListView from "@/views/section/place/restaurant/RestaurantListView";
+// import RestaurantDetailView from "@/views/section/place/restaurant/RestaurantDetailView";
+import AccommodationListView from "@/views/section/place/accommodation/AccommodationListView";
+import AccommodationDetailView from "@/views/section/place/accommodation/AccommodationDetailView";
 
 import MemberJoinView from "@/views/member/MemberJoinView";
 import tosView from "@/views/member/TosView";
@@ -18,8 +26,10 @@ import FindView from "@/views/member/FindView";
 import showIDView from "@/views/member/ShowIDView";
 import showPwdView from "@/views/member/ShowPwdView";
 import changePwdView from "@/views/member/ChangePwdView";
+import joinCompleteView from "@/views/member/JoinCompleteView";
 
 import MainView from "../views/MainView.vue";
+
 
 const routes = [
   {
@@ -28,22 +38,32 @@ const routes = [
     component: MainView
   },
   {
-    path:"/service/notice/list",
-    name:"notice",
+    path: "/admin/place",
+    name: "place-add",
+    component: AddPlaceView
+  },
+  {
+    path: "/admin/place/:brdNum/modify",
+    name: "place-modify",
+    component: ModifyPlaceView
+  },
+  {
+    path:"/service/notices",
+    name:"notices",
     component: () => import("@/views/admin/service/NoticeListView.vue")
   },
   {
-    path:"/service/notice/write",
+    path:"/service/notices/write",
     name:"notice-write",
     component: () => import("@/views/admin/service/NoticeWriteView.vue")
   },
   {
-    path:"/service/notice/detail",
+    path:"/service/notices/:brdNum",
     name:"notice-detail",
     component: () => import("@/views/admin/service/NoticeDetailView.vue")
   },
   {
-    path:"/service/notice/update",
+    path:"/service/notices/:brdNum/update",
     name:"notice-update",
     component: () => import("@/views/admin/service/NoticeUpdateView.vue")
   },
@@ -63,14 +83,15 @@ const routes = [
     component: QnADetailView
   },
   {
-    path: '/member/find',
-    name: 'find',
+    path: "/member/find",
+    name: "find",
     component: FindView
   },
   {
     path: "/memberjoin",
     name: "memberjoin",
-    component: MemberJoinView
+    component: MemberJoinView,
+    meta:{member:true}
   },
   {
     path: "/member/login",
@@ -83,21 +104,26 @@ const routes = [
     component: tosView
   },
   {
-    path: '/member/showid',
-    name: 'showId',
+    path: "/member/showid",
+    name: "showId",
     component: showIDView
   },
   {
-    path: '/member/showpwd',
-    name: 'showPwd',
+    path: "/member/showpwd",
+    name: "showPwd",
     component: showPwdView
   },
   {
-    path: '/member/changepwd',
-    name: 'changePwd',
+    path: "/member/changepwd",
+    name: "changePwd",
     component: changePwdView
   },
   {
+    path: '/memberjoin/complete',
+    name: 'join-complete',
+    component: joinCompleteView
+  },
+    {
     path: "/section/packages",
     name: "package-list",
     component: PackageListView
@@ -106,8 +132,8 @@ const routes = [
     path: "/section/packages/:brdNum",
     name: "package-detail",
     component: PackageDetailView
-   },
-   {
+  },
+  {
     path: "/section/packages/:brdNum/reservation",
     name: "package-reservation",
     component: PackageReservationView
@@ -118,16 +144,57 @@ const routes = [
       component: PackageReservationCompleteView
    },
    {
+  },
+  // {
+  //   path: "/section/place/attraction",
+  //   name: "attraction-list",
+  //   component: AttractionListView
+  // },
+  // {
+  //   path: "/section/place/attraction",
+  //   name: "attraction-detail",
+  //   component: AttractionDetailView
+  // },
+  // {
+  //   path: "/section/place/restaurant",
+  //   name: "restaurant-list",
+  //   component: RestaurantListView
+  // },
+  // {
+  //   path: "/section/place/restaurant",
+  //   name: "restaurant-detail",
+  //   component: RestaurantDetailView
+  // },
+  {
     path: "/section/place/accommodation",
-    name: "accommodation",
-    component: AccommodationView
-   }
-
+    name: "accommodation-list",
+    component: AccommodationListView
+  },
+  {
+    path: "/section/place/accommodation/:brdNum",
+    name: "accommodation-detail",
+    component: AccommodationDetailView
+  }
 ];
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes
 });
+
+//라우터 전역 가드 test
+router.beforeEach(function (to, from, next){
+  if(to.matched.some(function(info){
+    return info.meta.member;
+
+  })){ // 회원만 가능페이지 라우터 meta 속성의 member(boolean) true 설정 예시) memberjoin
+    alert('회원만 이용가능 로그인해주세요');
+    next('/member/login'); // 리다이렉트
+  }else{
+     next();
+  }
+
+});
+
 
 export default router;
