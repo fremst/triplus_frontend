@@ -4,7 +4,9 @@ export default createStore({
   state: {
     //새로고침하면 없어짐
     loginUser:{id:null,pwd:"",auth:"",name:"",tel:"",gender:"",addr:"",email:"",bdate:"",regdate:"",active:""},
-    userId:localStorage.getItem("id")
+    userId:localStorage.getItem("id"),
+    auth:localStorage.getItem("auth"),
+    token:localStorage.getItem("token"),
 
   },
   getters: {},
@@ -13,10 +15,14 @@ export default createStore({
       state.loginUser=payload;
     },
     keepId:function (state,payload){
-      if(payload===1){
+      if(payload===1){ //로그인
         state.userId = localStorage.getItem("id");
-      }else{
+        state.auth = localStorage.getItem("auth");
+        state.token = localStorage.getItem("token");
+      }else{ //로그아웃
         state.userId =null;
+        state.token =null;
+        state.auth=null;
       }
 
     }
