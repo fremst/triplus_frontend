@@ -68,7 +68,9 @@ export default {
 
     axios.post('http://localhost:8082/triplus/member/identify', joinparam, {
         headers: {
-          'Access-Control-Allow-Origin': '*'
+          'Access-Control-Allow-Origin': '*',
+          'token':this.$store.state.token  // 로그인이 필요한 경우 header에 token을 담는다
+
         }
       }).then(function (resp) {
           
@@ -95,7 +97,7 @@ export default {
     },
 
   showId(){
-     
+
     if(parseInt(this.rnd)==parseInt(this.cert)){
       this.$router.push({name:'showId',params:{'name1':this.name}})
       this.errMsg="";
