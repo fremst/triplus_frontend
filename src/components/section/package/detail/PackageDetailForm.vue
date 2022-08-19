@@ -61,7 +61,7 @@
       </table>
     </div>
     <Button label="예약하기"
-     @click="$router.push(`/section/packages/${this.brdNum}/reservation`)"/>
+     @click="this.$router.push({name: 'package-reservation', params: {childCnt: this.childCnt, adultCnt: this.adultCnt}})"/>
   </div>
 </template>
 
@@ -106,8 +106,7 @@ export default {
         return this.packageDetails.adultPrice;
       }
     }
-  }
-
+  },
 }
 </script>
 

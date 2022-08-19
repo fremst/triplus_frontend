@@ -12,13 +12,16 @@ import PackageList from "@/components/section/package/list/PackageList";
 import axios from "axios";
 
 export default {
+
   data(){
     return{
       packages: null,
     }
   },
+
   mounted() {
     axios.get("http://localhost:8082/triplus/api/section/packages", {
+
       headers: {
 
         'Access-Control-Allow-Origin': '*'
@@ -33,9 +36,11 @@ export default {
       console.log(err)});
 
   },
+
   components:{
     PackageList
   }
+
 }
 
 </script>

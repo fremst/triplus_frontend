@@ -9,7 +9,7 @@
       <td colspan="3">{{packageDetails.region}}</td>
     </tr>
     <tr>
-      <td>교&emsp;&emsp;통</td>
+      <td>교&emsp;&emsp;&nbsp;통</td>
       <td colspan="3">{{packageDetails.trans}}</td>
     </tr>
     <tr>
@@ -17,7 +17,7 @@
       <td colspan="3">남은 인원: {{packageDetails.vacancy}}인 (최소 출발 10인)</td>
     </tr>
     <tr>
-      <td>구&emsp;분</td>
+      <td>구&emsp;&emsp;&nbsp;분</td>
       <td>성&emsp;인</td>
       <td>아&emsp;동<br><span style="font-size: 0.8rem">(만 2세 ~ 만 12세)</span></td>
       <td>&emsp;유&emsp;아&emsp;</td>
