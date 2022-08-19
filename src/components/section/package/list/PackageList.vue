@@ -23,9 +23,9 @@
               <i class="pi pi-map-marker"></i><span class="product-category">{{slotProps.data.region}}</span>
             </div>
             <div class="product-list-action">
-              <Button icon="pi pi-search" label="상세보기" :disabled="slotProps.data.recStatus === 'completed'"
+              <Button icon="pi pi-search" label="상세보기" :disabled="rcrtStaEng(slotProps.data.rcrtSta) === 'completed'"
                       @click="$router.push(`/section/packages/${slotProps.data.brdNum}`)"></Button>
-              <span :class="'product-badge status-'+recStatusEng(slotProps.data.recStatus)">{{slotProps.data.recStatus}}</span>
+              <span :class="'product-badge status-'+rcrtStaEng(slotProps.data.rcrtSta)">{{slotProps.data.rcrtSta}}</span>
             </div>
           </div>
         </div>
@@ -39,13 +39,13 @@
                 <i class="pi pi-map-marker"></i>
                 <span class="product-category">{{slotProps.data.region}}</span>
               </div>
-              <span :class="'product-badge status-'+recStatusEng(slotProps.data.recStatus)">{{slotProps.data.recStatus}}</span>
+              <span :class="'product-badge status-'+rcrtStaEng(slotProps.data.rcrtSta)">{{slotProps.data.rcrtSta}}</span>
             </div>
             <div class="product-grid-item-content">
               <img :src="require(`@/assets/section/package/images/${slotProps.data.tImg}`)" :alt="slotProps.data.title"/>
               <div class="product-name">{{slotProps.data.title}}</div><br>
               <div class="product-description">성인 {{formatCurrency(slotProps.data.adultPrice)}} / 아동 {{formatCurrency(slotProps.data.adultPrice)}}</div>
-              <Button icon="pi pi-search" label="상세보기" :disabled="slotProps.data.recStatus === 'completed'"
+              <Button icon="pi pi-search" label="상세보기" :disabled="rcrtStaEng(slotProps.data.rcrtSta) === 'completed'"
               @click="$router.push(`/section/packages/${slotProps.data.brdNum}`)"></Button>
             </div>
             <div class="product-grid-item-bottom">
@@ -93,12 +93,12 @@ export default {
         this.sortKey = sortValue;
       }
     },
-    recStatusEng(recStatus){
-      if(recStatus==='모집중'){
+    rcrtStaEng(rcrtSta){
+      if(rcrtSta==='모집중'){
         return 'proceeding';
-      }else if(recStatus==='마감임박'){
+      }else if(rcrtSta==='마감임박'){
         return 'ending';
-      }else if(recStatus==='모집완료'){
+      }else if(rcrtSta==='모집완료'){
         return 'completed';
       }
     },
@@ -120,6 +120,11 @@ export default {
   box-shadow: 0 2px 1px -1px rgba(0,0,0,.2), 0 1px 1px 0 rgba(0,0,0,.14), 0 1px 3px 0 rgba(0,0,0,.12);
   border-radius: 4px;
   margin-bottom: 2rem;
+  min-height: 500px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 .p-dropdown {
   width: 14.2rem;
@@ -182,6 +187,7 @@ export default {
 
   img {
     width: 200px;
+    height: 120px;
     box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
     margin-right: 2rem;
   }
@@ -224,6 +230,7 @@ export default {
 
   img {
     width: 290px;
+    height: 174px;
     box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
     margin: 2rem 0;
   }
