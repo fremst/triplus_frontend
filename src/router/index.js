@@ -10,6 +10,7 @@ import QnADetailView from "../views/member/service/QnADetailView.vue";
 import PackageListView from "@/views/section/package/PackageListView";
 import PackageDetailView from "@/views/section/package/PackageDetailView";
 import PackageReservationView from "@/views/section/package/PackageReservationView";
+import PackageReservationCompleteView from "@/views/section/package/PackageReservationCompleteView";
 
 // import AttractionListView from "@/views/section/place/attraction/AttractionListView";
 // import AttractionDetailView from "@/views/section/place/attraction/AttractionDetailView";
@@ -136,6 +137,13 @@ const routes = [
     path: "/section/packages/:brdNum/reservation",
     name: "package-reservation",
     component: PackageReservationView
+   },
+   {
+      path: "/section/packages/reservation/complete/:oid",
+      name: "package-reservation-complete",
+      component: PackageReservationCompleteView
+   },
+   {
   },
   // {
   //   path: "/section/place/attraction",
