@@ -18,7 +18,8 @@
         <div class="article-footer"></div>
       </div>
       <div class="board-footer">
-        <Button @click="onUpdate">수정</Button>
+        <Button @click="$router.push(`/service/notices/${this.$route.params.brdNum}/update`)">수정</Button>
+         <!--<Button @click="onUpdate">수정</Button>-->
         <Button class="p-button-danger" @click="onDelete">삭제</Button>
         <Button @click="onList">목록으로</Button>
       </div>
@@ -45,6 +46,7 @@
           writerId:"",
           wdate:"",
           contents:""
+          // a:this.$route.params.brdNum
         }
       }
     },
@@ -52,9 +54,9 @@
       this.getArticle();
     },
     methods:{
-      onUpdate(){
-        this.$router.push({name:'notice-update'});
-      },
+      // onUpdate(){
+      //   this.$router.push({name:'notice-update', params:{'brdNum':this.a }});
+      // },
       onList(){
         this.$router.push({name:'notices'});
       },

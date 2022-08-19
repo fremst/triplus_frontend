@@ -1,7 +1,7 @@
 <template>
     <div class="home">
         <NoticeWrite
-                :title="title"
+                :pagetitle="pageTitle"
                 :submitLink="submitLink"
                 :cancelLink="cancelLink"
                 :detailLink="detailLink"
@@ -17,7 +17,7 @@
         },
         data(){
             return{
-                title: "공지 수정",
+                pageTitle: "공지 수정",
                 submitLink: "http://localhost:8082/triplus/api/service/notices/update",
                 cancelLink: "/service/notices",
                 detailLink: "/service/notices/detail",

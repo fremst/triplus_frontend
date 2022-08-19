@@ -69,7 +69,6 @@
             },
             onPageChange(n){
                 this.curPage = n;
-                console.log(`${this.detailLink}?page=${this.curPage}`)
             },
             getList(){
                 this.list= axios.get('http://localhost:8082/triplus/api/service/notices',{

@@ -42,7 +42,7 @@ const routes = [
     component: () => import("@/views/admin/service/NoticeDetailView.vue")
   },
   {
-    path:"/service/notices/update",
+    path:"/service/notices/:brdNum/update",
     name:"notice-update",
     component: () => import("@/views/admin/service/NoticeUpdateView.vue")
   },
