@@ -15,12 +15,29 @@
           <Sidebar v-model:visible="visibleRight" position="right">
             <div class="user" v-if="user===null">
               <a  href="/member/login"><h1>로그인/회원가입</h1></a>
+
+              <div class="mypage">
+
+                <ol class="ol-first">
+                  <li><h1>-</h1></li>
+                  <li><h1>-</h1></li>
+                  <li><h1>-</h1></li>
+                </ol>
+
+                <ol class="ol-second">
+                  <li><h3>내 일정</h3></li>
+                  <li><h3>&nbsp;내 글</h3></li>
+                  <li><h3>&nbsp;내 예약</h3></li>
+                </ol>
+              </div>
+
+
+
             </div>
 
 
             <div class="user"  v-if="user!=null">
               <h1>{{user}} 님 환영합니다.</h1>
-            </div>
 
             <div class="mypage">
 
@@ -35,6 +52,7 @@
                 <li><h3>&nbsp;내 글</h3></li>
                 <li><h3>&nbsp;내 예약</h3></li>
               </ol>
+            </div>
             </div>
 
         <div class="content">
@@ -87,6 +105,8 @@ export default {
   methods:{
     logout(){
       localStorage.removeItem("id");
+      localStorage.removeItem("token");
+      localStorage.removeItem("auth");
       this.$store.commit('keepId',2);
     }
   }

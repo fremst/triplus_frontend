@@ -51,8 +51,8 @@ export default {
       bdate:"",
       regdate:"",
       active:"",
+      token:'',
       keep:false,
-
       errMsg:"",
     }
   },
@@ -66,10 +66,10 @@ export default {
 
     login(){
       const joinparam = new URLSearchParams();
-      joinparam.append('id',this.id);
+      //joinparam.append('id',this.id);
       joinparam.append('pwd',this.pwd);
 
-      axios.post('http://localhost:8082/triplus/api/member/login',joinparam,{
+      axios.post(`http://localhost:8082/triplus/api/member/login/${this.id}`,joinparam,{
         headers:{
           'Access-Control-Allow-Origin': '*'
         }
@@ -84,11 +84,14 @@ export default {
           this.bdate = resp.data.dto.bdate;
           this.regdate = resp.data.dto.regdate;
           this.active = resp.data.dto.active;
+          this.token = resp.data.token;
 
           this.$store.dispatch('loginInfo',{id:this.id,pwd:this.pwd,auth:this.auth,name:this.name,
             tel:this.tel,gender:this.gender,addr:this.addr,email:this.email,
             bdate:this.bdate,regdate:this.regdate,active:this.active});
-          localStorage.setItem('id',this.id); //아이디 localstorage
+          localStorage.setItem('id',this.id);
+          localStorage.setItem('auth',this.auth); //아이디,권한 localstorage
+          localStorage.setItem('token',this.token); //토큰
           this.$store.commit('keepId',1);
 
           this.$router.push({name:'main'})
