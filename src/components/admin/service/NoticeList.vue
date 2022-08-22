@@ -5,19 +5,24 @@
                 <h1>{{title}}</h1>
             </div>
             <div class="board-main">
-                <div class="board-search">
-
+                <div class="table-header" id="searchGroup">
+                    <span class="p-input-icon-left" >
+                            <i class="pi pi-search" id="icon" />
+                            <InputText v-model="filters['global'].value" placeholder="검색어를 입력하세요" id="keyword"  />
+                    </span>
                 </div>
                 <DataTable class="board-table" :paginator="true"
-                           paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LasgPageLink RowsPerPageDropdown"
-                           :value="list" responsiveLayout="scroll" :rows="10">
+                           paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown"
+                           :value="list" responsiveLayout="scroll" :rows="10"
+                           :filters="filters">
                     <Column field="brdNum" header="글번호" style="width: 100px;" ></Column>
                     <Column field="title" header="제목" alignHeader="center" >
                         <template #body="slotProps">
                             <a href="#" @click.prevent="onDetail(slotProps.data.brdNum)" v-text="slotProps.data.title"></a>
                         </template>
                     </Column>
-                    <Column field="writerId" header="작성자" style="width: 100px;"></Column>
+                    <!-- 작성자가 admin으로 다 동일하기 때문에 주석처리...
+                    <Column field="writerId" header="작성자" style="width: 100px;"></Column>-->
                     <Column field="wdate" header="작성일" style="width: 100px;"></Column>
                     <Column field="hit" header="조회수" style="width: 100px;"></Column>
                 </DataTable>
@@ -34,6 +39,7 @@
     import axios from 'axios'
     import DataTable from 'primevue/datatable';
     import Column from 'primevue/column';
+    import { FilterMatchMode } from 'primevue/api';
 
     export default {
         name: "NoticeList",
@@ -51,11 +57,13 @@
             return{
                 searchOpt:["제목","내용","제목/내용"],
                 list:[],
-                pageIndex : 1
+                pageIndex : 1,
+                filters:{}
             }
         },
         created(){
             this.list=this.getList();
+            this.initFilters();
         },
         mounted() {
 
@@ -84,11 +92,6 @@
                     }
                 }.bind(this));
             },
-            // getDetailLink(brdNum){
-            //     return `${this.detailLink}?num=${brdNum}`;
-            //     // this.$router.push({name:"notice-detail",params:{}})
-            //
-            // },
             onDetail(brdNum){
                 console.log(brdNum);
                 this.$router.push({name:"notice-detail",params:{brdNum:brdNum}})
@@ -96,6 +99,11 @@
             getDate(ms) {
                 let date = new Date(ms);
                 return `${date.getUTCMonth() + 1}월 ${date.getUTCDate() + 1}일`;
+            },
+            initFilters() {
+                this.filters = {
+                    'global': {value: null, matchMode: FilterMatchMode.CONTAINS},
+                }
             }
         }
     }
@@ -180,5 +188,16 @@
     }
     .board-footer * {
         margin: 0px 4px;
+    }
+    #searchGroup{
+        margin-bottom: 10px;
+    }
+    #keyword{
+        height: 50px;
+        width: 300px;
+        margin-left: 735px;
+    }
+    #icon{
+        margin-left: 735px;
     }
 </style>

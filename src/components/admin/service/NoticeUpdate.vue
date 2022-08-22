@@ -83,7 +83,7 @@
                         alert("공지사항 수정 성공");
                         this.$router.push({name:"notices"});
                     } else {
-                        alert(resp.data.result);
+                        alert("공지사항 수정 실패");
                         this.$router.push({name:"notices"});
                     }
                 }.bind(this));
