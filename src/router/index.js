@@ -28,6 +28,8 @@ import showPwdView from "@/views/member/ShowPwdView";
 import changePwdView from "@/views/member/ChangePwdView";
 import joinCompleteView from "@/views/member/JoinCompleteView";
 
+import checkListView from "@/views/member/plan/CheckListView";
+
 import MainView from "../views/MainView.vue";
 
 const routes = [
@@ -122,6 +124,13 @@ const routes = [
     name: 'join-complete',
     component: joinCompleteView
   },
+
+  {
+    path: '/member/plan/checklist',
+    name: 'member-checklist',
+    component: checkListView
+  },
+
     {
     path: "/section/packages",
     name: "package-list",
