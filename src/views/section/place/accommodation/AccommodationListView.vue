@@ -2,6 +2,7 @@
   <div class="wrap">
     <div class="inner">
       <h2 class="addlist-title">숙소 리스트</h2>
+      <!-- 숙소 리스트 -->
       <div class="card">
         <DataTable
           ref="dt"
@@ -12,7 +13,7 @@
           :rowsPerPageOptions="[5, 10, 25]"
           :value="products"
           currentPageReportTemplate="Showing {first} to {last} of {totalRecords} products"
-          dataKey="contentid"
+          dataKey="brdNum"
           paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
           responsiveLayout="scroll"
           style="text-align: center"
@@ -26,22 +27,22 @@
               <h5 class="mb-2 md:m-0 p-as-md-center">&nbsp;</h5>
             </div>
           </template>
-
+          <Column selectionMode="multiple" style="width: 3rem" :exportable="false"></Column>
           <Column header="숙소이미지" style="min-width: 8rem">
             <template #body="slotProps">
               <img :alt="slotProps.data.title" :src="slotProps.data.firstimage" class="product-image" />
             </template>
           </Column>
-          <Column :sortable="true" field="scatName" header="카테고리" style="min-width: 8rem; text-align: center">
+          <Column :sortable="true" field="scatNum" header="카테고리" style="min-width: 8rem; text-align: center">
             <template #body="slotProps">
-              <span class="product-category">{{ slotProps.data.scatName }}</span>
+              <span class="product-category">{{ slotProps.data.scatNum }}</span>
             </template>
           </Column>
           <Column :sortable="true" field="title" header="숙소명" style="min-width: 16rem; text-align: center">
             <template #body="slotProps">
               <span class="product-category">
                 <router-link :to="`/section/place/accommodation/`+slotProps.data.brdNum">
-                  {{ slotProps.data.title }}
+                  {{ slotProps.data.brdNum }}
                 </router-link>
               </span>
             </template>
@@ -51,39 +52,8 @@
               <span class="product-category">{{ slotProps.data.addr }}</span>
             </template>
           </Column>
-          <Column field="rating" header="Reviews" :sortable="true" style="min-width: 12rem">
-            <template #body="slotProps">
-              <Rating :modelValue="slotProps.data.rating" :readonly="true" :cancel="false" />
-            </template>
-          </Column>
-          <Column :exportable="false" style="min-width: 12rem">
-            <template #body="slotProps">
-              <Button
-                class="p-button-rounded p-button-success mr-2"
-                icon="pi pi-pencil"
-                @click="$router.push(`/section/places/accommodation/${slotProps.data.brdNum}`)"
-              />
-              <Button
-                class="p-button-rounded p-button-warning"
-                icon="pi pi-trash"
-                @click="confirmDeleteProduct(slotProps.data)"
-              />
-            </template>
-          </Column>
         </DataTable>
       </div>
-      <Dialog v-model:visible="deleteProductDialog" :modal="true" :style="{ width: '450px' }" header="Confirm">
-        <div class="confirmation-content">
-          <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem" />
-          <span v-if="product"
-            ><b>{{ product.title }}</b> 을/를 삭제하시겠습니까?</span
-          >
-        </div>
-        <template #footer>
-          <Button class="p-button-text" icon="pi pi-times" label="No" @click="deleteProductDialog = false" />
-          <Button class="p-button-text" icon="pi pi-check" label="Yes" @click="deleteProduct" />
-        </template>
-      </Dialog>
     </div>
   </div>
 </template>
@@ -102,14 +72,7 @@ export default {
       product: {},
       selectedProducts: null,
       filters: {},
-      submitted: false,
-      statuses: [
-        { label: "호텔", value: "호텔" },
-        { label: "펜션/민박", value: "펜션/민박" },
-        { label: "모텔", value: "모텔" },
-        { label: "게스트하우스", value: "게스트하우스" },
-        { label: "기타", value: "기타" }
-      ]
+      submitted: false
     };
   },
   productService: null,
@@ -123,8 +86,7 @@ export default {
   methods: {
     getList() {
       axios
-        .get("localhost:8082/triplus/api/section/places", this.data, {
-        // .get("localhost:8082/triplus/api/section/places/accommodation", this.data, {
+        .get("http://localhost:8082/triplus/api/section/places/accommodation/", this.data, {
           headers: {
             "Access-Control-Allow-Origin": "*"
           },
@@ -136,53 +98,6 @@ export default {
         .catch(err => {
           console.log(err.response);
         });
-    },
-    openNew() {
-      this.product = {};
-      this.submitted = false;
-      this.productDialog = true;
-    },
-    hideDialog() {
-      this.productDialog = false;
-      this.submitted = false;
-    },
-    editProduct(product) {
-      this.product = { ...product };
-      this.productDialog = true;
-    },
-    confirmDeleteProduct(product) {
-      this.product = product;
-      this.deleteProductDialog = true;
-    },
-    confirmSaveSelected(product) {
-      this.product = product;
-      this.submitted = true;
-    },
-    deleteProduct() {
-      this.products = this.products.filter(val => val.title !== this.product.title);
-      this.deleteProductDialog = false;
-      this.product = {};
-      this.$toast.add({ severity: "success", summary: "Successful", detail: "Product Deleted", life: 3000 });
-    },
-    findIndexById(title) {
-      let index = -1;
-      for (let i = 0; i < this.products.length; i++) {
-        if (this.products[i].title === title) {
-          index = i;
-          break;
-        }
-      }
-
-      return index;
-    },
-    confirmDeleteSelected() {
-      this.deleteProductsDialog = true;
-    },
-    deleteSelectedProducts() {
-      this.products = this.products.filter(val => !this.selectedProducts.includes(val));
-      this.deleteProductsDialog = false;
-      this.selectedProducts = null;
-      this.$toast.add({ severity: "success", summary: "Successful", detail: "Products Deleted", life: 3000 });
     },
     initFilters() {
       this.filters = {
