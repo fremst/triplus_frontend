@@ -46,7 +46,6 @@
           writerId:"",
           wdate:"",
           contents:""
-          // a:this.$route.params.brdNum
         }
       }
     },

@@ -2,8 +2,7 @@
     <div class="main">
         <div class="board">
             <div class="board-header">
-                <h1>{{pageTitle}}</h1>
-                {{$route.params.brdNum}}
+                <h1>공지 수정</h1>
             </div>
             <div class="board-main">
                 <div class="board-input">
@@ -22,7 +21,7 @@
             </div>
             <div class="board-footer">
                 <Button @click="onCancel">취소</Button>
-                <Button @click="onSubmit">등록</Button>
+                <Button @click="onUpdate">등록</Button>
             </div>
         </div>
     </div>
@@ -53,6 +52,8 @@
                 ],
                 title: "",
                 contents: "",
+                noticeNum:0,
+                brdNum:0
             }
         },
         mounted() {
@@ -61,41 +62,34 @@
                         'Access-Control-Allow-Origin': '*'
                     },
                 }).then(function(resp) {
-                    // console.log(this.$route.params.brdNum);
                     console.log(resp.data);
                     this.data = resp.data;
                 }.bind(this));
         },
         methods: {
+            onUpdate() {
+                console.log('title:' + this.data.title , 'category:' + this.data.category.code, 'contents:' + this.data.contents);
 
-            onSubmit() {
-                const writeParam = new URLSearchParams();
-                writeParam.append('writerId', "admin");
-                writeParam.append('noticeNum', 0);
-                writeParam.append('title', this.aTitle);
-                writeParam.append('category', this.category.code);
-                writeParam.append('contents', this.contents);
-
-                axios.post('http://localhost:8082/triplus/api/service/notice/update', writeParam, {
+                // 파라미터 JSON 배열로 넘기기
+                const updateParam = {"title":this.data.title,"category":this.data.category.code,"contents":this.data.contents};
+                axios.put(`http://localhost:8082/triplus/api/service/notices/${this.$route.params.brdNum}`, updateParam, {
                     headers:{
-                        'Access-Control-Allow-Origin' : '*'
+                        'Access-Control-Allow-Origin' : '*',
+                        // JSON 방식으로 변환된 파라미터를 읽을 수 있도록 Header에 'Content-Type': 'application/json' 추가.
+                        'Content-Type': 'application/json'
                     }
                 }).then(function (resp) {
-                    if (resp.data.result == true) {
-                        alert("공지사항 작성 성공");
-                        this.$router.push(this.getDetailLink(resp.data.brdNum));
+                    if (resp.data.result == "true") {
+                        alert("공지사항 수정 성공");
+                        this.$router.push({name:"notices"});
                     } else {
-                        alert(resp.data.reason);
-                        this.$router.push({name:"notice"});
+                        alert(resp.data.result);
+                        this.$router.push({name:"notices"});
                     }
-
                 }.bind(this));
             },
             onCancel() {
-                this.$router.push({name:"notice"});
-            },
-            getDetailLink(brdNum) {
-                return `${this.detailLink}?num=${brdNum}`;
+                this.$router.push({name:"notices"});
             }
         }
     }
