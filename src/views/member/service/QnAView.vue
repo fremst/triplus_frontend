@@ -6,7 +6,6 @@
       :detailLink="detailLink"
       :writeLink="writeLink"/>
   </div>
-  <Button @click="getList">aaa</Button>
 </template>
 
 <script>
@@ -25,7 +24,7 @@ export default {
       listLink: "http://localhost:8082/triplus/api/service/qna/list",
       detailLink: "/service/qna/detail",
       writeLink: "/service/qna/write",
-      title: "이곳에 타이틀 입력",
+      title: "Q&A 게시판",
       pageCur: 6,
       pageEnd: 70
     };

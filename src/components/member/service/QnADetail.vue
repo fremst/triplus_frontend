@@ -4,7 +4,7 @@
       <div class="board-header">
         <h1>{{title}}</h1>
       </div>
-      <div class="board-main">
+      <div class="board-main" v-show="article.published">
         <table class="article-header">
           <tr>
             <th style="text-align: start; padding-left: 20px;">{{article.title}}</th>
@@ -17,7 +17,16 @@
         </div>
         <div class="article-footer"></div>
       </div>
-      <div class="board-footer">
+      <div class="board-main" v-if="!article.published">
+        <div class="article-main" style="height: 300px; flex-direction: column; justify-content: center; align-items: center;">
+          <h3>해당 글은 잠겨있습니다.</h3>
+          <br>
+          <Password id="pwd" v-model="pwd" :feedback="false"/>
+          <br>
+          <Button @click="inputPassword">보기</Button>
+        </div>
+      </div>
+      <div class="board-footer" v-show="article.published">
           <!-- TODO 버튼 구현 -->
         <Dialog header="비밀번호 입력" v-model:visible="displayUpdate">
           <Password id="pwd" v-model="pwd" :feedback="false"/>
@@ -29,6 +38,9 @@
           <Button class="p-button-danger" @click="onDelete">삭제</Button>
         </Dialog>
         <Button class="p-button-danger" @click="viewDelete">삭제</Button>
+        <Button @click="onList">목록으로</Button>
+      </div>
+      <div class="board-footer" v-if="!article.published">
         <Button @click="onList">목록으로</Button>
       </div>
     </div>
@@ -58,7 +70,8 @@
           title: "",
           writerId: "",
           wdate: "",
-          contents: ""
+          contents: "",
+          published: true
         },
         displayUpdate: false,
         displayDelete: false,
@@ -67,7 +80,27 @@
     },
     methods: {
       onUpdate() {
-        this.displayUpdate = !this.displayUpdate;
+        this.article = axios.get(this.detailLink + "/password", {
+          headers: {
+            'Access-Control-Allow-Origin': '*'
+          },
+          params: {
+            num: this.$route.query.num,
+            pwd: this.pwd
+          }
+        }).then(function(resp) {
+          console.log(resp);
+          if (resp.data.result == false)
+          {
+            alert("비밀번호가 틀렸습니다.");
+          }
+          else
+          {
+            localStorage.setItem("qnaNum", this.$route.query.num);
+            localStorage.setItem("qnaPwd", this.pwd);
+            this.$router.push(this.updateLink);
+          }
+        }.bind(this));
       },
       viewUpdate() {
         this.displayUpdate = !this.displayUpdate;
@@ -112,6 +145,29 @@
         }).then(function(resp) {
           console.log(resp);
           this.article = resp.data;
+        }.bind(this));
+      },
+      inputPassword() {
+        this.article = axios.get(this.detailLink + "/password", {
+          headers: {
+            'Access-Control-Allow-Origin': '*'
+          },
+          params: {
+            num: this.$route.query.num,
+            pwd: this.pwd
+          }
+        }).then(function(resp) {
+          console.log(resp);
+          if (resp.data.result == false)
+          {
+            alert("비밀번호가 틀렸습니다.");
+          }
+          else
+          {
+            this.article = resp.data.article;
+            this.article.published = true;
+            this.pwd = "";
+          }
         }.bind(this));
       }
     },

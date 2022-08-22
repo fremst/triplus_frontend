@@ -20,7 +20,7 @@ export default {
   },
   data() {
     return {
-      title: "이곳에 타이틀 입력",
+      title: "Q&A 게시판",
       article: {
         number: 1,
         title: "aaaabbbbcccc",
