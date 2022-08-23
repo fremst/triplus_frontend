@@ -19,6 +19,8 @@ import PackageReservationCompleteView from "@/views/section/package/PackageReser
 import AccommodationListView from "@/views/section/place/accommodation/AccommodationListView";
 import AccommodationDetailView from "@/views/section/place/accommodation/AccommodationDetailView";
 
+import AddScheduleView from "@/views/section/plan/AddScheduleView";
+
 import MemberJoinView from "@/views/member/MemberJoinView";
 import tosView from "@/views/member/TosView";
 import LoginView from "@/views/member/LoginView";
@@ -47,23 +49,23 @@ const routes = [
     component: ModifyPlaceView
   },
   {
-    path:"/service/notices",
-    name:"notices",
+    path: "/service/notices",
+    name: "notices",
     component: () => import("@/views/admin/service/NoticeListView.vue")
   },
   {
-    path:"/service/notices/write",
-    name:"notice-write",
+    path: "/service/notices/write",
+    name: "notice-write",
     component: () => import("@/views/admin/service/NoticeWriteView.vue")
   },
   {
-    path:"/service/notices/:brdNum",
-    name:"notice-detail",
+    path: "/service/notices/:brdNum",
+    name: "notice-detail",
     component: () => import("@/views/admin/service/NoticeDetailView.vue")
   },
   {
-    path:"/service/notices/:brdNum/update",
-    name:"notice-update",
+    path: "/service/notices/:brdNum/update",
+    name: "notice-update",
     component: () => import("@/views/admin/service/NoticeUpdateView.vue")
   },
   {
@@ -89,7 +91,7 @@ const routes = [
   {
     path: "/memberjoin",
     name: "memberjoin",
-    component: MemberJoinView,
+    component: MemberJoinView
     // meta:{member:true}
   },
   {
@@ -118,11 +120,11 @@ const routes = [
     component: changePwdView
   },
   {
-    path: '/memberjoin/complete',
-    name: 'join-complete',
+    path: "/memberjoin/complete",
+    name: "join-complete",
     component: joinCompleteView
   },
-    {
+  {
     path: "/section/packages",
     name: "package-list",
     component: PackageListView
@@ -136,13 +138,12 @@ const routes = [
     path: "/section/packages/:brdNum/reservation",
     name: "package-reservation",
     component: PackageReservationView
-   },
-   {
-      path: "/section/packages/reservation/complete/:oid",
-      name: "package-reservation-complete",
-      component: PackageReservationCompleteView
-
-   },
+  },
+  {
+    path: "/section/packages/reservation/complete/:oid",
+    name: "package-reservation-complete",
+    component: PackageReservationCompleteView
+  },
   // {
   //   path: "/section/place/attraction",
   //   name: "attraction-list",
@@ -172,6 +173,11 @@ const routes = [
     path: "/section/place/accommodation/:brdNum",
     name: "accommodation-detail",
     component: AccommodationDetailView
+  },
+  {
+    path: "/section/calendar",
+    name: "add-schedule",
+    component: AddScheduleView
   }
 ];
 
@@ -181,17 +187,18 @@ const router = createRouter({
 });
 
 //라우터 전역 가드 test
-router.beforeEach(function (to, from, next){
-  if(to.matched.some(function(info){
-    return info.meta.member;
-
-  })){ // 회원만 가능페이지 라우터 meta 속성의 member(boolean) true 설정 예시) memberjoin
-    alert('회원만 이용가능 로그인해주세요');
-    next('/member/login'); // 리다이렉트
-  }else{
-     next();
+router.beforeEach(function (to, from, next) {
+  if (
+    to.matched.some(function (info) {
+      return info.meta.member;
+    })
+  ) {
+    // 회원만 가능페이지 라우터 meta 속성의 member(boolean) true 설정 예시) memberjoin
+    alert("회원만 이용가능 로그인해주세요");
+    next("/member/login"); // 리다이렉트
+  } else {
+    next();
   }
-
 });
 
 export default router;
