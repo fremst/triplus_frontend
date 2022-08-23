@@ -214,7 +214,7 @@ export default {
       addPlaceParam.append("overview", this.overview);
 
       axios
-        .post("http://localhost:8082/triplus/api/section/places/", addPlaceParam, {
+        .post(`http://localhost:8082/triplus/api/section/places/${this.mcatNameToEng(addPlaceParam.get("mcatName"))}/`, addPlaceParam, {
           headers: {
             "Access-Control-Allow-Origin": "*"
           }
@@ -244,6 +244,16 @@ export default {
     },
     checkCategory() {
       return this.category != "";
+    },
+    mcatNameToEng(mcatName){
+      console.log(mcatName);
+      if(mcatName == "명소"){
+        return "attration";
+      }else if(mcatName == "맛집") {
+          return "restaurant";
+      }else {
+        return "accommodation";
+      }
     }
   }
 };
