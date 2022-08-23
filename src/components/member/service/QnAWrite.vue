@@ -8,34 +8,41 @@
         <h1>{{title}}</h1>
       </div>
       <div class="board-main">
-        <div class="">
+        <div class="board-input">
           <label for="aTitle"><h2>제목</h2></label>
           <InputText id="aTitle" type="username" v-model="aTitle" area-describedby="aTitle-help" :class="[{ 'p-invalid': !checkTitle() }]"/>
-          <small v-if="!checkTitle()" id="aTitle-help" class="p-error">내용을 입력하세요.</small>
+          <small v-if="!checkTitle()" id="aTitle-help" class="p-error">4~30자 사이의 제목을 입력하세요.</small>
         </div>
-        <div class="">
+        <div class="board-input">
           <label for="email"><h2>임시 이메일</h2></label>
           <InputText id="email" type="email" v-model="tempEmail" area-describedby="email-help" :class="[{ 'p-invalid': !checkEmail() }]"/>
-          <small v-if="!checkEmail()" id="email-help" class="p-error">내용을 입력하세요.</small>
+          <small v-if="!checkEmail()" id="email-help" class="p-error">임시로 사용할 이메일 주소를 입력하세요.</small>
         </div>
-        <div class="">
+        <div class="board-input">
           <label for="pwd"><h2>임시 비밀번호</h2></label>
           <Password id="pwd" v-model="tempPwd" area-describedby="pwd-help" :class="[{ 'p-invalid': !checkPwd() }]"/>
-          <small id="pwd-help" v-if="!checkPwd()" class="p-error">내용을 입력하세요.</small>
+          <small id="pwd-help" v-if="!checkPwd()" class="p-error">4~20자 사이의 비밀번호를 입력하세요.</small>
         </div>
-        <div class="">
+        <div class="board-input">
           <label for="category"><h2>문의 유형</h2></label>
-          <Dropdown id="category" v-model="category" area-describedby="category-help" :class="[{ 'p-invalid': !checkCategory() }]"
+          <Dropdown id="category" v-model="category"
+            ref="category"
+            area-describedby="category-help" :class="[{ 'p-invalid': !checkCategory() }]"
             :options="categories" optionLabel="name" placeholder="카테고리 선택" />
           <small id="category-help" v-if="!checkCategory()" class="p-error">카테고리를 선택하세요.</small>
         </div>
         <h2>내용</h2>
-        <Editor v-model="content" editorStyle="height: 320px">
+        <Editor ref="editor" v-model="content" editorStyle="height: 320px">
         </Editor>
+        <div class="board-input">
+          <h2>비밀글 설정</h2>
+          <Checkbox v-model="isSecret" :binary="true" />
+        </div>
       </div>
       <div class="board-footer">
           <Button @click="onCancel">취소</Button>
-          <Button @click="onSubmit" :disabled="submitting">작성</Button>
+          <Button v-if="!isUpdate" @click="onSubmit" :disabled="submitting">작성</Button>
+          <Button v-else @click="onSubmit" :disabled="submitting">수정</Button>
       </div>
     </div>
   </div>
@@ -46,18 +53,21 @@
   import Editor from 'primevue/editor';
   import InputText from 'primevue/inputtext';
   import Password from 'primevue/password';
+  import Checkbox from 'primevue/checkbox';
 
   export default
   {
     name: 'QnAWrite',
     components: {
-      Dropdown, Editor, InputText, Password
+      Dropdown, Editor, InputText, Password, Checkbox
     },
     props: {
       title: String, // 글쓰기 타이틀(제목 아님)
       submitLink: String, // 쓰기 링크
+      updateLink: String, // 갱신 링크
       cancelLink: String, // 취소 링크
-      detailLink: String
+      detailLink: String,
+      detailURL: String
     },
     data() {
       return {
@@ -65,15 +75,21 @@
         categories: [
           {name: '일정 기능', code: 'SCHEDULER'},
           {name: '패키지', code: 'PACKAGE'},
-          {name: '고객 지원', code: 'CUSTOMER SERVICE'},
-          {name: '나도 잘 모름', code: 'I DONT KNOW'},
+          {name: '매거진', code: 'MAGAZINE'},
+          {name: '명소, 맛집, 숙소', code: 'SPOT'},
+          {name: '커뮤니티', code: 'COMMUNITY'},
+          {name: '고객 지원', code: 'SERVICE'},
           {name: '기타', code: 'ETC'},
         ],
         aTitle: "",
         content: "",
         tempEmail: "",
         tempPwd: "",
-        submitting: false
+        submitting: false,
+        isSecret: false,
+
+        isUpdate: false,
+        updateBrdNum: 0
       }
     },
     methods: {
@@ -83,9 +99,37 @@
       onSubmit() {
         if (this.submitting)
           return;
+        
+        if (!this.checkTitle())
+        {
+          alert("제목 길이가 길거나 너무 짧습니다.");
+          return;
+        }
+        if (!this.checkEmail())
+        {
+          alert("이메일 주소가 적합하지 않습니다.");
+          return;
+        }
+        if (!this.checkPwd())
+        {
+          alert("비밀번호가 길거나 너무 짧습니다.");
+          return;
+        }
+        if (!this.checkCategory())
+        {
+          alert("문의 유형이 선택되지 않았습니다.");
+          return;
+        }
+        if (!this.checkContent())
+        {
+          alert("내용이 없습니다.");
+          return;
+        }
+
         this.submitting = true;
 
         const writeParam = new URLSearchParams();
+        writeParam.append('brdNum', this.updateBrdNum);
         writeParam.append('writerId', "guest");
         writeParam.append('answerNum', 0);
         writeParam.append('title', this.aTitle);
@@ -93,8 +137,9 @@
         writeParam.append('tempEmail', this.tempEmail);
         writeParam.append('tempPwd', this.tempPwd);
         writeParam.append('contents', this.content);
+        writeParam.append('isSecret', this.isSecret);
 
-        axios.post(this.submitLink, writeParam, {
+        axios.post(this.isUpdate ? this.updateLink : this.submitLink, writeParam, {
           headers: {
             'Access-Control-Allow-Origin': '*'
           }
@@ -102,7 +147,7 @@
           console.log(resp);
           if (resp.data.result == true)
           {
-            alert("문의글 작성 성공");
+            alert(this.isUpdate ? "문의글 수정 성공" : "문의글 작성 성공");
             this.$router.push(this.getDetailLink(resp.data.brdNum));
           }
           else
@@ -117,22 +162,68 @@
         this.$router.push(this.cancelLink);
       },
       checkTitle() {
-        return this.aTitle.length > 4;
+        return this.aTitle.length >= 4 && this.aTitle.length <= 30;
       },
       checkEmail() {
-        return this.tempEmail.length > 8;
+        let emailFormat = new RegExp(/^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i);
+        return emailFormat.test(this.tempEmail);
       },
       checkPwd() {
-        return this.tempPwd.length > 8 && this.tempPwd.length < 20;
+        return this.tempPwd.length >= 4 && this.tempPwd.length < 20;
       },
       checkCategory() {
         return this.category != "";
       },
       checkContent() {
-        return this.content.length > 40;
+        return this.content.length > 0;
       },
       getDetailLink(brdNum) {
-        return `${this.detailLink}?num=${brdNum}`;
+        return `${this.detailURL}?num=${brdNum}`;
+      },
+      getArticleForUpdate(tempNum, tempPwd) {
+        this.article = axios.get(this.detailLink + "/password", {
+          headers: {
+            'Access-Control-Allow-Origin': '*'
+          },
+          params: {
+            num: tempNum,
+            pwd: tempPwd
+          }
+        }).then(function(resp) {
+          console.log(resp);
+          this.updateArticle(resp.data.article);
+        }.bind(this));
+      },
+      updateArticle(article)
+      {
+        this.updateBrdNum = article.brdNum;
+        this.category = article.category;
+        this.tempEmail = article.tempEmail;
+        this.tempPwd = article.tempPwd;
+        this.isSecret = !article.published;
+
+        this.aTitle = article.title;
+        this.content = article.contents;
+        console.log(article);
+      }
+    },
+    created() {
+      if (localStorage.getItem("qnaNum") != null)
+      {
+        this.article = axios.get(this.detailLink + "/password", {
+            headers: {
+              'Access-Control-Allow-Origin': '*'
+            },
+            params: {
+              num: localStorage.getItem("qnaNum"),
+              pwd: localStorage.getItem("qnaPwd")
+            }
+          }).then(function(resp) {
+            this.isUpdate = true;
+            localStorage.removeItem("qnaNum");
+            localStorage.removeItem("qnaPwd");
+            this.updateArticle(resp.data.article);
+          }.bind(this));
       }
     }
   }
@@ -188,6 +279,10 @@
   .board-main * {
     width: 100%;
     text-align: left;
+    margin: 2px 0px;
+  }
+  .board-input {
+    min-height: 90px;
   }
   .board-footer {
     display: flex;
