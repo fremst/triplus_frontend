@@ -33,17 +33,24 @@
               <img :alt="slotProps.data.title" :src="slotProps.data.firstimage" class="product-image" />
             </template>
           </Column>
-          <Column :sortable="true" field="scatNum" header="카테고리" style="min-width: 8rem; text-align: center">
+          <Column :sortable="true" field="scatName" header="카테고리" style="min-width: 8rem; text-align: center">
             <template #body="slotProps">
-              <span class="product-category">{{ slotProps.data.scatNum }}</span>
+              <span class="product-category">{{ slotProps.data.scatName }}</span>
             </template>
           </Column>
           <Column :sortable="true" field="title" header="숙소명" style="min-width: 16rem; text-align: center">
             <template #body="slotProps">
               <span class="product-category">
                 <router-link :to="`/section/place/accommodation/`+slotProps.data.brdNum">
-                  {{ slotProps.data.brdNum }}
+                  {{ slotProps.data.title }}
                 </router-link>
+              </span>
+            </template>
+          </Column>
+          <Column :sortable="true" field="tel" header="전화번호" style="min-width: 16rem; text-align: center">
+            <template #body="slotProps">
+              <span class="product-category">
+                  {{ slotProps.data.tel }}
               </span>
             </template>
           </Column>
@@ -81,7 +88,6 @@ export default {
   },
   mounted() {
     this.getList();
-    // this.parseCategory();
   },
   methods: {
     getList() {
@@ -92,7 +98,6 @@ export default {
           },
         })
         .then(res => {
-          console.log(res);
           this.products = res.data;
         })
         .catch(err => {

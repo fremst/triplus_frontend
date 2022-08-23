@@ -12,10 +12,10 @@ import PackageDetailView from "@/views/section/package/PackageDetailView";
 import PackageReservationView from "@/views/section/package/PackageReservationView";
 import PackageReservationCompleteView from "@/views/section/package/PackageReservationCompleteView";
 
-// import AttractionListView from "@/views/section/place/attraction/AttractionListView";
-// import AttractionDetailView from "@/views/section/place/attraction/AttractionDetailView";
-// import RestaurantListView from "@/views/section/place/restaurant/RestaurantListView";
-// import RestaurantDetailView from "@/views/section/place/restaurant/RestaurantDetailView";
+import AttractionListView from "@/views/section/place/attraction/AttractionListView";
+import AttractionDetailView from "@/views/section/place/attraction/AttractionDetailView";
+import RestaurantListView from "@/views/section/place/restaurant/RestaurantListView";
+import RestaurantDetailView from "@/views/section/place/restaurant/RestaurantDetailView";
 import AccommodationListView from "@/views/section/place/accommodation/AccommodationListView";
 import AccommodationDetailView from "@/views/section/place/accommodation/AccommodationDetailView";
 
@@ -142,26 +142,26 @@ const routes = [
     name: "package-reservation-complete",
     component: PackageReservationCompleteView
   },
-  // {
-  //   path: "/section/place/attraction",
-  //   name: "attraction-list",
-  //   component: AttractionListView
-  // },
-  // {
-  //   path: "/section/place/attraction",
-  //   name: "attraction-detail",
-  //   component: AttractionDetailView
-  // },
-  // {
-  //   path: "/section/place/restaurant",
-  //   name: "restaurant-list",
-  //   component: RestaurantListView
-  // },
-  // {
-  //   path: "/section/place/restaurant",
-  //   name: "restaurant-detail",
-  //   component: RestaurantDetailView
-  // },
+  {
+    path: "/section/place/attraction",
+    name: "attraction-list",
+    component: AttractionListView
+  },
+  {
+    path: "/section/place/attraction/:brdNum",
+    name: "attraction-detail",
+    component: AttractionDetailView
+  },
+  {
+    path: "/section/place/restaurant",
+    name: "restaurant-list",
+    component: RestaurantListView
+  },
+  {
+    path: "/section/place/restaurant/:brdNum",
+    name: "restaurant-detail",
+    component: RestaurantDetailView
+  },
   {
     path: "/section/place/accommodation",
     name: "accommodation-list",
