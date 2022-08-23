@@ -243,6 +243,7 @@ export default {
         "title":this.data.title,
         "region" :this.data.region,
         "tel" : this.data.tel,
+        "addr" : this.data.addr,
         "mapx" : this.data.mapx,
         "mapy" : this.data.mapy,
         "homepage" : this.data.homepage,
