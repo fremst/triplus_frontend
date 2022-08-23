@@ -61,7 +61,7 @@
       </table>
     </div>
     <Button label="예약하기"
-     @click="this.$router.push({name: 'package-reservation', params: {childCnt: this.childCnt, adultCnt: this.adultCnt}})"/>
+     @click="this.$router.push({name: 'package-reservation', query: {childCnt: this.childCnt, adultCnt: this.adultCnt}})"/>
   </div>
 </template>
 
