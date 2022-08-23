@@ -17,28 +17,56 @@
         </div>
         <div class="article-footer"></div>
       </div>
+      <div class="board-main" v-show="article.published">
+        <Accordion style="width: 100%">
+          <AccordionTab v-for="reply of replyList" :key="reply" :header="reply.title">
+            <div style="text-align: end;">{{reply.writerId}}님이 {{reply.wdate}}에 작성한 글입니다.</div>
+            <Divider style="border: 1px solid #ccc;" />
+            <div v-html="reply.contents"></div>
+            <Divider style="border: 1px solid #ccc;" />
+            <div>
+              답변이 도움이 되었다면 평가해주세요!
+              <rating v-model="rate" :cancel="false"></rating>
+            </div>
+          </AccordionTab>
+        </Accordion>
+      </div>
       <div class="board-main" v-if="!article.published">
-        <div class="article-main" style="height: 300px; flex-direction: column; justify-content: center; align-items: center;">
+        <div v-if="article.writerId == 'guest'" class="article-main" style="height: 300px; flex-direction: column; justify-content: center; align-items: center;">
           <h3>해당 글은 잠겨있습니다.</h3>
           <br>
           <Password id="pwd" v-model="pwd" :feedback="false"/>
           <br>
           <Button @click="inputPassword">보기</Button>
         </div>
+        <div v-else class="article-main" style="height: 300px; flex-direction: column; justify-content: center; align-items: center;">
+          <h3>해당 글은 잠겨있습니다.</h3>
+        </div>
       </div>
-      <div class="board-footer" v-show="article.published">
-          <!-- TODO 버튼 구현 -->
-        <Dialog header="비밀번호 입력" v-model:visible="displayUpdate">
-          <Password id="pwd" v-model="pwd" :feedback="false"/>
-          <Button @click="onUpdate">수정</Button>
-        </Dialog>
-        <Button @click="viewUpdate">수정</Button>
-        <Dialog header="비밀번호 입력" v-model:visible="displayDelete">
-          <Password id="pwd" v-model="pwd" :feedback="false"/>
-          <Button class="p-button-danger" @click="onDelete">삭제</Button>
-        </Dialog>
-        <Button class="p-button-danger" @click="viewDelete">삭제</Button>
-        <Button @click="onList">목록으로</Button>
+      <div class="board-footer" v-show="article.published" style="flex-direction: column; justify-content: end; align-items: flex-end;">
+        <!-- 답글 -->
+        <div v-if="isLogin">
+          <Button @click="onReply">질문에 답변하기</Button>
+        </div>
+        <br>
+        <div>
+          <!-- 수정 -->
+          <Dialog header="비밀번호 입력" v-model:visible="displayUpdate">
+            <Password id="pwd" v-model="pwd" :feedback="false"/>
+            <Button @click="onUpdate">수정</Button>
+          </Dialog>
+          <Button @click="viewUpdate">수정</Button>
+  
+          <!-- 삭제 -->
+          <Dialog header="비밀번호 입력" v-model:visible="displayDelete">
+            <Password id="pwd" v-model="pwd" :feedback="false"/>
+            <Button class="p-button-danger" @click="onDelete">삭제</Button>
+          </Dialog>
+          <Button class="p-button-danger" @click="viewDelete">삭제</Button>
+  
+          <!-- 목록 -->
+          <Button @click="onList">목록으로</Button>
+        </div>
       </div>
       <div class="board-footer" v-if="!article.published">
         <Button @click="onList">목록으로</Button>
@@ -50,12 +78,16 @@
   import Dialog from 'primevue/dialog';
   import Password from 'primevue/password';
   import axios from 'axios';
+  import Accordion from 'primevue/accordion';
+  import AccordionTab from 'primevue/accordiontab';
+  import Divider from 'primevue/divider';
+  import Rating from 'primevue/rating';
 
   export default
   {
     name: 'QnADetail',
     components: {
-      Dialog, Password
+      Dialog, Password, Accordion, AccordionTab, Divider, Rating
     },
     props: {
       title: String, // 타이틀
@@ -73,9 +105,12 @@
           contents: "",
           published: true
         },
+        replyList: [],
         displayUpdate: false,
         displayDelete: false,
-        pwd: ""
+        pwd: "",
+        rate: 0,
+        isLogin: false
       };
     },
     methods: {
@@ -101,6 +136,13 @@
             this.$router.push(this.updateLink);
           }
         }.bind(this));
+      },
+      onReply() {
+        if (localStorage.getItem("id") == null)
+          return alert("로그인이 필요한 서비스입니다.");
+
+        localStorage.setItem("qnaReplyNum", this.$route.query.num);
+        this.$router.push(this.updateLink);
       },
       viewUpdate() {
         this.displayUpdate = !this.displayUpdate;
@@ -140,11 +182,26 @@
             'Access-Control-Allow-Origin': '*'
           },
           params: {
-            num: this.$route.query.num
+            num: this.$route.query.num,
+            id: localStorage.getItem("id"),
+            token: localStorage.getItem("token")
           }
         }).then(function(resp) {
           console.log(resp);
           this.article = resp.data;
+        }.bind(this));
+      },
+      getReplyList() {
+        this.article = axios.get(this.detailLink + "/reply", {
+          headers: {
+            'Access-Control-Allow-Origin': '*'
+          },
+          params: {
+            num: this.$route.query.num,
+          }
+        }).then(function(resp) {
+          console.log(resp);
+          this.replyList = resp.data;
         }.bind(this));
       },
       inputPassword() {
@@ -173,6 +230,8 @@
     },
     created() {
       this.getArticle();
+      this.getReplyList();
+      this.isLogin = localStorage.getItem("id");
     }
   }
 </script>

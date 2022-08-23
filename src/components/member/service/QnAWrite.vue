@@ -8,22 +8,32 @@
         <h1>{{title}}</h1>
       </div>
       <div class="board-main">
+        <Accordion style="width: 100%" v-if="isReply">
+          <AccordionTab header="원본글 보기">
+            <div><h2>{{replyArticle.title}}</h2></div>
+            <Divider style="border: 1px solid #ccc;" />
+            <div v-html="replyArticle.contents"></div>
+          </AccordionTab>
+        </Accordion>
         <div class="board-input">
           <label for="aTitle"><h2>제목</h2></label>
           <InputText id="aTitle" type="username" v-model="aTitle" area-describedby="aTitle-help" :class="[{ 'p-invalid': !checkTitle() }]"/>
           <small v-if="!checkTitle()" id="aTitle-help" class="p-error">4~30자 사이의 제목을 입력하세요.</small>
         </div>
-        <div class="board-input">
+        <div class="board-input" v-show="!isLogin">
           <label for="email"><h2>임시 이메일</h2></label>
-          <InputText id="email" type="email" v-model="tempEmail" area-describedby="email-help" :class="[{ 'p-invalid': !checkEmail() }]"/>
+          <InputText
+            id="email" type="email"
+            v-model="tempEmail" area-describedby="email-help"
+            :class="[{ 'p-invalid': !checkEmail() }]"/>
           <small v-if="!checkEmail()" id="email-help" class="p-error">임시로 사용할 이메일 주소를 입력하세요.</small>
         </div>
-        <div class="board-input">
+        <div class="board-input" v-show="!isLogin">
           <label for="pwd"><h2>임시 비밀번호</h2></label>
           <Password id="pwd" v-model="tempPwd" area-describedby="pwd-help" :class="[{ 'p-invalid': !checkPwd() }]"/>
           <small id="pwd-help" v-if="!checkPwd()" class="p-error">4~20자 사이의 비밀번호를 입력하세요.</small>
         </div>
-        <div class="board-input">
+        <div class="board-input" v-show="!isReply">
           <label for="category"><h2>문의 유형</h2></label>
           <Dropdown id="category" v-model="category"
             ref="category"
@@ -34,7 +44,7 @@
         <h2>내용</h2>
         <Editor ref="editor" v-model="content" editorStyle="height: 320px">
         </Editor>
-        <div class="board-input">
+        <div class="board-input" v-show="!isReply">
           <h2>비밀글 설정</h2>
           <Checkbox v-model="isSecret" :binary="true" />
         </div>
@@ -54,12 +64,14 @@
   import InputText from 'primevue/inputtext';
   import Password from 'primevue/password';
   import Checkbox from 'primevue/checkbox';
+  import Accordion from 'primevue/accordion';
+  import AccordionTab from 'primevue/accordiontab';
 
   export default
   {
     name: 'QnAWrite',
     components: {
-      Dropdown, Editor, InputText, Password, Checkbox
+      Dropdown, Editor, InputText, Password, Checkbox, Accordion, AccordionTab
     },
     props: {
       title: String, // 글쓰기 타이틀(제목 아님)
@@ -88,8 +100,15 @@
         submitting: false,
         isSecret: false,
 
+        isLogin: false,
         isUpdate: false,
-        updateBrdNum: 0
+        isReply: false,
+        updateBrdNum: 0,
+        replyBrdNum: 0,
+        replyArticle: {
+          title: "",
+          contents: ""
+        }
       }
     },
     methods: {
@@ -130,8 +149,9 @@
 
         const writeParam = new URLSearchParams();
         writeParam.append('brdNum', this.updateBrdNum);
-        writeParam.append('writerId', "guest");
-        writeParam.append('answerNum', 0);
+        writeParam.append('writerId', localStorage.getItem("id") == null ? "guest" : localStorage.getItem("id"));
+        writeParam.append('token', localStorage.getItem("token"));
+        writeParam.append('answerNum', this.isReply ? localStorage.getItem("qnaReplyNum") : 0);
         writeParam.append('title', this.aTitle);
         writeParam.append('category', this.category.code);
         writeParam.append('tempEmail', this.tempEmail);
@@ -165,13 +185,21 @@
         return this.aTitle.length >= 4 && this.aTitle.length <= 30;
       },
       checkEmail() {
+        if (localStorage.getItem("id") != null)
+          return true;
+
         let emailFormat = new RegExp(/^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i);
         return emailFormat.test(this.tempEmail);
       },
       checkPwd() {
+        if (localStorage.getItem("id") != null)
+          return true;
+
         return this.tempPwd.length >= 4 && this.tempPwd.length < 20;
       },
       checkCategory() {
+        if (this.isReply)
+          return true;
         return this.category != "";
       },
       checkContent() {
@@ -208,6 +236,7 @@
       }
     },
     created() {
+      this.isLogin = localStorage.getItem("id") != null;
       if (localStorage.getItem("qnaNum") != null)
       {
         this.article = axios.get(this.detailLink + "/password", {
@@ -223,6 +252,23 @@
             localStorage.removeItem("qnaNum");
             localStorage.removeItem("qnaPwd");
             this.updateArticle(resp.data.article);
+          }.bind(this));
+      }
+      else if (localStorage.getItem("qnaReplyNum") != null)
+      {
+        axios.get(this.detailLink, {
+            headers: {
+              'Access-Control-Allow-Origin': '*'
+            },
+            params: {
+              num: localStorage.getItem("qnaReplyNum")
+            }
+          }).then(function(resp) {
+            localStorage.removeItem("qnaNum");
+            localStorage.removeItem("qnaPwd");
+            this.replyArticle = resp.data;
+            console.log(this.replyArticle);
+            this.isReply = true;
           }.bind(this));
       }
     }
