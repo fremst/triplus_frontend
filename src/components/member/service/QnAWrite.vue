@@ -52,7 +52,7 @@
       <div class="board-footer">
           <Button @click="onCancel">취소</Button>
           <Button v-if="!isUpdate" @click="onSubmit" :disabled="submitting">작성</Button>
-          <Button v-else @click="onSubmit" :disabled="submitting">수정</Button>
+          <Button v-else @click="onUpdate" :disabled="submitting">수정</Button>
       </div>
     </div>
   </div>
@@ -75,10 +75,8 @@
     },
     props: {
       title: String, // 글쓰기 타이틀(제목 아님)
-      submitLink: String, // 쓰기 링크
-      updateLink: String, // 갱신 링크
+      link: String,
       cancelLink: String, // 취소 링크
-      detailLink: String,
       detailURL: String
     },
     data() {
@@ -147,19 +145,22 @@
 
         this.submitting = true;
 
+        const tempId = localStorage.getItem("id") == null ? "guest" : localStorage.getItem("id");
         const writeParam = new URLSearchParams();
         writeParam.append('brdNum', this.updateBrdNum);
-        writeParam.append('writerId', localStorage.getItem("id") == null ? "guest" : localStorage.getItem("id"));
-        writeParam.append('token', localStorage.getItem("token"));
+        writeParam.append('writerId', tempId);
         writeParam.append('answerNum', this.isReply ? localStorage.getItem("qnaReplyNum") : 0);
         writeParam.append('title', this.aTitle);
         writeParam.append('category', this.category.code);
         writeParam.append('tempEmail', this.tempEmail);
         writeParam.append('tempPwd', this.tempPwd);
         writeParam.append('contents', this.content);
-        writeParam.append('isSecret', this.isSecret);
+        writeParam.append('published', !this.isSecret);
 
-        axios.post(this.isUpdate ? this.updateLink : this.submitLink, writeParam, {
+        writeParam.append('id', tempId);
+        writeParam.append('token', localStorage.getItem("token"));
+
+        axios.post(this.link, writeParam, {
           headers: {
             'Access-Control-Allow-Origin': '*'
           }
@@ -167,7 +168,73 @@
           console.log(resp);
           if (resp.data.result == true)
           {
-            alert(this.isUpdate ? "문의글 수정 성공" : "문의글 작성 성공");
+            alert("문의글 작성 성공");
+            this.$router.push(this.getDetailLink(resp.data.brdNum));
+          }
+          else
+          {
+            alert(resp.data.reason);
+            this.$router.push(this.cancelLink);
+          }
+
+        }.bind(this));
+      },
+      onUpdate() {
+        if (this.submitting)
+          return;
+        
+        if (!this.checkTitle())
+        {
+          alert("제목 길이가 길거나 너무 짧습니다.");
+          return;
+        }
+        if (!this.checkEmail())
+        {
+          alert("이메일 주소가 적합하지 않습니다.");
+          return;
+        }
+        if (!this.checkPwd())
+        {
+          alert("비밀번호가 길거나 너무 짧습니다.");
+          return;
+        }
+        if (!this.checkCategory())
+        {
+          alert("문의 유형이 선택되지 않았습니다.");
+          return;
+        }
+        if (!this.checkContent())
+        {
+          alert("내용이 없습니다.");
+          return;
+        }
+
+        this.submitting = true;
+
+        const tempId = localStorage.getItem("id") == null ? "guest" : localStorage.getItem("id");
+
+        axios.put(`${this.link}/${this.updateBrdNum}`, JSON.stringify({
+          id: tempId,
+          token: localStorage.getItem("token"),
+          brdNum: this.updateBrdNum,
+          writerId: tempId,
+          answerNum: this.isReply ? localStorage.getItem("qnaReplyNum") : 0,
+          title: this.aTitle,
+          category: this.category.code,
+          tempEmail: this.tempEmail,
+          tempPwd: this.tempPwd,
+          contents: this.content,
+          published: !this.isSecret
+        }), {
+          headers: {
+            'Access-Control-Allow-Origin': '*',
+            'Content-Type': 'application/json'
+          }
+        }).then(function(resp) {
+          console.log(resp);
+          if (resp.data.result == true)
+          {
+            alert("문의글 수정 성공");
             this.$router.push(this.getDetailLink(resp.data.brdNum));
           }
           else
@@ -209,7 +276,7 @@
         return `${this.detailURL}?num=${brdNum}`;
       },
       getArticleForUpdate(tempNum, tempPwd) {
-        this.article = axios.get(this.detailLink + "/password", {
+        axios.get(`${this.link}/${tempNum}/password`, {
           headers: {
             'Access-Control-Allow-Origin': '*'
           },
@@ -239,12 +306,13 @@
       this.isLogin = localStorage.getItem("id") != null;
       if (localStorage.getItem("qnaNum") != null)
       {
-        this.article = axios.get(this.detailLink + "/password", {
+        let tempNum = localStorage.getItem("qnaNum");
+        axios.get(`${this.link}/${tempNum}/password`, {
             headers: {
               'Access-Control-Allow-Origin': '*'
             },
             params: {
-              num: localStorage.getItem("qnaNum"),
+              num: tempNum,
               pwd: localStorage.getItem("qnaPwd")
             }
           }).then(function(resp) {
@@ -256,16 +324,16 @@
       }
       else if (localStorage.getItem("qnaReplyNum") != null)
       {
-        axios.get(this.detailLink, {
+        axios.get(`${this.link}/${localStorage.getItem("qnaReplyNum")}`, {
             headers: {
               'Access-Control-Allow-Origin': '*'
             },
             params: {
-              num: localStorage.getItem("qnaReplyNum")
             }
           }).then(function(resp) {
             localStorage.removeItem("qnaNum");
             localStorage.removeItem("qnaPwd");
+            localStorage.removeItem("qnaReplyNum");
             this.replyArticle = resp.data;
             console.log(this.replyArticle);
             this.isReply = true;

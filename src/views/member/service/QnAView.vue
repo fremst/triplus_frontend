@@ -21,7 +21,7 @@ export default {
   },
   data() {
     return {
-      listLink: "http://localhost:8082/triplus/api/service/qna/list",
+      listLink: "http://localhost:8082/triplus/api/service/qna/",
       detailLink: "/service/qna/detail",
       writeLink: "/service/qna/write",
       title: "Q&A 게시판",
@@ -31,7 +31,7 @@ export default {
   },
   methods: {
     getList() {
-      axios.get("http://localhost:8082/triplus/api/service/qna/list", {
+      axios.get("http://localhost:8082/triplus/api/service/qna/", {
         headers: {
           'Access-Control-Allow-Origin': '*'
         },

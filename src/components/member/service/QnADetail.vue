@@ -91,9 +91,8 @@
     },
     props: {
       title: String, // 타이틀
-      detailLink: String, // 상세보기 링크
+      link: String, // 링크
       updateLink: String, // 수정 링크
-      deleteLink: String, // 삭제 링크
       listLink: String, // 목록 링크
     },
     data() {
@@ -115,12 +114,13 @@
     },
     methods: {
       onUpdate() {
-        this.article = axios.get(this.detailLink + "/password", {
+        let tempBrdNum = this.$route.query.num;
+        this.article = axios.get(`${this.link}/${tempBrdNum}/password`, {
           headers: {
             'Access-Control-Allow-Origin': '*'
           },
           params: {
-            num: this.$route.query.num,
+            num: tempBrdNum,
             pwd: this.pwd
           }
         }).then(function(resp) {
@@ -131,7 +131,7 @@
           }
           else
           {
-            localStorage.setItem("qnaNum", this.$route.query.num);
+            localStorage.setItem("qnaNum", tempBrdNum);
             localStorage.setItem("qnaPwd", this.pwd);
             this.$router.push(this.updateLink);
           }
@@ -149,10 +149,9 @@
       },
       onDelete() {
         const writeParam = new URLSearchParams();
-        writeParam.append('brdNum', this.$route.query.num);
         writeParam.append('pwd', this.pwd);
 
-        axios.post(this.deleteLink, writeParam, {
+        axios.delete(`${this.link}/${this.$route.query.num}/${this.pwd}`, "", {
           headers: {
             'Access-Control-Allow-Origin': '*'
           }
@@ -177,7 +176,7 @@
         this.$router.push(this.listLink);
       },
       getArticle() {
-        this.article = axios.get(this.detailLink, {
+        this.article = axios.get(`${this.link}/${this.$route.query.num}`, {
           headers: {
             'Access-Control-Allow-Origin': '*'
           },
@@ -192,7 +191,7 @@
         }.bind(this));
       },
       getReplyList() {
-        this.article = axios.get(this.detailLink + "/reply", {
+        axios.get(`${this.link}/${this.$route.query.num}/reply`, {
           headers: {
             'Access-Control-Allow-Origin': '*'
           },
@@ -205,7 +204,7 @@
         }.bind(this));
       },
       inputPassword() {
-        this.article = axios.get(this.detailLink + "/password", {
+        axios.get(`${this.link}/${this.$route.query.num}/password`, {
           headers: {
             'Access-Control-Allow-Origin': '*'
           },
