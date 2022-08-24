@@ -44,7 +44,7 @@ export default ({
     },
 })
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
 //인디케이터 css
 .custom-indicator-galleria {
     .indicator-text {
@@ -67,5 +67,6 @@ export default ({
     margin: 0 auto;
     width: 1080px;
     position: relative;
+    margin-top: 5%;
   }
 </style>

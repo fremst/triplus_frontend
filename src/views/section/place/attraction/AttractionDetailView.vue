@@ -1,14 +1,14 @@
 <template>
   <div class="wrap">
     <div class="inner">
-      <h1>숙소 상세정보</h1>
+      <h1>명소 상세정보</h1>
       <table border="1px solid #333333" class="list-table">
         <tr>
-          <td>숙소이미지</td>
+          <td>명소이미지</td>
           <td><img :src=data.firstimage></td>
         </tr>
         <tr>
-          <td>숙소명</td>
+          <td>명소명</td>
           <td>{{data.title}}</td>
         </tr>
         <tr>
@@ -40,7 +40,7 @@
       <Button label="수정하기" class="p-button-primary mr-2" @click="$router.push('/admin/place/'+data.brdNum)" />
       <Button label="삭제하기" class="p-button-danger mr-2" @click="openDialog('delete',true)" />
         <ConfirmDialog v-model:visible="showConfirmDialog"
-              :msg="'선택하신 숙소 정보를 삭제하시겠습니까?'"
+              :msg="'선택하신 명소 정보를 삭제하시겠습니까?'"
               @closeDialog="deleteSelectedProducts"/>
       <Button label="목록으로" class="p-button-secondary mr-2" @click="goList" />
       </div>
@@ -71,7 +71,7 @@ export default {
   methods: {
     getDetail() {
       axios
-        .get(`http://localhost:8082/triplus/api/section/places/accommodation/${this.$route.params.brdNum}`, this.data, {
+        .get(`http://localhost:8082/triplus/api/section/places/attraction/${this.$route.params.brdNum}`, this.data, {
           headers: {
             "Access-Control-Allow-Origin": "*"
           }
@@ -94,7 +94,7 @@ export default {
       if(!value){
         return false;
       }else{
-      axios.delete(`http://localhost:8082/triplus/api/section/places/accommodation/${this.$route.params.brdNum}`, this.data,{
+      axios.delete(`http://localhost:8082/triplus/api/section/places/attraction/${this.$route.params.brdNum}`, this.data,{
         headers: {
           "Access-Control-Allow-Origin": "*"
         },
@@ -110,7 +110,7 @@ export default {
     },
     //목록으로 가기
     goList(){
-      router.push("/section/place/accommodation");
+      router.push("/section/place/attraction");
     }
   }
 };

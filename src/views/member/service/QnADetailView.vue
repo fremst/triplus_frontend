@@ -2,9 +2,8 @@
   <div class="home">
     <QnADetail
       :title="title"
-      :detailLink="detailLink"
+      :link="link"
       :updateLink="updateLink"
-      :deleteLink="deleteLink"
       :listLink="listLink"/>
   </div>
 </template>
@@ -20,7 +19,7 @@ export default {
   },
   data() {
     return {
-      title: "이곳에 타이틀 입력",
+      title: "Q&A 게시판",
       article: {
         number: 1,
         title: "aaaabbbbcccc",
@@ -28,9 +27,8 @@ export default {
         date: "1970.01.01",
         content: "<p>testtest</p><p>testtest2</p><p>testtest3</p>"
       },
-      detailLink: "http://localhost:8082/triplus/api/service/qna/detail",
+      link: "http://localhost:8082/triplus/api/service/qna",
       updateLink: "/service/qna/write",
-      deleteLink: "http://localhost:8082/triplus/api/service/qna/delete",
       listLink: "/service/qna/",
     };
   },

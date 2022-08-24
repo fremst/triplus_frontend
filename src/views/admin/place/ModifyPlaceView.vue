@@ -13,11 +13,11 @@
                 :optionGroupChildren="['subCategory']"
                 :options="options"
                 optionGroupLabel="name"
-                optionLabel="subname"
+                optionLabel="scatName"
                 placeholder="카테고리"
                 style="min-width: 11rem; margin-right: 10px"
               />
-              <small v-if="submitted && !this.region" class="p-error">카테고리를 선택해 주세요.</small>
+              <small v-if="submitted && !this.scatName" class="p-error">카테고리를 선택해 주세요.</small>
               <label for="multiselect" />
             </span>
             <InputText
@@ -74,6 +74,7 @@
       <div class="button-group">
         <Button class="p-button-primary mr-2" label="Save" @click="onSave" />
         <Button class="p-button-secondary mr-2" label="Cancel" @click="onCancel" />
+        <Button class="p-button-secondary mr-2" label="목록으로" @click="goDetail()" />
       </div>
     </div>
   </div>
@@ -81,9 +82,9 @@
 
 <script>
 import axios from "axios";
+import router from '@/router';
 
 export default {
-  name: "AddPlaceForm",
   data() {
     return {
       selectedOptions: null, //선택된 카테고리
@@ -94,31 +95,31 @@ export default {
           code: "명소",
           subCategory: [
             {
-              subname: "자연관광지",
+              scatName: "자연관광지",
               value: "명소"
             },
             {
-              subname: "역사관광지",
+              scatName: "역사관광지",
               value: "명소"
             },
             {
-              subname: "휴양관광지",
+              scatName: "휴양관광지",
               value: "명소"
             },
             {
-              subname: "체험관광지",
+              scatName: "체험관광지",
               value: "명소"
             },
             {
-              subname: "산업관광지",
+              scatName: "산업관광지",
               value: "명소"
             },
             {
-              subname: "문화시설",
+              scatName: "문화시설",
               value: "명소"
             },
             {
-              subname: "기타",
+              scatName: "기타",
               value: "명소"
             }
           ]
@@ -128,31 +129,31 @@ export default {
           code: "맛집",
           subCategory: [
             {
-              subname: "한식",
+              scatName: "한식",
               value: "맛집"
             },
             {
-              subname: "양식",
+              scatName: "양식",
               value: "맛집"
             },
             {
-              subname: "일식",
+              scatName: "일식",
               value: "맛집"
             },
             {
-              subname: "중식",
+              scatName: "중식",
               value: "맛집"
             },
             {
-              subname: "아시아식",
+              scatName: "아시아식",
               value: "맛집"
             },
             {
-              subname: "패밀리레스토랑",
+              scatName: "패밀리레스토랑",
               value: "맛집"
             },
             {
-              subname: "기타",
+              scatName: "기타",
               value: "맛집"
             }
           ]
@@ -162,23 +163,23 @@ export default {
           code: "숙소",
           subCategory: [
             {
-              subname: "호텔",
+              scatName: "호텔",
               value: "숙소"
             },
             {
-              subname: "펜션/민박",
+              scatName: "펜션/민박",
               value: "숙소"
             },
             {
-              subname: "모텔",
+              scatName: "모텔",
               value: "숙소"
             },
             {
-              subname: "게스트하우스",
+              scatName: "게스트하우스",
               value: "숙소"
             },
             {
-              subname: "기타",
+              scatName: "기타",
               value: "숙소"
             }
           ]
@@ -196,37 +197,67 @@ export default {
       submitted: false
     };
   },
+  mounted(){
+    this.getDetail();
+  },
   methods: {
-    onSave() {
-      this.submitted = true;
-      const addPlaceParam = new URLSearchParams();
-      addPlaceParam.append("userId", "admin");
-      addPlaceParam.append("mcatName", this.selectedOptions.value);
-      addPlaceParam.append("scatName", this.selectedOptions.subname);
-      addPlaceParam.append("title", this.title);
-      addPlaceParam.append("region", this.region);
-      addPlaceParam.append("tel", this.tel);
-      addPlaceParam.append("addr", this.addr);
-      addPlaceParam.append("mapx", this.mapx);
-      addPlaceParam.append("mapy", this.mapy);
-      addPlaceParam.append("homepage", this.homepage);
-      addPlaceParam.append("firstimage", this.firstimage);
-      addPlaceParam.append("overview", this.overview);
-
+    getDetail() {
       axios
-        .post("http://localhost:8082/triplus/api/section/places/", addPlaceParam, {
+        .get(`http://localhost:8082/triplus/api/section/places/accommodation/${this.$route.params.brdNum}`, this.data, {
           headers: {
             "Access-Control-Allow-Origin": "*"
+          }
+        })
+         .then(res => {
+          this.data = res.data;
+          this.scatName = this.data.scatName;
+          this.title = this.data.title;
+          this.region = this.data.region;
+          this.tel = this.data.tel;
+          this.addr = this.data.addr;
+          this.mapx = this.data.mapx;
+          this.mapy = this.data.mapy;
+          this.homepage = this.data.homepage;
+          this.firstimage = this.data.firstimage;
+          this.overview = this.data.overview;
+        })
+        .catch(err => {
+          console.log(err.response);
+        });
+    },
+    onSave() {
+      this.submitted = true;
+
+      const updateParam = {
+        "userId":"admin",
+        "mcatName":this.selectedOptions.value,
+        "scatName":this.selectedOptions.scatName,
+        "title":this.title,
+        "region" :this.region,
+        "tel" : this.tel,
+        "addr" : this.addr,
+        "mapx" : this.mapx,
+        "mapy" : this.mapy,
+        "homepage" : this.homepage,
+        "firstimage" : this.firstimage,
+        "overview" : this.overview
+        };
+
+      axios
+        .put(`http://localhost:8082/triplus/api/section/places/accommodation/${this.$route.params.brdNum}`, updateParam, {
+          headers: {
+            'Access-Control-Allow-Origin': '*',
+            'Content-Type': 'application/json'
           }
         })
         .then(
           function (resp) {
             if (resp.data.result === "success") {
-              alert("장소추가 성공");
+              alert("장소수정 성공");
             } else {
-              alert("장소추가 실패");
+              alert("장소수정 실패");
             }
-          }.bind(this)
+          }.bind(this),
         );
     },
     onCancel() {
@@ -244,6 +275,9 @@ export default {
     },
     checkCategory() {
       return this.category != "";
+    },
+    goDetail(){
+      router.push(`/section/place/accommodation/${this.$route.params.brdNum}`);
     }
   }
 };

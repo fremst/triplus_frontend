@@ -1,6 +1,7 @@
 <template>
   <div class="home">
-    <QnAWrite :title="title" :submitLink="submitLink" :cancelLink="cancelLink" :detailLink="detailLink"/>
+    <QnAWrite :title="title" :detailURL="detailURL"
+      :link="link" :cancelLink="cancelLink"/>
   </div>
 </template>
 
@@ -15,10 +16,10 @@ export default {
   },
   data() {
     return {
-      title: "이곳에 타이틀 입력",
-      submitLink: "http://localhost:8082/triplus/api/service/qna/write",
+      title: "Q&A 게시글 작성",
+      link: "http://localhost:8082/triplus/api/service/qna",
       cancelLink: "/service/qna",
-      detailLink: "/service/qna/detail",
+      detailURL: "/service/qna/detail",
     };
   }
 }

@@ -1,7 +1,6 @@
 <template>
     <div class="home">
-        <NoticeWrite
-                :pagetitle="pageTitle"
+        <NoticeUpdate
                 :submitLink="submitLink"
                 :cancelLink="cancelLink"
                 :detailLink="detailLink"
@@ -10,14 +9,13 @@
 </template>
 
 <script>
-    import NoticeWrite from "@/components/admin/service/NoticeWrite";
+    import NoticeUpdate from "@/components/admin/service/NoticeUpdate";
     export default {
         components:{
-            NoticeWrite
+            NoticeUpdate
         },
         data(){
             return{
-                pageTitle: "공지 수정",
                 submitLink: "http://localhost:8082/triplus/api/service/notices/update",
                 cancelLink: "/service/notices",
                 detailLink: "/service/notices/detail",

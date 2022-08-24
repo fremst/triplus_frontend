@@ -13,7 +13,7 @@
                 :optionGroupChildren="['subCategory']"
                 :options="options"
                 optionGroupLabel="name"
-                optionLabel="subname"
+                optionLabel="scatName"
                 placeholder="카테고리"
                 style="min-width: 11rem; margin-right: 10px"
               />
@@ -94,31 +94,31 @@ export default {
           code: "명소",
           subCategory: [
             {
-              subname: "자연관광지",
+              scatName: "자연관광지",
               value: "명소"
             },
             {
-              subname: "역사관광지",
+              scatName: "역사관광지",
               value: "명소"
             },
             {
-              subname: "휴양관광지",
+              scatName: "휴양관광지",
               value: "명소"
             },
             {
-              subname: "체험관광지",
+              scatName: "체험관광지",
               value: "명소"
             },
             {
-              subname: "산업관광지",
+              scatName: "산업관광지",
               value: "명소"
             },
             {
-              subname: "문화시설",
+              scatName: "문화시설",
               value: "명소"
             },
             {
-              subname: "기타",
+              scatName: "기타",
               value: "명소"
             }
           ]
@@ -128,31 +128,31 @@ export default {
           code: "맛집",
           subCategory: [
             {
-              subname: "한식",
+              scatName: "한식",
               value: "맛집"
             },
             {
-              subname: "양식",
+              scatName: "양식",
               value: "맛집"
             },
             {
-              subname: "일식",
+              scatName: "일식",
               value: "맛집"
             },
             {
-              subname: "중식",
+              scatName: "중식",
               value: "맛집"
             },
             {
-              subname: "아시아식",
+              scatName: "아시아식",
               value: "맛집"
             },
             {
-              subname: "패밀리레스토랑",
+              scatName: "패밀리레스토랑",
               value: "맛집"
             },
             {
-              subname: "기타",
+              scatName: "기타",
               value: "맛집"
             }
           ]
@@ -162,23 +162,23 @@ export default {
           code: "숙소",
           subCategory: [
             {
-              subname: "호텔",
+              scatName: "호텔",
               value: "숙소"
             },
             {
-              subname: "펜션/민박",
+              scatName: "펜션/민박",
               value: "숙소"
             },
             {
-              subname: "모텔",
+              scatName: "모텔",
               value: "숙소"
             },
             {
-              subname: "게스트하우스",
+              scatName: "게스트하우스",
               value: "숙소"
             },
             {
-              subname: "기타",
+              scatName: "기타",
               value: "숙소"
             }
           ]
@@ -202,7 +202,7 @@ export default {
       const addPlaceParam = new URLSearchParams();
       addPlaceParam.append("userId", "admin");
       addPlaceParam.append("mcatName", this.selectedOptions.value);
-      addPlaceParam.append("scatName", this.selectedOptions.subname);
+      addPlaceParam.append("scatName", this.selectedOptions.scatName);
       addPlaceParam.append("title", this.title);
       addPlaceParam.append("region", this.region);
       addPlaceParam.append("tel", this.tel);
@@ -214,7 +214,7 @@ export default {
       addPlaceParam.append("overview", this.overview);
 
       axios
-        .post("http://localhost:8082/triplus/api/section/places/", addPlaceParam, {
+        .post(`http://localhost:8082/triplus/api/section/places/${this.mcatNameToEng(addPlaceParam.get("mcatName"))}/`, addPlaceParam, {
           headers: {
             "Access-Control-Allow-Origin": "*"
           }
@@ -244,6 +244,16 @@ export default {
     },
     checkCategory() {
       return this.category != "";
+    },
+    mcatNameToEng(mcatName){
+      console.log(mcatName);
+      if(mcatName == "명소"){
+        return "attration";
+      }else if(mcatName == "맛집") {
+          return "restaurant";
+      }else {
+        return "accommodation";
+      }
     }
   }
 };

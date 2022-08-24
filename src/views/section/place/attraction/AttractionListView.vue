@@ -1,8 +1,8 @@
 <template>
   <div class="wrap">
     <div class="inner">
-      <h2 class="addlist-title">숙소 리스트</h2>
-      <!-- 숙소 리스트 -->
+      <h2 class="addlist-title">명소 리스트</h2>
+      <!-- 명소 리스트 -->
       <div class="card">
         <DataTable
           ref="dt"
@@ -28,7 +28,7 @@
             </div>
           </template>
           <Column selectionMode="multiple" style="width: 3rem" :exportable="false"></Column>
-          <Column header="숙소이미지" style="min-width: 8rem">
+          <Column header="명소이미지" style="min-width: 8rem">
             <template #body="slotProps">
               <img :alt="slotProps.data.title" :src="slotProps.data.firstimage" class="product-image" />
             </template>
@@ -38,10 +38,10 @@
               <span class="product-category">{{ slotProps.data.scatName }}</span>
             </template>
           </Column>
-          <Column :sortable="true" field="title" header="숙소명" style="min-width: 16rem; text-align: center">
+          <Column :sortable="true" field="title" header="명소명" style="min-width: 16rem; text-align: center">
             <template #body="slotProps">
               <span class="product-category">
-                <router-link :to="`/section/place/accommodation/`+slotProps.data.brdNum">
+                <router-link :to="`/section/place/attraction/`+slotProps.data.brdNum">
                   {{ slotProps.data.title }}
                 </router-link>
               </span>
@@ -92,7 +92,7 @@ export default {
   methods: {
     getList() {
       axios
-        .get("http://localhost:8082/triplus/api/section/places/accommodation/", this.data, {
+        .get("http://localhost:8082/triplus/api/section/places/attraction/", this.data, {
           headers: {
             "Access-Control-Allow-Origin": "*"
           },
