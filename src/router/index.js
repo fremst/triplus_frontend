@@ -30,6 +30,8 @@ import joinCompleteView from "@/views/member/JoinCompleteView";
 import myPageCheckPwdView from "@/views/member/mypage/MyPageCheckPwdView";
 import MyPageUpdateView from "@/views/member/mypage/MyPageUpdateView";
 
+import checkListView from "@/views/member/plan/CheckListView";
+
 import MainView from "../views/MainView.vue";
 
 
@@ -126,6 +128,11 @@ const routes = [
     name: 'join-complete',
     component: joinCompleteView
   },
+  {
+    path: '/member/plan/checklist',
+    name: 'member-checklist',
+    component: checkListView
+  },
     //마이페이지
   { // 비밀번호 확인 view
     path: '/member/mypage/chkpwd',
@@ -137,10 +144,7 @@ const routes = [
     name: 'mypage-update',
     component: MyPageUpdateView
   },
-
-
-
-    {
+  {
     path: "/section/packages",
     name: "package-list",
     component: PackageListView
