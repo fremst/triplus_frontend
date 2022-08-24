@@ -1,7 +1,7 @@
 <template>
   <div class="wrapper">
     <div class="title"><h1>회원가입</h1></div>
-
+    <Toast />
     <div class="step">
       <ol class="step_list">
         <li><span>약관동의</span></li>
@@ -15,8 +15,8 @@
       <div class="layout">
       <div class="id">
         <div><label>아이디</label></div>
-        <div><InputText type="text" v-model="id"  class="id-txt" placeholder="아이디(영어+숫자 6~12자)"/><Button label="중복확인" class="p-button-outlined" @click="idCheck" /></div>
-        <div><span>{{idErr}}</span></div>
+        <div><InputText type="text" v-model="id" @change="reCheck"  class="id-txt" placeholder="아이디(영어+숫자 6~12자)"/><Button label="중복확인" class="p-button-outlined" @click="idCheck" /></div>
+        <div><span>{{idErr}}</span></div> {{idPass}}
       </div>
 
       <div class="pwd">
@@ -24,24 +24,27 @@
         <div><InputText v-model="pwd1" class="pwd-txt" placeholder="영어+숫자+특수문자(8~16자)" type="password"/></div>
         <div><label>비밀번호 확인</label><span>{{pwdErr}}</span></div>
         <div><InputText v-model="pwd2" class="pwd2-txt" placeholder="비밀번호를 다시 한번 입력하세요" type="password"/></div>
+        {{pwdPass}}
       </div>
 
       <div class="name">
         <div><label>이름</label></div>
         <div><InputText type="text" v-model="name"  class="name-txt"/></div>
         <div><span>{{nameErr}}</span></div>
+        {{namePass}}
       </div>
 
       <div class="gender">
-        <RadioButton name="gen" value="male" v-model="radio" class="men"  />남성
-        <span><RadioButton name="gen" value="female" v-model="radio" class="women" />여성<span class="radioErr">{{genErr}}</span></span>
-
+        <RadioButton name="gen" value="M" v-model="radio" class="men"  />남성
+        <span><RadioButton name="gen" value="F" v-model="radio" class="women" />여성<span class="radioErr">{{genErr}}</span></span>
+        {{genPass}}
       </div>
 
       <div class="phone">
         <div><label>전화번호</label></div>
         <div><InputText type="text" v-model="phone" class="phone-txt" /></div>
         <span>{{phoneErr}}</span>
+        {{phonePass}}
       </div>
 
       <div class="addr">
@@ -57,6 +60,7 @@
         <span>{{emailErr}}</span>
         <div><InputText type="text" v-model="cert" placeholder="인증번호를 입력하세요" class="cert-txt" /><Button label="인증번호 확인" class="p-button-outlined" @click="checkRnd"  /></div>
         <span>{{check}}</span>
+        {{emailPass}}
       </div>
 
       <div class="bdate">
@@ -65,9 +69,11 @@
           <span>{{bdateErr}}</span>
       </div>
 
+
       <div class="join">
-        <Button label="회원가입" @click="Join"/>
+         <Button label="회원가입" @click="Join"/>
       </div>
+
       </div>
       </div>
     </div>
@@ -84,6 +90,7 @@ export default {
       id:"",
       pwd1:'',
       pwd2:'',
+      auth:'user',
       name:"",
       phone:"",
       radio:'',
@@ -92,8 +99,9 @@ export default {
       extraAddress: "",
       detailAddress:"", //상세주소
       email:'',
+      bdate:null, //Date형식
+      active:'Y',
       cert:'', //인증번호 입력
-      bdate:'',
       rnd:'', //보낸 인증번호
       check:'', // 인증번호 확인 메시지
 
@@ -112,21 +120,22 @@ export default {
       namePass:false,
       genPass:false,
       phonePass:false,
-      addrPass:false,
+      addressPass:false,
       detailPass:false,
       emailPass:false,
       bdatePass:false
 
-
-
-
     }
   },
-  created() {
+  computed: {
+    addr(){
+      return '('+this.postcode+'), ' + this.address + ', ' + this.detailAddress;
+    }
 
   },
 
   methods: {
+
     //카카오 주소 api
     execDaumPostcode() {
       new window.daum.Postcode({
@@ -201,7 +210,8 @@ export default {
     },
     //인증번호 확인
     checkRnd(){
-      if(this.cert === this.rnd){
+
+      if(parseInt(this.cert) === parseInt(this.rnd)){
         this.emailPass=true;
         this.check='인증되었습니다';
       }else{
@@ -237,6 +247,14 @@ export default {
       }
     },
 
+    // id값이 변하면 다시 중복확인
+    reCheck(){
+      this.idPass= false;
+      this.idErr='아이디 중복확인을 해주세요';
+    }
+
+    ,
+
     ///////////////////////회원가입 버튼////////////////////////////////////////
     Join(){
 
@@ -249,6 +267,8 @@ export default {
         this.idErr='아이디 중복확인을 해주세요';
       }
     }
+
+
 
 
     //조건 2) 비밀번호
@@ -300,7 +320,7 @@ export default {
           this.phoneErr='전화번호는 하이픈(-) 없이 숫자(10자 또는 11자)로 입력하세요 ';
         }else{
           this.phoneErr='';
-          this.pwdPass=true;
+          this.phonePass=true;
         }
       }else{
         this.phoneErr='전화번호를 입력하세요';
@@ -311,7 +331,7 @@ export default {
         this.addrErr='주소를 입력하세요';
       }else{
         this.addrErr='';
-        this.addrPass=true;
+        this.addressPass=true;
       }
 
       if(this.detailAddress===null || this.detailAddress==='' ){
@@ -323,7 +343,9 @@ export default {
 
       //조건 6) 이메일 / 인증
       if(this.emailPass!=true){
-        alert('이메일 인증이 되지 않았습니다');
+        //alert 나오면 창새로고침 되면서 다 사라짐 > errmsg or toast
+        //alert('이메일 인증이 되지 않았습니다');
+        this.$toast.add({severity:'error', summary: '인증 오류', detail:'이메일 인증을 해주세요', life: 3000});
       }
 
       //조건 7) 생년월일
@@ -337,19 +359,48 @@ export default {
 
       //전부 입력 / 인증 -> 완료
       if(this.idPass===true && this.pwdPass===true && this.namePass===true && this.genPass===true
-          && this.phonePass===true && this.addrPass===true && this.detailPass===true && this.emailPass===true
+          && this.phonePass===true && this.addressPass===true && this.detailPass===true && this.emailPass===true
           && this.bdatePass===true
-      ){
-        this.$router.push({name:'join-complete'});
-      }
+      ) {
+
+        const joinparam = new URLSearchParams();
+        joinparam.append('id', this.id);
+        joinparam.append('pwd', this.pwd2);
+        joinparam.append('auth',this.auth); // user로 처리
+        joinparam.append('name', this.name);
+        joinparam.append('tel', this.phone);
+        joinparam.append('gender', this.radio);
+        //주소(합처서)
+        joinparam.append('addr', this.addr);
+        joinparam.append('email', this.email);
+        joinparam.append('bDate', this.bdate);
+        //regdate 안보내면 자동 null / sysdate처리
+        joinparam.append('active', this.active);
+
+        axios.post('http://localhost:8082/triplus/api/memberjoin',joinparam,{
+          headers:{
+            'Access-Control-Allow-Origin': '*'
+          }
+        }).then(function(resp){
+          if(resp.data.result==='success'){
+            this.$router.push({name:'join-complete'});
+          }else{
+            alert('실패');
+          }
+        }.bind(this));
 
 
 
 
-    }
+        } //if
 
-  }
-}
+
+      }//join
+
+    }//method
+
+  } //export
+
 
 
 
