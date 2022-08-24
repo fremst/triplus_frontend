@@ -85,7 +85,6 @@ import axios from "axios";
 import router from '@/router';
 
 export default {
-  name: "AddPlaceForm",
   data() {
     return {
       selectedOptions: null, //선택된 카테고리
@@ -221,13 +220,6 @@ export default {
           this.homepage = this.data.homepage;
           this.firstimage = this.data.firstimage;
           this.overview = this.data.overview;
-
-          // console.log(res);
-          // console.log(res.data);
-          // console.log(this.data.title);
-          // console.log(this.data.addr);
-          // console.log(this.data.tel);
-          // console.log(this.data.homepage);
         })
         .catch(err => {
           console.log(err.response);
@@ -240,15 +232,15 @@ export default {
         "userId":"admin",
         "mcatName":this.selectedOptions.value,
         "scatName":this.selectedOptions.scatName,
-        "title":this.data.title,
-        "region" :this.data.region,
-        "tel" : this.data.tel,
-        "addr" : this.data.addr,
-        "mapx" : this.data.mapx,
-        "mapy" : this.data.mapy,
-        "homepage" : this.data.homepage,
-        "firstimage" : this.data.firstimage,
-        "overview" : this.data.overview
+        "title":this.title,
+        "region" :this.region,
+        "tel" : this.tel,
+        "addr" : this.addr,
+        "mapx" : this.mapx,
+        "mapy" : this.mapy,
+        "homepage" : this.homepage,
+        "firstimage" : this.firstimage,
+        "overview" : this.overview
         };
 
       axios
