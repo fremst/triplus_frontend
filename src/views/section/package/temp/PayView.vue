@@ -33,9 +33,6 @@
       <label for="bookeremail">구매자 이메일: </label>
       <input id="bookeremail" name="bookerEmail" type="text" value="test@triplus.com"><br><br>
 
-      <input name="bookerBDate" value="2022-08-15">
-
-      <label for="resSta">예약 상태: </label>
       <input id="resSta" name="resSta" type="text" value="결제전"><br><br>
       <button type="submit">결제하기</button>
     </form>
