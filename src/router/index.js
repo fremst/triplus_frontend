@@ -174,6 +174,15 @@ const routes = [
     component: AccommodationDetailView
   },
   {
+    path:"/admin/magazine/write",
+    name:"magazine-write",
+    component: () => import("@/views/admin/magazine/MagazineWriteView.vue")
+  },
+  {
+    path:"/admin/magazine/update",
+    name:"magazine-update",
+    component: () => import("@/views/admin/magazine/MagazineUpdateView.vue")
+
     path:"/section/magazines",
     name:"magazines",
     component: () => import("@/views/section/magazine/MagazineListView.vue")
@@ -182,6 +191,7 @@ const routes = [
     path:"/section/magazines/detail",
     name:"magazine-detail",
     component: () => import("@/views/section/magazine/MagazineDetailView.vue")
+
   },
 ];
 
