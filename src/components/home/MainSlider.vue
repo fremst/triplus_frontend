@@ -67,5 +67,6 @@ export default ({
     margin: 0 auto;
     width: 1080px;
     position: relative;
+    margin-top: 5%;
   }
 </style>
