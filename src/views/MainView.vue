@@ -31,8 +31,9 @@ export default {
 };
 </script>
 <style scoped>
-.mainContent {
-    min-width: 1080px;
-    min-height: 50px;
+
+.app-container{
+  margin-top: 5%;
 }
+
 </style>

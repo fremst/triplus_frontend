@@ -30,7 +30,7 @@ export default {
                 {
                     label: '매거진',
                     icon: 'pi pi-fw pi-book',
-                    to: '/section/magazine'
+                    to: '/section/magazines'
                 },
                 {
                     label: '관광명소',

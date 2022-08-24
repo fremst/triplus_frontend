@@ -133,11 +133,6 @@ const routes = [
     component: joinCompleteView
   },
   {
-    path: "/memberjoin/complete",
-    name: "join-complete",
-    component: joinCompleteView
-  },
-  {
     path: "/member/myreservation/:oid",
     name: "myreservation",
     component: MyReservationDetailView
@@ -179,7 +174,7 @@ const routes = [
     component: PackageReservationView
   },
   {
-    path: "/section/packages/reservation/complete/:oid",
+    path: "/section/packages/reservation-complete/:oid",
     name: "package-reservation-complete",
     component: PackageReservationCompleteView
   },
@@ -219,10 +214,11 @@ const routes = [
     component: () => import("@/views/admin/magazine/MagazineWriteView.vue")
   },
   {
-    path:"/admin/magazine/update",
-    name:"magazine-update",
+    path: "/admin/magazine/update",
+    name: "magazine-update",
     component: () => import("@/views/admin/magazine/MagazineUpdateView.vue")
-
+  },
+  {
     path:"/section/magazines",
     name:"magazines",
     component: () => import("@/views/section/magazine/MagazineListView.vue")

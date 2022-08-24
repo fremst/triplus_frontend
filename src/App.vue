@@ -31,6 +31,11 @@ export default ({
   padding: 0;
 }
 
+a{
+  text-decoration: none;
+  color: #333333;
+}
+
 .content {
   min-height: 100px;
 }
