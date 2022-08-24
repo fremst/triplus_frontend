@@ -44,7 +44,7 @@ export default ({
     },
 })
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
 //인디케이터 css
 .custom-indicator-galleria {
     .indicator-text {
