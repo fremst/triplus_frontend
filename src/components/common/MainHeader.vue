@@ -8,17 +8,17 @@
       </div>
 
       <div class="status" v-if="user===null">
-         <a  href="/member/login">로그인/회원가입</a>
+         <a  href="/member/login">로그인  |  회원가입</a>
       </div>
 
           <Sidebar v-model:visible="visibleRight" position="right">
             <div class="user" v-if="user===null">
-              <a  href="/member/login"><h1>로그인/회원가입</h1></a>
+              <a  href="/member/login"><h2>로그인  |  회원가입</h2><br></a>
 
               <div class="mypage">
 
                 <ol class="ol-first">
-                  <li><h1>-</h1></li>
+                  <li><h1>1</h1></li>
                   <li><h1>-</h1></li>
                   <li><h1>-</h1></li>
                 </ol>
@@ -57,10 +57,12 @@
             <a href="#" @click.prevent="logout">로그아웃</a>
         </div>
           </Sidebar>
+          <div class="H-button">
           <Button icon="pi pi-bars" @click="visibleRight = true"/>
+          </div>
         </div>
       <a href="/" class="logo">
-        <img :src="require('@/assets/logo.png')"/>
+        <img :src="require('@/assets/textLogo.png')"/>
       </a>
     </div>
   </div>
@@ -107,9 +109,10 @@ export default {
 
 <style scoped>
 img {
-  height: 180px;
-  width: 200px;
+  /* height: 180px;
+  width: 200px; */
   display: inline-block;
+  margin-top: 15px;
 }
 
 a {
@@ -120,23 +123,28 @@ a {
   margin: 0 auto;
   display: block;
   width: 100%;
-  text-align: center;
+  /* text-align: center; */
+  text-align: left;
+  margin-left: 15%;
 
 }
 
 .header {
-  height: 220px;
-  background: #91D9CC;
+  height: 65px;
+  background: #ffffff;
 }
 
 .loginLink {
-  text-align: right;
+  display: flex;
+  float: right;
   color: #333333;
+  margin-top: 10px;
+  margin-right: 10px;
 }
 
 .status{
   display: inline-block;
-  margin-right: 20px;
+  margin: 15px;
 }
 
 .user{
@@ -162,7 +170,6 @@ a {
   border-top: 0.5px solid  #CCC;;
   padding-top: 10px;
 }
-
 
 
 </style>
