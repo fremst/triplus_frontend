@@ -5,8 +5,9 @@
       <div class="magazineBox">
         <ul :style="`left: -${value * 11.16}px`">
           <li>
-            <a href="/">
-              <img :src="require('@/assets/magazine/제주.png')" class="magazine"/>
+        <!--<a href="#" @click.prevent="showDetail(111)">-->
+            <a href="#" @click.prevent="showDetail">
+              <img :src="require('@/assets/magazine/제주.png')"  class="magazine" />
             </a>
           </li>
           <li>
@@ -50,7 +51,7 @@
 <script>
 import Slider from 'primevue/slider';
 
-export default ({
+export default {
   name: 'MainMagazine',
   components: {
     Slider
@@ -63,9 +64,13 @@ export default ({
   methods: {
     changeMaga() {
       this.value
+    },
+    showDetail(){
+      // this.$router.push({name:"magazine-detail",params:{brdNum:n}})
+      this.$router.push({name:"magazine-detail"})
     }
   }
-})
+}
 </script>
 <style scoped>
 .wrap {
