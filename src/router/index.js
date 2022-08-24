@@ -172,7 +172,17 @@ const routes = [
     path: "/section/place/accommodation/:brdNum",
     name: "accommodation-detail",
     component: AccommodationDetailView
-  }
+  },
+  {
+    path:"/section/magazines",
+    name:"magazines",
+    component: () => import("@/views/section/magazine/MagazineListView.vue")
+  },
+  {
+    path:"/section/magazines/detail",
+    name:"magazine-detail",
+    component: () => import("@/views/section/magazine/MagazineDetailView.vue")
+  },
 ];
 
 const router = createRouter({
