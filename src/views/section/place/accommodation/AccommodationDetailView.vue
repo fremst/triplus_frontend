@@ -2,47 +2,47 @@
   <div class="wrap">
     <div class="inner">
       <h1>숙소 상세정보</h1>
-      <img v-if="product.firstimage" :alt="product.title" :src="product.firstimage" class="product-image" />
-      <div class="field">
-        {{ product.scatName }}
-      </div>
-      <div class="field">
-        <label for="title">숙소명</label>
-        <InputText
-          id="title"
-          v-model.trim="product.title"
-          :class="{ 'p-invalid': submitted && !product.title }"
-          autofocus
-          required="true"
-        />
-        <small v-if="submitted && !product.title" class="p-error">숙소명을 입력해주세요.</small>
-      </div>
-      <div class="field">
-        <label for="tel">전화번호</label>
-        <InputText
-          id="tel"
-          v-model.trim="product.tel"
-          :class="{ 'p-invalid': submitted && !product.tel }"
-          autofocus
-          required="true"
-        />
-        <small v-if="submitted && !product.tel" class="p-error">전화번호를 입력해주세요.</small>
-      </div>
-      <div class="field">
-        <label for="addr1">주소</label>
-        <InputText
-          id="addr1"
-          v-model.trim="product.addr1"
-          :class="{ 'p-invalid': submitted && !product.addr1 }"
-          autofocus
-          required="true"
-          >{{ slotProps.data.addr1 }}{{ slotProps.data.addr2 }}</InputText
-        >
-        <small v-if="submitted && !product.addr1" class="p-error">주소를 입력해주세요.</small>
-      </div>
-      <div class="field">
-        <label for="description">상세설명</label>
-        <Textarea id="description" v-model="product.description" cols="20" required="true" rows="3" />
+      <table border="1px solid #333333" class="list-table">
+        <tr>
+          <td>숙소이미지</td>
+          <td><img :src=data.firstimage></td>
+        </tr>
+        <tr>
+          <td>숙소명</td>
+          <td>{{data.title}}</td>
+        </tr>
+        <tr>
+          <td>주소</td>
+          <td>{{data.addr}}</td>
+        </tr>
+        <tr>
+          <td>경도</td>
+          <td>{{data.mapx}}</td>
+        </tr>
+        <tr>
+          <td>위도</td>
+          <td>{{data.mapy}}</td>
+        </tr>
+        <tr>
+          <td>전화번호</td>
+          <td>{{data.tel}}</td>
+        </tr>
+         <tr>
+          <td>url</td>
+          <td><a :href=data.homepage>{{data.homepage}}</a></td>
+        </tr>
+        <tr>
+          <td>상세설명</td>
+          <td>{{data.overview}}</td>
+        </tr>
+      </table>
+      <div class="list-button">
+      <Button label="수정하기" class="p-button-primary mr-2" @click="$router.push('/admin/place/'+data.brdNum)" />
+      <Button label="삭제하기" class="p-button-danger mr-2" @click="openDialog('delete',true)" />
+        <ConfirmDialog v-model:visible="showConfirmDialog"
+              :msg="'선택하신 숙소 정보를 삭제하시겠습니까?'"
+              @closeDialog="deleteSelectedProducts"/>
+      <Button label="목록으로" class="p-button-secondary mr-2" @click="goList" />
       </div>
     </div>
   </div>
@@ -50,78 +50,67 @@
 
 <script>
 import axios from "axios";
+import router from '@/router';
+import ConfirmDialog from '@/views/admin/place/ConfirmDialog.vue';
+
 export default {
   data() {
     return {
       products: null,
+      data: {},
       submitted: false,
-      statuses: [
-        { label: "호텔", value: "호텔" },
-        { label: "펜션/민박", value: "펜션/민박" },
-        { label: "모텔", value: "모텔" },
-        { label: "게스트하우스", value: "게스트하우스" },
-        { label: "기타", value: "기타" }
-      ]
+      showConfirmDialog: false,
     };
   },
-  productService: null,
-  created() {
-    this.initFilters();
+  components : {
+    ConfirmDialog
   },
-  mounted() {
-    this.getList();
-    this.parseCategory();
+  mounted(){
+    this.getDetail();
   },
   methods: {
-    getList() {
+    getDetail() {
       axios
-        .get("localhost:8082/triplus/api/section/places/accommodation/{brdNum}", this.data, {
+        .get(`http://localhost:8082/triplus/api/section/places/accommodation/${this.$route.params.brdNum}`, this.data, {
           headers: {
             "Access-Control-Allow-Origin": "*"
           }
         })
-        .then(res => {
-          this.products = res.data.response.body.items.item;
+         .then(res => {
+          this.data = res.data;
         })
         .catch(err => {
           console.log(err.response);
         });
     },
-    openNew() {
-      this.product = {};
-      this.submitted = false;
-      this.productDialog = true;
+    openDialog(dialogType,show) {
+          if(dialogType === "delete"){
+            this.showConfirmDialog = show;
+          }
     },
-    hideDialog() {
-      this.productDialog = false;
-      this.submitted = false;
-    },
-    saveProduct() {
-      this.submitted = true;
-
-      if (this.product.title.trim()) {
-        if (this.product.title) {
-          this.product.inventoryStatus = this.product.inventoryStatus.value
-            ? this.product.inventoryStatus.value
-            : this.product.inventoryStatus;
-          this.products[this.findIndexById(this.product.title)] = this.product;
-          this.$toast.add({ severity: "success", summary: "Successful", detail: "Product Updated", life: 3000 });
-        } else {
-          this.product.title = this.createId();
-          this.product.contentid = this.createId();
-          this.product.image = "product-placeholder.svg";
-          this.product.inventoryStatus = this.product.inventoryStatus ? this.product.inventoryStatus.value : "기타";
-          this.products.push(this.product);
-          this.$toast.add({ severity: "success", summary: "Successful", detail: "Product Created", life: 3000 });
-        }
-
-        this.productDialog = false;
-        this.product = {};
+    deleteSelectedProducts(value) {
+      //삭제버튼을 누르고 YES클릭시 상태값이 콘솔로그에 찍힘. ex)true
+      console.log(value);
+      if(!value){
+        return false;
+      }else{
+      axios.delete(`http://localhost:8082/triplus/api/section/places/accommodation/${this.$route.params.brdNum}`, this.data,{
+        headers: {
+          "Access-Control-Allow-Origin": "*"
+        },
+      })
+      .then(res => {
+        this.data = res.data;
+      })
+      .catch(err => {
+        console.log(err.response);
+      });
+      this.goList(-1);
       }
     },
-    editProduct(product) {
-      this.product = { ...product };
-      this.productDialog = true;
+    //목록으로 가기
+    goList(){
+      router.push("/section/place/accommodation");
     }
   }
 };
@@ -133,5 +122,10 @@ export default {
 .inner {
   width: 1080px;
   margin: 0 auto;
+}
+.list-button{
+  margin-top: 20px;
+  margin-bottom: 20px;
+  margin-left: 760px;
 }
 </style>
