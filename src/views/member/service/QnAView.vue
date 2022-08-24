@@ -6,7 +6,6 @@
       :detailLink="detailLink"
       :writeLink="writeLink"/>
   </div>
-  <Button @click="getList">aaa</Button>
 </template>
 
 <script>
@@ -22,17 +21,17 @@ export default {
   },
   data() {
     return {
-      listLink: "http://localhost:8082/triplus/api/service/qna/list",
+      listLink: "http://localhost:8082/triplus/api/service/qna/",
       detailLink: "/service/qna/detail",
       writeLink: "/service/qna/write",
-      title: "이곳에 타이틀 입력",
+      title: "Q&A 게시판",
       pageCur: 6,
       pageEnd: 70
     };
   },
   methods: {
     getList() {
-      axios.get("http://localhost:8082/triplus/api/service/qna/list", {
+      axios.get("http://localhost:8082/triplus/api/service/qna/", {
         headers: {
           'Access-Control-Allow-Origin': '*'
         },

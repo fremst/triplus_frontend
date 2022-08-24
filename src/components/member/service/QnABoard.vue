@@ -16,37 +16,44 @@
         <div class="board-search">
           <!-- TODO 검색 기능(axios...) -->
         </div>
-        <DataTable class="board-table" :value="list" responsiveLayout="scroll" :rows="10">
-            <Column field="brdNum" header="글번호" style="width: 100px;"></Column>
-            <Column field="title" header="제목" alignHeader="center">
-              <template #body="slotProps">
+        <DataTable class="board-table" :paginator="true"
+          paginatorTemplate=" FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown"
+          :value="list" responsiveLayout="scroll" :rows="10">
+          <Column field="brdNum" header="글번호" style="width: 100px;"></Column>
+          <Column field="title" header="제목" alignHeader="center">
+            <template #body="slotProps">
+              <div v-if="slotProps.data.published == true">
                 <a :href="getDetailLink(slotProps.data.brdNum)" v-text="slotProps.data.title" />
-              </template>
-            </Column>
-            <Column field="writerId" header="작성자" style="width: 100px;"></Column>
-            <Column field="wdate" header="작성일" style="width: 100px;"></Column>
-            <Column field="hit" header="조회수" style="width: 100px;"></Column>
+              </div>
+              <div v-else>
+                <i class="pi pi-lock"></i>
+                &nbsp;
+                <a :href="getDetailLink(slotProps.data.brdNum)" v-text="slotProps.data.title" />
+              </div>
+            </template>
+          </Column>
+          <Column field="writerId" header="작성자" style="width: 100px;"></Column>
+          <Column field="wdate" header="작성일" style="width: 100px;"></Column>
+          <Column field="hit" header="조회수" style="width: 100px;"></Column>
         </DataTable>
-        <Paginator :rows="10" :pageLinkSize="9" :totalRecords="pageCount"></Paginator>
       </div>
       <div class="board-footer">
         <Button color="#67AB9F" @click="onWrite">문의글 작성하기</Button>
-        <Button color="#67AB9F">공지 등록(??)</Button>
       </div>
     </div>
   </div>
 </template>
 <script>
+  import 'primeicons/primeicons.css';
   import axios from 'axios'
   import DataTable from 'primevue/datatable';
   import Column from 'primevue/column';
-  import Paginator from 'primevue/paginator';
-
+  
   export default
   {
     name: 'QnABoard',
     components: {
-      DataTable, Column, Paginator
+      DataTable, Column
     },
     props: {
       title: String, // 타이틀
@@ -59,7 +66,6 @@
         searchOpt: ["제목", "내용", "제목/내용"],
         list: [],
         pageIndex: 1, // 현재 페이지 인덱스
-        pageCount: 160 // 페이지 개수
       }
     },
     created() {
