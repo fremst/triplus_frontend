@@ -7,6 +7,8 @@ import QnAView from "../views/member/service/QnAView.vue";
 import QnAWriteView from "../views/member/service/QnAWriteView.vue";
 import QnADetailView from "../views/member/service/QnADetailView.vue";
 
+import MyReservationDetailView from "../views/member/MyReservationView";
+
 import PackageListView from "@/views/section/package/PackageListView";
 import PackageDetailView from "@/views/section/package/PackageDetailView";
 import PackageReservationView from "@/views/section/package/PackageReservationView";
@@ -29,8 +31,13 @@ import showIDView from "@/views/member/ShowIDView";
 import showPwdView from "@/views/member/ShowPwdView";
 import changePwdView from "@/views/member/ChangePwdView";
 import joinCompleteView from "@/views/member/JoinCompleteView";
+import myPageCheckPwdView from "@/views/member/mypage/MyPageCheckPwdView";
+import MyPageUpdateView from "@/views/member/mypage/MyPageUpdateView";
+
+import checkListView from "@/views/member/plan/CheckListView";
 
 import MainView from "../views/MainView.vue";
+
 
 const routes = [
   {
@@ -83,46 +90,74 @@ const routes = [
     name: "qna-detail",
     component: QnADetailView
   },
-  {
+    //회원 관련
+  { //아이디 / 비밀번호 찾는 view
     path: "/member/find",
     name: "find",
     component: FindView
   },
-  {
+  { //회원가입 view
     path: "/memberjoin",
     name: "memberjoin",
     component: MemberJoinView
     // meta:{member:true}
   },
-  {
+  { //로그인view
     path: "/member/login",
     name: "member-login",
     component: LoginView
   },
-  {
+  { //회원가입 이용약관
     path: "/memberjoin/tos",
     name: "tos",
     component: tosView
   },
-  {
+  { // 찾는 아이디 보여주는 view
     path: "/member/showid",
     name: "showId",
     component: showIDView
   },
-  {
+  { // 비밀번호 찾기 view
     path: "/member/showpwd",
     name: "showPwd",
     component: showPwdView
   },
-  {
+  { // 비밀번호 변경 view
     path: "/member/changepwd",
     name: "changePwd",
     component: changePwdView
   },
   {
+
     path: "/memberjoin/complete",
     name: "join-complete",
     component: joinCompleteView
+  },
+  {
+    path: "/member/myreservation/:oid",
+    name: "myreservation",
+    component: MyReservationDetailView
+  },
+  { // 회원가입 완료 view
+    path: '/memberjoin/complete',
+    name: 'join-complete',
+    component: joinCompleteView
+  },
+  {
+    path: '/member/plan/checklist',
+    name: 'member-checklist',
+    component: checkListView
+  },
+    //마이페이지
+  { // 비밀번호 확인 view
+    path: '/member/mypage/chkpwd',
+    name: 'mypage-chkpwd',
+    component: myPageCheckPwdView
+  },
+  { //회원정보 수정 view
+    path: '/member/mypage/update',
+    name: 'mypage-update',
+    component: MyPageUpdateView
   },
   {
     path: "/section/packages",
@@ -141,6 +176,11 @@ const routes = [
   },
   {
     path: "/section/packages/reservation/complete/:oid",
+    name: "package-reservation-complete",
+    component: PackageReservationCompleteView
+  },
+  {
+    path: "/section/packages/reservation-complete/:oid",
     name: "package-reservation-complete",
     component: PackageReservationCompleteView
   },
