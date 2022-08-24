@@ -7,6 +7,8 @@ import QnAView from "../views/member/service/QnAView.vue";
 import QnAWriteView from "../views/member/service/QnAWriteView.vue";
 import QnADetailView from "../views/member/service/QnADetailView.vue";
 
+import MyReservationDetailView from "../views/member/MyReservationView";
+
 import PackageListView from "@/views/section/package/PackageListView";
 import PackageDetailView from "@/views/section/package/PackageDetailView";
 import PackageReservationView from "@/views/section/package/PackageReservationView";
@@ -123,6 +125,11 @@ const routes = [
     name: "changePwd",
     component: changePwdView
   },
+  {
+    path: "/member/myreservation/:oid",
+    name: "myreservation",
+    component: MyReservationDetailView
+  },
   { // 회원가입 완료 view
     path: '/memberjoin/complete',
     name: 'join-complete',
@@ -160,7 +167,7 @@ const routes = [
     component: PackageReservationView
    },
    {
-      path: "/section/packages/reservation/complete/:oid",
+      path: "/section/packages/reservation-complete/:oid",
       name: "package-reservation-complete",
       component: PackageReservationCompleteView
 

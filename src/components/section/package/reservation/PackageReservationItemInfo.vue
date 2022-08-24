@@ -52,7 +52,7 @@
       </td>
     </tr>
     <tr>
-      <td>휴대폰 번호</td>
+      <td>전화 번호</td>
       <td colspan="4">
         <InputText type="text" class="p-inputtext-sm" v-model="value1" />
       </td>
@@ -61,21 +61,21 @@
 
   <h1>일행 정보</h1>
 
-  <table v-for="(person, index) in list" :key="index">
+  <table v-for="(pkgCom, index) in list" :key="index">
     <tr>
       <td>
         구분
       </td>
       <td>
-        {{person.trvlrClass}}
+        {{pkgCom.class}}
       </td>
     </tr>
     <tr>
       <td>이름</td>
-      <td><InputText type="text" class="p-inputtext-sm" :value="person.name" v-model="value1" /></td>
+      <td><InputText type="text" class="p-inputtext-sm" :value="pkgCom.name" v-model="value1" /></td>
     </tr>
     <tr>
-      <td>휴대폰 번호</td>
+      <td>전화 번호</td>
       <td>
         <InputText type="text" class="p-inputtext-sm" v-model="value1" />
       </td>
@@ -136,7 +136,7 @@ export default {
     return {
       sales: null,
       gender: 'male',
-      list: [{name: '가성인', trvlrClass: '성인'}, {name: '나성인', trvlrClass: '성인'}, {name: '가아동', trvlrClass: '아동'}],
+      list: [{name: '가성인', class: '성인'}, {name: '나성인', class: '성인'}, {name: '가아동', class: '아동'}],
       selectedDomain: "",
       selectedCoupon: "없음",
       domains: [
