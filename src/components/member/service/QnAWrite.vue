@@ -185,32 +185,6 @@ export default
       if (this.submitting)
         return;
 
-      if (!this.checkTitle())
-      {
-        alert("제목 길이가 길거나 너무 짧습니다.");
-        return;
-      }
-      if (!this.checkEmail())
-      {
-        alert("이메일 주소가 적합하지 않습니다.");
-        return;
-      }
-      if (!this.checkPwd())
-      {
-        alert("비밀번호가 길거나 너무 짧습니다.");
-        return;
-      }
-      if (!this.checkCategory())
-      {
-        alert("문의 유형이 선택되지 않았습니다.");
-        return;
-      }
-      if (!this.checkContent())
-      {
-        alert("내용이 없습니다.");
-        return;
-      }
-
       this.submitting = true;
 
       const tempId = localStorage.getItem("id") == null ? "guest" : localStorage.getItem("id");
@@ -244,7 +218,6 @@ export default
           alert(resp.data.reason);
           this.$router.push(this.cancelLink);
         }
-
       }.bind(this));
     },
     onCancel() {

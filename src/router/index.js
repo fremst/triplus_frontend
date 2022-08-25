@@ -35,9 +35,9 @@ import myPageCheckPwdView from "@/views/member/mypage/MyPageCheckPwdView";
 import MyPageUpdateView from "@/views/member/mypage/MyPageUpdateView";
 
 import checkListView from "@/views/member/plan/CheckListView";
+import ExpensesView from "@/views/member/plan/ExpensesView";
 
 import MainView from "../views/MainView.vue";
-
 
 const routes = [
   {
@@ -90,39 +90,46 @@ const routes = [
     name: "qna-detail",
     component: QnADetailView
   },
-    //회원 관련
-  { //아이디 / 비밀번호 찾는 view
+  //회원 관련
+  {
+    //아이디 / 비밀번호 찾는 view
     path: "/member/find",
     name: "find",
     component: FindView
   },
-  { //회원가입 view
+  {
+    //회원가입 view
     path: "/memberjoin",
     name: "memberjoin",
     component: MemberJoinView
     // meta:{member:true}
   },
-  { //로그인view
+  {
+    //로그인view
     path: "/member/login",
     name: "member-login",
     component: LoginView
   },
-  { //회원가입 이용약관
+  {
+    //회원가입 이용약관
     path: "/memberjoin/tos",
     name: "tos",
     component: tosView
   },
-  { // 찾는 아이디 보여주는 view
+  {
+    // 찾는 아이디 보여주는 view
     path: "/member/showid",
     name: "showId",
     component: showIDView
   },
-  { // 비밀번호 찾기 view
+  {
+    // 비밀번호 찾기 view
     path: "/member/showpwd",
     name: "showPwd",
     component: showPwdView
   },
-  { // 비밀번호 변경 view
+  {
+    // 비밀번호 변경 view
     path: "/member/changepwd",
     name: "changePwd",
     component: changePwdView
@@ -137,25 +144,33 @@ const routes = [
     name: "myreservation",
     component: MyReservationDetailView
   },
-  { // 회원가입 완료 view
-    path: '/memberjoin/complete',
-    name: 'join-complete',
+  {
+    // 회원가입 완료 view
+    path: "/memberjoin/complete",
+    name: "join-complete",
     component: joinCompleteView
   },
   {
-    path: '/member/plan/checklist',
-    name: 'member-checklist',
+    path: "/member/plan/checklist",
+    name: "member-checklist",
     component: checkListView
   },
-    //마이페이지
-  { // 비밀번호 확인 view
-    path: '/member/mypage/chkpwd',
-    name: 'mypage-chkpwd',
+  {
+    path: "/member/plan/expenses",
+    name: "member-expenses",
+    component: ExpensesView
+  },
+  //마이페이지
+  {
+    // 비밀번호 확인 view
+    path: "/member/mypage/chkpwd",
+    name: "mypage-chkpwd",
     component: myPageCheckPwdView
   },
-  { //회원정보 수정 view
-    path: '/member/mypage/update',
-    name: 'mypage-update',
+  {
+    //회원정보 수정 view
+    path: "/member/mypage/update",
+    name: "mypage-update",
     component: MyPageUpdateView
   },
   {
@@ -209,8 +224,8 @@ const routes = [
     component: AccommodationDetailView
   },
   {
-    path:"/admin/magazine/write",
-    name:"magazine-write",
+    path: "/admin/magazine/write",
+    name: "magazine-write",
     component: () => import("@/views/admin/magazine/MagazineWriteView.vue")
   },
   {
@@ -219,15 +234,14 @@ const routes = [
     component: () => import("@/views/admin/magazine/MagazineUpdateView.vue")
   },
   {
-    path:"/section/magazines",
-    name:"magazines",
+    path: "/section/magazines",
+    name: "magazines",
     component: () => import("@/views/section/magazine/MagazineListView.vue")
   },
   {
-    path:"/section/magazines/detail",
-    name:"magazine-detail",
+    path: "/section/magazines/detail",
+    name: "magazine-detail",
     component: () => import("@/views/section/magazine/MagazineDetailView.vue")
-
   },
   {
     path: "/section/calendar",
