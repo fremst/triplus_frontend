@@ -1,7 +1,10 @@
 import { createRouter, createWebHistory } from "vue-router";
 
+import AdminView from "@/views/admin/AdminView";
+
 import AddPlaceView from "@/views/admin/place/AddPlaceView";
 import ModifyPlaceView from "@/views/admin/place/ModifyPlaceView";
+import AdminPackageListView from "@/views/admin/item/AdminPackageListView";
 
 import QnAView from "../views/member/service/QnAView.vue";
 import QnAWriteView from "../views/member/service/QnAWriteView.vue";
@@ -38,13 +41,18 @@ import checkListView from "@/views/member/plan/CheckListView";
 
 import MainView from "../views/MainView.vue";
 
-
 const routes = [
+  {
+    path: "/admin",
+    name: "admin",
+    component: AdminView
+  },
   {
     path: "/",
     name: "main",
     component: MainView
   },
+
   {
     path: "/admin/place",
     name: "place-add",
@@ -54,6 +62,11 @@ const routes = [
     path: "/admin/place/:brdNum",
     name: "place-modify",
     component: ModifyPlaceView
+  },
+  {
+    path: "/admin/packages",
+    name: "admin-packages",
+    component: AdminPackageListView
   },
   {
     path: "/service/notices",
