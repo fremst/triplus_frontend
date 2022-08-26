@@ -224,7 +224,7 @@ const routes = [
     component: () => import("@/views/section/magazine/MagazineListView.vue")
   },
   {
-    path:"/section/magazines/detail",
+    path:"/section/magazines/:brdNum",
     name:"magazine-detail",
     component: () => import("@/views/section/magazine/MagazineDetailView.vue")
 

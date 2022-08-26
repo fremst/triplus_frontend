@@ -1,75 +1,79 @@
 <template>
-    <div class="main">
-        <div class="board">
-            <div class="board-header">
-                <h1>매거진 목록</h1>
-            </div>
-            <div class="board-main">
-                <div class="table-header" id="searchGroup">
-                    <span class="p-input-icon-left" >
-                            <i class="pi pi-search" id="icon" />
-                            <InputText v-model="filters['global'].value" placeholder="검색어를 입력하세요" id="keyword"  />
-                    </span>
+    <div class="card">
+        <DataView :value="list" :layout="layout" :paginator="true" :rows="9" :sortOrder="sortOrder" :sortField="sortField">
+            <template #header>
+                <div class="grid grid-no gutter">
+                    <div class="col-6" style="text-align: left">
+                        <Dropdown v-model="sortKey" :options="sortOptions" optionLabel="label" placeholder="정렬 옵션 선택" @change="onSortChange($event)"/>
+                    </div>
+                    <div class="col-6" style="text-align: right">
+                        <DataViewLayoutOptions v-model="layout" />
+                    </div>
                 </div>
-                <DataTable class="board-table" :paginator="true"
-                           paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown"
-                           :value="list"
-                           responsiveLayout="scroll" :rows="5"
-                           :filters="filters">
-                    <Column field="tImg" header="" style="width: 200px;" >
-                        <template #body="slotProps">
-                            <img :src="require('@/assets/magazine/제주.png')" :alt="slotProps.data.tImg" class="tImg"  />
-                        </template>
-                    </Column>
-                    <Column field="title" header="제목" >
-                        <template #body="slotProps">
-                            <a href="#" @click.prevent="onDetail(slotProps.data.brdNum)" v-text="slotProps.data.title"></a>
-                        </template>
-                    </Column>
-                    <Column field="wdate" header="작성일" style="width: 100px;"></Column>
-                    <Column field="hit" header="조회수" style="width: 100px;"></Column>
-                </DataTable>
-            </div>
-            <div class="board-footer">
-                <Button @click="onWrite">매거진 등록</Button>
-                <Button @click="onList">전체 글 보기</Button>
-            </div>
-        </div>
+            </template>
+
+            <template #list="slotProps">
+                <div class="col-12">
+                    <div class="product-list-item">
+                        <img :src="require('@/assets/magazine/제주.png')" :alt="slotProps.data.tImg" class="tImg"  />
+                        <div class="product-list-detail">
+                            <div class="product-name">{{slotProps.data.title}}</div>
+                            <i class="pi pi-tag product-category-icon"></i><span class="product-category">{{slotProps.data.category}}</span>
+                        </div>
+                        <div class="product-list-action">
+                            <Button icon="pi pi-search" class="p-button" @click="onDetail(slotProps.data.brdNum)">상세내용</Button>
+                        </div>
+                    </div>
+                </div>
+            </template>
+            <template #grid="slotProps">
+                <div class="col-12 md:col-4">
+                    <div class="product-grid-item card">
+                        <div class="product-grid-item-top">
+                            <div>
+                                <i class="pi pi-tag product-category-icon"></i>
+                                <span class="product-category">{{slotProps.data.category}}</span>
+                            </div>
+                        </div>
+                        <div class="product-grid-item-content">
+                            <img :src="require('@/assets/magazine/제주.png')" :alt="slotProps.data.tImg" class="tImg" />
+                            <div class="product-name">{{slotProps.data.title}}</div>
+                        </div>
+                        <div class="product-grid-item-bottom">
+                            <Button icon="pi pi-search" class="p-button-lg" @click="onDetail(slotProps.data.brdNum)">상세내용</Button>
+                        </div>
+                    </div>
+                </div>
+            </template>
+        </DataView>
     </div>
 </template>
 
 <script>
-    // import axios from 'axios';
-    import DataTable from 'primevue/datatable';
-    import Column from 'primevue/column';
-    import { FilterMatchMode } from 'primevue/api';
+    import axios from 'axios';
+    import DataView from 'primevue/dataview';
 
     export default {
         name: "MagazineList.vue",
         components:{
-            DataTable,
-            Column
+            DataView
         },
         data(){
             return{
-                // list:[],
+                list:[],
                 pageIndex : 1,
-                list: [
-                {"brdNum": 11,"title": "미리 준비할수록 저렴해요. 제주 여름휴가","writerId": "admin","contents": "제주여행 매거진","tImg": "","wdate": "2022/08/22","hit": 0,"published": 1},
-                {"brdNum": 10,"title": "서울여행","writerId": "admin","contents": "서울여행 매거진","tImg": "","wdate": "2022/08/22","hit": 0,"published": 1},
-                {"brdNum": 8,"title": "강릉여행","writerId": "admin","contents": "강릉여행 매거진","tImg": "","wdate": "2022/08/22","hit": 0,"published": 1},
-                {"brdNum": 7,"title": "부산여행","writerId": "admin","contents": "부산여행 매거진","tImg": "","wdate": "2022/08/22","hit": 0,"published": 1},
-                {"brdNum": 11,"title": "제주여행","writerId": "admin","contents": "제주여행 매거진","tImg": "","wdate": "2022/08/22","hit": 0,"published": 1},
-                {"brdNum": 10,"title": "서울여행","writerId": "admin","contents": "서울여행 매거진","tImg": "","wdate": "2022/08/22","hit": 0,"published": 1},
-                {"brdNum": 8,"title": "강릉여행","writerId": "admin","contents": "강릉여행 매거진","tImg": "","wdate": "2022/08/22","hit": 0,"published": 1},
-                {"brdNum": 7,"title": "부산여행","writerId": "admin","contents": "부산여행 매거진","tImg": "","wdate": "2022/08/22","hit": 0,"published": 1},
-                ],
-                filters:{}
+                layout: 'list',
+                sortKey: null,
+                sortOrder: null,
+                sortField: null,
+                sortOptions: [
+                    {label: '조회 많은순', value: '!hit'},
+                    {label: '조회 적은순', value: 'hit'},
+                ]
             }
         },
         created(){
-            // this.list=this.getList();
-            this.initFilters();
+            this.getList();
         },
         methods:{
             onWrite(){
@@ -79,19 +83,13 @@
                 this.curPage = n;
             },
             getList(){
-                // this.list= axios.get('http://localhost:8082/triplus/api/',{
-                //     headers: {
-                //         'Access-Control-Allow-Origin': '*'
-                //     },
-                //     params:{}
-                // }).then(function(resp){
-                //     this.list=resp.data;
-                // }.bind(this));
-            },
-            initFilters() {
-                this.filters = {
-                    'global': {value: null, matchMode: FilterMatchMode.CONTAINS},
-                }
+                axios.get('http://localhost:8082/triplus/api/section/magazines',{
+                    headers: {
+                        'Access-Control-Allow-Origin': '*'
+                    }
+                }).then(function(resp){
+                    this.list=resp.data;
+                }.bind(this));
             },
             onDetail(brdNum){
                 console.log(brdNum);
@@ -100,87 +98,28 @@
             // onList(){
             //     this.$router.push({name:'magazines'})
             // }
+            onSortChange(event){
+                const value = event.value.value;
+                const sortValue = event.value;
+
+                if (value.indexOf('!') === 0) {
+                    this.sortOrder = -1;
+                    this.sortField = value.substring(1, value.length);
+                    this.sortKey = sortValue;
+                }
+                else {
+                    this.sortOrder = 1;
+                    this.sortField = value;
+                    this.sortKey = sortValue;
+                }
+            }
 
         }
 
     }
 </script>
 
-<style scoped>
-    * {
-        padding: 20px;
-        margin: 0px;
-        padding: 0px;
-    }
-    a {
-        text-decoration: none;
-    }
-    .main {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        background-color: white;
-    }
-    .board {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        width: 1080px;
-        border: 1px solid lightgray;
-    }
-    .board-header {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        width: 100%;
-        height: 100px;
-        align-items: flex-start;
-        padding: 20px;
-    }
-    .board-header h1 {
-        font-size: 50px;
-        font-weight: bold;
-        color: #222;
-    }
-    .board-main {
-        display: flex;
-        flex-direction: column;
-        width: 100%;
-        align-items: center;
-        padding: 20px;
-    }
-    .board-search * {
-        margin: 0;
-    }
-    .board-search input[type="submit"] {
-        width: 100px;
-    }
-    .board-table {
-        width: 100%;
-        margin: 0px 0px 20px 0px;
-        text-align: center;
-        border-top: 1px solid gray;
-        border-collapse: collapse;
-    }
-    .board-page .currentPage {
-        color: #67AB9F;
-    }
-    .board-page * {
-        margin: 0px 4px;
-    }
-    .board-footer {
-        display: flex;
-        flex-direction: row;
-        justify-content: end;
-        width: 100%;
-        align-items: center;
-        padding: 20px;
-    }
-    .board-footer * {
-        margin: 0px 4px;
-    }
+<style lang="scss" scoped>
     #searchGroup{
         margin-bottom: 10px;
     }
@@ -192,9 +131,166 @@
     #icon{
         margin-left: 735px;
     }
-    .tImg{
-        width: 150px;
-        height: 200px;
-        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+    .card {
+        background: #ffffff;
+        padding: 1rem;
+        box-shadow: 0 2px 1px -1px rgba(0,0,0,.2), 0 1px 1px 0 rgba(0,0,0,.14), 0 1px 3px 0 rgba(0,0,0,.12);
+        border-radius: 4px;
+        margin-bottom: 2rem;
+        min-height: 500px;
+
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+    .p-dropdown {
+        width: 14.2rem;
+        font-weight: normal;
+    }
+
+    .product-name {
+        font-size: 1.2rem;
+        font-weight: 700;
+    }
+
+    .product-description {
+        margin: 0 0 1rem 0;
+        font-size: 13pt;
+    }
+
+    .pi-map-marker {
+        vertical-align: middle;
+        margin-right: .5rem;
+    }
+    .product-category-icon {
+        vertical-align: middle;
+        margin-right: .5rem;
+    }
+
+    .product-category {
+        font-weight: 600;
+        vertical-align: middle;
+        font-size: 14pt;
+    }
+    .product-badge {
+        text-align: center;
+        border-radius: 2px;
+        padding: .25em .5rem;
+        text-transform: uppercase;
+        font-weight: 700;
+        font-size: 12pt;
+        letter-spacing: .3px;
+    }
+
+    .product-badge.status-proceeding {
+        background: #C8E6C9;
+        color: #256029;
+    }
+
+    .product-badge.status-completed {
+        background: #FFCDD2;
+        color: #C63737;
+    }
+
+    .product-badge.status-ending {
+        background: #FEEDAF;
+        color: #8A5340;
+    }
+    ::v-deep(.product-list-item) {
+        display: flex;
+        align-items: center;
+        padding: 1rem;
+        width: 100%;
+
+        img {
+            width: 200px;
+            height: 120px;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+            margin-right: 2rem;
+        }
+
+        .product-list-detail {
+            flex: 1 1 0;
+        }
+
+        .p-rating {
+            margin: 0 0 .5rem 0;
+        }
+
+        .product-price {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: .5rem;
+            align-self: flex-end;
+        }
+
+        .product-list-action {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .p-button {
+            margin-bottom: .5rem;
+        }
+    }
+
+    ::v-deep(.product-grid-item) {
+        margin: .5rem;
+        border: 1px solid var(--surface-border);
+
+        .product-grid-item-top,
+        .product-grid-item-bottom {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        img {
+            width: 290px;
+            height: 174px;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+            margin: 2rem 0;
+        }
+
+        .product-grid-item-content {
+            text-align: center;
+        }
+
+        .product-price {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+    }
+
+    @media screen and (max-width: 576px) {
+        .product-list-item {
+            flex-direction: column;
+            align-items: center;
+
+            img {
+                margin: 2rem 0;
+            }
+
+            .product-list-detail {
+                text-align: center;
+            }
+
+            .product-price {
+                align-self: center;
+            }
+
+            .product-list-action {
+                display: flex;
+                flex-direction: column;
+            }
+
+            .product-list-action {
+                margin-top: 2rem;
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+                width: 100%;
+            }
+        }
     }
 </style>
