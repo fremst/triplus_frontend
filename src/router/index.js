@@ -23,6 +23,8 @@ import AccommodationDetailView from "@/views/section/place/accommodation/Accommo
 
 import AddMyScheduleView from "@/views/section/member/AddMyScheduleView";
 import MyScheduleMainView from "@/views/section/member/MyScheduleMainView";
+import AddSchedulePlaceView from "@/views/section/member/AddSchedulePlaceView";
+import AddScheduleMemoView from "@/views/section/member/AddScheduleMemoView";
 
 import MemberJoinView from "@/views/member/MemberJoinView";
 import tosView from "@/views/member/TosView";
@@ -254,9 +256,21 @@ const routes = [
   },
   //일정등록 메인페이지
   {
-    path: "/section/member/MyScheduleMainView",
+    path: "/section/member/schedule/main",
     name: "add-schedule-main",
     component: MyScheduleMainView
+  },
+  //일정등록 장소추가
+  {
+    path: "/section/member/schedule/add-place",
+    name: "add-schedule-place",
+    component: AddSchedulePlaceView
+  },
+  //일정등록 메모추가
+  {
+    path: "/section/member/schedule/add-memo",
+    name: "add-schedule-memo",
+    component: AddScheduleMemoView
   }
 ];
 

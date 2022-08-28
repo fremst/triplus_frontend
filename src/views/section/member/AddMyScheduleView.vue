@@ -88,8 +88,8 @@ export default {
       this.submitted = true;
 
       const params = {
-        startDate: this.dates[0],
-        endDate: this.dates[1],
+        sDate: this.dates[0],
+        eDate: this.dates[1],
         destination: this.destination
       };
       const postUrl = `${process.env.VUE_APP_API_URL || ""}/section/member/`;
@@ -107,7 +107,7 @@ export default {
     getFormattedDate(date) {
       console.log(date);
       if (date) {
-        return date.getFullYear() + "-" + date.getMonth() + "-" + date.getDate();
+        return date.getFullYear() + "-" + date.getMonth() + 1 + "-" + date.getDate();
       } else {
         return "";
       }
