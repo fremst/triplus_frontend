@@ -22,7 +22,7 @@
             <template #header>
               <div class="table-header flex flex-column md:flex-row md:justiify-content-between">
                 <h3>패키지 목록</h3>
-                <Button @click="$router.push('/admin/package/add')">새로 등록</Button>
+                <Button @click="$router.push('/admin/packages/write')">새로 등록</Button>
               </div>
             </template>
             <Column selectionMode="multiple" style="width: 3rem" :exportable="false"></Column>
@@ -150,6 +150,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
 tr {
   align-content: center;
   justify-content: center;
@@ -238,4 +239,5 @@ tr {
 .addlist-title {
   margin: 15px 0 10px 0;
 }
+
 </style>

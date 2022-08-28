@@ -79,7 +79,7 @@ export default {
             },
             {
               label: '패키지 추가',
-              to: 'admin/packages/add'
+              to: 'admin/packages/write'
             }
           ]
         },
