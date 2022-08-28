@@ -7,15 +7,15 @@
             <div class="board-main">
                 <table class="article-header">
                     <tr>
+                        <th width="150px">[ {{article.category}} ]</th>
                         <th style="text-align: start; padding-left: 20px;">{{article.title}}</th>
-                        <th width="200px">{{article.writerId}}</th>
                         <th width="200px">{{article.wdate}}</th>
                     </tr>
                 </table>
                 <br>
                 <Button @click="onRecommend" id="recommendBtn">추천하기</Button><br>
                 <div class="article-main">
-                    <div v-html="article.contents"></div>
+                    <pre v-html="article.contents"></pre>
                 </div>
                 <div class="article-footer">
                 </div>
@@ -27,7 +27,7 @@
             </div>
             <div class="comm-list">
                 <table class="comm-main">
-                    <tr v-for="comm in comments" :key="comm.id">
+                    <tr v-for="comm in comments" :key="comm.brdCmtNum">
 <!--                        <th width="100px" style="text-align:left">{{comm.brdCmtNum}}</th>-->
                         <th width="100px" style="text-align:left">{{comm.id}}</th>
                         <td style="width:70%; text-align:left">{{comm.contents}}</td>
@@ -61,7 +61,8 @@
                     title:"미리 준비할수록 저렴해요 제주 여름휴가",
                     writerId:"admin",
                     wdate:"2022/08/23",
-                    contents:"제주 매거진에 대한 내용과 이미지들"
+                    contents:"제주 매거진에 대한 내용과 이미지들",
+                    category:""
                 },
                 comments:[
                     {
