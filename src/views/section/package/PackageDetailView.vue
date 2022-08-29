@@ -37,12 +37,6 @@ export default {
     }
   },
 
-  // computed: {
-  //   brdNum(){
-  //     return this.$route.params.brdNum;
-  //   },
-  // },
-
   created(){
 
       axios.get(`http://localhost:8082/triplus/api/section/packages/${this.$route.params.brdNum}`, {
