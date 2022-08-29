@@ -30,7 +30,7 @@
           <Column selectionMode="multiple" style="width: 3rem" :exportable="false"></Column>
           <Column header="명소이미지" style="min-width: 8rem">
             <template #body="slotProps">
-              <img :alt="slotProps.data.title" :src="slotProps.data.firstimage" class="product-image" />
+              <img :alt="slotProps.data.title" :src="`data:image/jpeg;base64,${slotProps.data.firstimage}`" class="product-image" />
             </template>
           </Column>
           <Column :sortable="true" field="scatName" header="카테고리" style="min-width: 8rem; text-align: center">

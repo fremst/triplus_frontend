@@ -5,7 +5,7 @@
       <table border="1px solid #333333" class="list-table">
         <tr>
           <td>명소이미지</td>
-          <td><img :src=data.firstimage></td>
+          <td><img :src="`data:image/jpeg;base64,${data.firstimage}`"></td>
         </tr>
         <tr>
           <td>명소명</td>
@@ -27,7 +27,7 @@
           <td>전화번호</td>
           <td>{{data.tel}}</td>
         </tr>
-         <tr>
+        <tr>
           <td>url</td>
           <td><a :href=data.homepage>{{data.homepage}}</a></td>
         </tr>

@@ -55,7 +55,7 @@ export default {
                 {
                     label: '일정등록',
                     icon: 'pi pi-fw pi-calendar',
-                    to: '/section/calendar'
+                    to: '/section/member'
                 },
             ]
         }
