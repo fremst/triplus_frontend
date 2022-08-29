@@ -25,7 +25,11 @@ import RestaurantDetailView from "@/views/section/place/restaurant/RestaurantDet
 import AccommodationListView from "@/views/section/place/accommodation/AccommodationListView";
 import AccommodationDetailView from "@/views/section/place/accommodation/AccommodationDetailView";
 
-import AddScheduleView from "@/views/section/plan/AddScheduleView";
+import AddMyScheduleView from "@/views/section/member/AddMyScheduleView";
+import MyScheduleMainView from "@/views/section/member/MyScheduleMainView";
+import AddSchedulePlaceView from "@/views/section/member/AddSchedulePlaceView";
+import AddScheduleMemoView from "@/views/section/member/AddScheduleMemoView";
+import WeatherView from "@/views/section/member/WeatherView";
 
 import MemberJoinView from "@/views/member/MemberJoinView";
 import tosView from "@/views/member/TosView";
@@ -59,12 +63,13 @@ const routes = [
     name: "main",
     component: MainView
   },
-
+  //관리자 장소추가
   {
     path: "/admin/place",
     name: "place-add",
     component: AddPlaceView
   },
+  //관리자 장소 수정
   {
     path: "/admin/place/:brdNum",
     name: "place-modify",
@@ -213,31 +218,37 @@ const routes = [
     name: "package-reservation-complete",
     component: PackageReservationCompleteView
   },
+  //명소 리스트
   {
     path: "/section/place/attraction",
     name: "attraction-list",
     component: AttractionListView
   },
+  //명소 상세페이지
   {
     path: "/section/place/attraction/:brdNum",
     name: "attraction-detail",
     component: AttractionDetailView
   },
+  //맛집 리스트
   {
     path: "/section/place/restaurant",
     name: "restaurant-list",
     component: RestaurantListView
   },
+  //맛집 상세페이지
   {
     path: "/section/place/restaurant/:brdNum",
     name: "restaurant-detail",
     component: RestaurantDetailView
   },
+  //숙박 리스트
   {
     path: "/section/place/accommodation",
     name: "accommodation-list",
     component: AccommodationListView
   },
+  //숙박 상세페이지
   {
     path: "/section/place/accommodation/:brdNum",
     name: "accommodation-detail",
@@ -263,10 +274,35 @@ const routes = [
     name: "magazine-detail",
     component: () => import("@/views/section/magazine/MagazineDetailView.vue")
   },
+  //일정등록 첫 페이지
   {
-    path: "/section/calendar",
+    path: "/section/member",
     name: "add-schedule",
-    component: AddScheduleView
+    component: AddMyScheduleView
+  },
+  //일정등록 메인페이지
+  {
+    path: "/section/member/schedule/main",
+    name: "add-schedule-main",
+    component: MyScheduleMainView
+  },
+  //일정등록 장소추가
+  {
+    path: "/section/member/schedule/add-place",
+    name: "add-schedule-place",
+    component: AddSchedulePlaceView
+  },
+  //일정등록 메모추가
+  {
+    path: "/section/member/schedule/add-memo",
+    name: "add-schedule-memo",
+    component: AddScheduleMemoView
+  },
+  //날씨보기
+  {
+    path: "/section/member/schedule/weather",
+    name: "schedule-weather",
+    component: WeatherView
   }
 ];
 
