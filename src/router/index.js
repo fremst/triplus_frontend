@@ -39,6 +39,7 @@ import myPageCheckPwdView from "@/views/member/mypage/MyPageCheckPwdView";
 import MyPageUpdateView from "@/views/member/mypage/MyPageUpdateView";
 
 import checkListView from "@/views/member/plan/CheckListView";
+import ExpensesView from "@/views/member/plan/ExpensesView";
 
 import MainView from "../views/MainView.vue";
 
@@ -173,6 +174,11 @@ const routes = [
     path: "/member/plan/checklist",
     name: "member-checklist",
     component: checkListView
+  },
+  {
+    path: "/member/plan/expenses",
+    name: "member-expenses",
+    component: ExpensesView
   },
   //마이페이지
   {
