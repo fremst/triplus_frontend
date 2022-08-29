@@ -7,46 +7,45 @@
             <div class="board-main">
                 <table class="article-header">
                     <tr>
+                        <th width="150px">[ {{article.category}} ]</th>
                         <th style="text-align: start; padding-left: 20px;">{{article.title}}</th>
-                        <th width="200px">{{article.writerId}}</th>
                         <th width="200px">{{article.wdate}}</th>
                     </tr>
                 </table>
                 <br>
                 <Button @click="onRecommend" id="recommendBtn">추천하기</Button><br>
                 <div class="article-main">
-                    <div v-html="article.contents"></div>
+                    <pre v-html="article.contents"></pre>
                 </div>
                 <div class="article-footer">
                 </div>
             </div>
             <div class="board-footer">
-                <Button @click="$router.push(`/section/magezines/${this.$route.params.brdNum}/update`)" >수정</Button>
+                <Button @click="$router.push(`/section/magazines/${this.$route.params.brdNum}/update`)" >수정</Button>
                 <Button class="p-button-danger" @click="onDelete">삭제</Button>
                 <Button @click="onList">목록으로</Button>
             </div>
-            <div class="reply-list">
-                <table class="reply-main">
-                    <tr>
-                        <th width="200px" style="text-align:left">{{reply.writerId}}</th>
+            <div class="comm-list">
+                <table class="comm-main">
+                    <tr v-for="comm in comments" :key="comm.brdCmtNum">
+<!--                        <th width="100px" style="text-align:left">{{comm.brdCmtNum}}</th>-->
+                        <th width="100px" style="text-align:left">{{comm.id}}</th>
+                        <td style="width:70%; text-align:left">{{comm.contents}}</td>
+                        <Button @click="deleteComm(comm.brdCmtNum)" id="deleteCommBtn" class="p-button-danger">X</Button>
                     </tr>
-                    <tr>
-                        <td style="text-align:left">{{reply.contents}}</td>
-                    </tr>
-                    <Button @click="deleteReply" id="deleteReplyBtn" class="p-button-danger">삭제</Button>
                 </table>
 
             </div>
             <div class="board-reply">
-            <Textarea v-model="value" :autoResize="true" rows="5" cols="115" />
-            <Button @click="onReply" id="replyBtn" class="p-button-lg">등록</Button>
+            <Textarea v-model="value" :autoResize="true" rows="3" cols="125" />
+            <Button @click="insertComm" id="replyBtn" class="p-button-lg">등록</Button>
             </div>
         </div>
     </div>
 </template>
 
 <script>
-    // import axios from 'axios'
+    import axios from 'axios'
     import Textarea from 'primevue/textarea';
 
     export default {
@@ -62,46 +61,75 @@
                     title:"미리 준비할수록 저렴해요 제주 여름휴가",
                     writerId:"admin",
                     wdate:"2022/08/23",
-                    contents:"제주 매거진에 대한 내용과 이미지들"
+                    contents:"제주 매거진에 대한 내용과 이미지들",
+                    category:""
                 },
-                reply:{
-                    writerId: "user1",
-                    contents: "정말 유익해요!"
-                }
+                comments:[
+                    {
+                        brdCmtNum:0,
+                        brdNum:0,
+                        id:"",
+                        contents:""
+                    }
+                ]
             }
         },
         created(){
             this.getArticle();
+            this.getCommList();
         },
         methods:{
             onList(){
                 this.$router.push({name:'magazines'});
             },
             onDelete(){
-                // axios.delete(`http://localhost:8082/triplus/api/section/magazines/${this.$route.params.brdNum}`,{
-                //     headers: {
-                //         'Access-Control-Allow-Origin': '*'
-                //     }
-                // }).then(function(resp){
-                //     if(resp.data=='success'){
-                //         alert("공지 삭제 완료!");
-                //         this.$router.push({name:'magazines'})
-                //     }else{
-                //         alert('삭제 실패');
-                //     }
-                // }.bind(this));
+                axios.delete(`http://localhost:8082/triplus/api/section/magazines/${this.$route.params.brdNum}`,{
+                    headers: {
+                        'Access-Control-Allow-Origin': '*'
+                    }
+                }).then(function(resp){
+                    if(resp.data=='success'){
+                        alert("매거진 삭제 완료!");
+                        this.$router.push({name:'magazines'})
+                    }else{
+                        alert('삭제 실패');
+                    }
+                }.bind(this));
             },
             getArticle(){
-                // this.article = axios.get(`http://localhost:8082/triplus/api/section/magazines/${this.$route.params.brdNum}`, {
-                //     headers: {
-                //         'Access-Control-Allow-Origin': '*'
-                //     },
-                // }).then(function(resp) {
-                //     console.log(resp);
-                //     this.article = resp.data;
-                // }.bind(this));
+                axios.get(`http://localhost:8082/triplus/api/section/magazines/${this.$route.params.brdNum}`, {
+                    headers: {
+                        'Access-Control-Allow-Origin': '*'
+                    },
+                }).then(function(resp) {
+                    console.log(resp);
+                    this.article = resp.data;
+                }.bind(this));
+            },
+            getCommList(){
+                axios.get(`http://localhost:8082/triplus/api/section/magazines/comments/${this.$route.params.brdNum}`,{
+                    headers: {
+                        'Access-Control-Allow-Origin': '*'
+                    },
+                }).then(function(resp) {
+                    this.comments = resp.data;
+                }.bind(this));
+            },
+            deleteComm(brdCmtNum){
+                console.log(brdCmtNum);
+                axios.delete(`http://localhost:8082/triplus/api/section/magazines/comments/${brdCmtNum}`,{
+                    headers:{
+                        'Access-Control-Allow-Origin': '*',
+                    }
+                }).then(function(resp){
+                    if(resp.data=='success'){
+                        alert("삭제 완료!");
+                        this.getCommList();
+                    }else{
+                        alert('삭제 실패');
+                    }
+                }.bind(this));
             }
-
         }
     }
 </script>
@@ -182,7 +210,7 @@
     .board-footer {
         display: flex;
         flex-direction: row;
-        justify-content: end;
+        justify-content: flex-end;
         width: 100%;
         align-items: center;
         padding: 20px;
@@ -200,16 +228,16 @@
     }
     .board-reply Button{
         margin-left: 15px;
-        margin-bottom: 30px;
+        margin-bottom: 10px;
     }
     .board-reply{
         width: 100%;
         margin: 0 0 20px 0;
     }
-    .reply-list{
-        margin-top: 30px;
+    .comm-main{
+        margin-left: 20px;
+        padding-right: 800px;
+        margin-bottom: 5px;
     }
-    .reply-main{
-        margin-right: 820px;
-    }
+
 </style>

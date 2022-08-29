@@ -154,17 +154,6 @@ a {
   align-items: center;
   padding: 20px;
 }
-.board-search {
-  display: flex;
-  width: 100%;
-  justify-content: end;
-}
-.board-search * {
-  margin: 0;
-}
-.board-search input[type="submit"] {
-  width: 100px;
-}
 .board-table {
   width: 100%;
   margin: 0 0 20px 0;
@@ -181,7 +170,7 @@ a {
 .board-footer {
   display: flex;
   flex-direction: row;
-  justify-content: end;
+  justify-content: flex-end;
   width: 100%;
   align-items: center;
   padding: 20px;
