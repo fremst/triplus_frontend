@@ -157,7 +157,7 @@
   .board-search {
     display: flex;
     width: 100%;
-    justify-content: end;
+    justify-content: flex-end;
   }
   .board-search * {
     margin: 0;
@@ -181,7 +181,7 @@
   .board-footer {
     display: flex;
     flex-direction: row;
-    justify-content: end;
+    justify-content: flex-end;
     width: 100%;
     align-items: center;
     padding: 20px;

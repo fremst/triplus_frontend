@@ -375,7 +375,7 @@ a {
 .board-footer {
   display: flex;
   flex-direction: row;
-  justify-content: end;
+  justify-content: flex-end;
   width: 100%;
   align-items: center;
   padding: 20px;

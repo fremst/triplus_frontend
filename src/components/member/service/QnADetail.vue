@@ -43,7 +43,7 @@
           <h3>해당 글은 잠겨있습니다.</h3>
         </div>
       </div>
-      <div class="board-footer" v-show="article.published" style="flex-direction: column; justify-content: end; align-items: flex-end;">
+      <div class="board-footer" v-show="article.published" style="flex-direction: column; justify-content: flex-end; align-items: flex-end;">
         <!-- 답글 -->
         <div v-if="isLogin">
           <Button @click="onReply">질문에 답변하기</Button>
@@ -310,7 +310,7 @@
   .board-footer {
     display: flex;
     flex-direction: row;
-    justify-content: end;
+    justify-content: flex-end;
     width: 100%;
     align-items: center;
     padding: 20px;
