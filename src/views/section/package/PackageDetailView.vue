@@ -17,7 +17,7 @@
           </PackageDetailForm>
         </div>
       </div>
-       <img :src="require(`@/assets/section/package/images/haenam.png`)" alt="이미지 없음" style="width: 925px"/>
+      <div v-html="packageDetails.contents"></div>
       <ScrollTop />
     </div>
   </div>
@@ -44,10 +44,15 @@ export default {
   // },
 
   created(){
+
       axios.get(`http://localhost:8082/triplus/api/section/packages/${this.$route.params.brdNum}`, {
+
         headers: {
+
           'Access-Control-Allow-Origin': '*'
+
         },
+
       }).then(function (resp) {
 
         this.packageDetails = Object.assign(resp.data.dto, resp.data.map);
