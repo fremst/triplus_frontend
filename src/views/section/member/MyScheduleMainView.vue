@@ -9,7 +9,9 @@
         <Button label="숙소" icon="pi pi-plus" class="p-button-secondary p-button-rounded p-button-sm mr-4" /><Button
           label="체크리스트"
           class="p-button-secondary p-button-rounded p-button-sm mr-4"
-        /><Button label="가계부" class="p-button-secondary p-button-rounded p-button-sm mr-4" />
+        />
+        <Button label="가계부" class="p-button-secondary p-button-rounded p-button-sm mr-4" @click="goWeather()" />
+        <Button label="날씨보기" class="p-button-secondary p-button-rounded p-button-sm mr-4" />
         <table class="schedule-table">
           <tr v-for="(day, i) in list.day" :key="i">
             <td>
@@ -72,7 +74,10 @@ export default {
     addMemo() {
       router.push("/section/member/schedule/add-memo");
     },
-    palceModal() {}
+    palceModal() {},
+    goWeather() {
+      router.push("/section/member/schedule/weather");
+    }
   }
 };
 </script>

@@ -105,9 +105,9 @@ export default {
       }
     },
     getFormattedDate(date) {
-      console.log(date);
       if (date) {
-        return date.getFullYear() + "-" + date.getMonth() + 1 + "-" + date.getDate();
+        console.log(date);
+        return date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
       } else {
         return "";
       }

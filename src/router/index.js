@@ -25,6 +25,7 @@ import AddMyScheduleView from "@/views/section/member/AddMyScheduleView";
 import MyScheduleMainView from "@/views/section/member/MyScheduleMainView";
 import AddSchedulePlaceView from "@/views/section/member/AddSchedulePlaceView";
 import AddScheduleMemoView from "@/views/section/member/AddScheduleMemoView";
+import WeatherView from "@/views/section/member/WeatherView";
 
 import MemberJoinView from "@/views/member/MemberJoinView";
 import tosView from "@/views/member/TosView";
@@ -271,6 +272,12 @@ const routes = [
     path: "/section/member/schedule/add-memo",
     name: "add-schedule-memo",
     component: AddScheduleMemoView
+  },
+  //날씨보기
+  {
+    path: "/section/member/schedule/weather",
+    name: "schedule-weather",
+    component: WeatherView
   }
 ];
 
