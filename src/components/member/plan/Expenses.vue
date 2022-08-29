@@ -576,15 +576,13 @@
     }
   }
 </script>
-<style>
-  thead {
+<style scoped>
+  .board-table::v-deep thead {
     display: none;
   }
-  .p-datatable .p-datatable-tbody > tr > td {
+  .p-datatable::v-deep .p-datatable-tbody > tr > td {
     border: none;
   }
-</style>
-<style scoped>
   a {
     text-decoration: none;
   }
