@@ -28,7 +28,7 @@
             <Column selectionMode="multiple" style="width: 3rem" :exportable="false"></Column>
             <Column header="썸네일" style="min-width: 8rem; text-align: center">
               <template #body="slotProps">
-                <img :src="require(`@/assets/section/package/images/${slotProps.data.tImg}`)" :alt="slotProps.data.title" class="product-image" />
+                <img :src="`data:image/jpeg;base64,${slotProps.data.tImg}`" :alt="slotProps.data.title" class="product-image" />
               </template>
             </Column>
             <Column header="여행 지역" field="region" :sortable="true" style="min-width: 9rem; text-align: center">

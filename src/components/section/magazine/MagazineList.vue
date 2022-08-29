@@ -15,7 +15,7 @@
             <template #list="slotProps">
                 <div class="col-12">
                     <div class="product-list-item">
-                        <img :src="require('@/assets/magazine/제주.png')" :alt="slotProps.data.tImg" class="tImg"  />
+                        <img :src="`data:image/jpeg;base64,${slotProps.data.timg}`" :alt="slotProps.data.tImg" class="tImg"  />
                         <div class="product-list-detail">
                             <div class="product-name">{{slotProps.data.title}}</div>
                             <i class="pi pi-tag product-category-icon"></i><span class="product-category">{{slotProps.data.category}}</span>

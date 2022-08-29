@@ -15,8 +15,7 @@
       <template #list="slotProps">
         <div class="col-12">
           <div class="product-list-item">
-            <img :src="require(`@/assets/section/package/images/${slotProps.data.tImg}`)" :alt="slotProps.data.title"/>
-
+            <img :src="`data:image/jpeg;base64,${slotProps.data.tImg}`" :alt="slotProps.data.title"/>
             <div class="product-list-detail">
               <div class="product-name">{{slotProps.data.title}}</div><br>
               <div class="product-description">성인 {{formatCurrency(slotProps.data.adultPrice)}} / 아동 {{formatCurrency(slotProps.data.adultPrice)}}</div>
@@ -42,7 +41,7 @@
               <span :class="'product-badge status-'+rcrtStaEng(slotProps.data.rcrtSta)">{{slotProps.data.rcrtSta}}</span>
             </div>
             <div class="product-grid-item-content">
-              <img :src="require(`@/assets/section/package/images/${slotProps.data.tImg}`)" :alt="slotProps.data.title"/>
+              <img :src="`data:image/jpeg;base64,${slotProps.data.tImg}`" :alt="slotProps.data.title"/>
               <div class="product-name">{{slotProps.data.title}}</div><br>
               <div class="product-description">성인 {{formatCurrency(slotProps.data.adultPrice)}} / 아동 {{formatCurrency(slotProps.data.adultPrice)}}</div>
               <Button icon="pi pi-search" label="상세보기" :disabled="rcrtStaEng(slotProps.data.rcrtSta) === 'completed'"
