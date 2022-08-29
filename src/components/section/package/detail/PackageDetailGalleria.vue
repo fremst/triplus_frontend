@@ -2,7 +2,8 @@
   <div>
     <Galleria :value="images" :responsiveOptions="responsiveOptions" :numVisible="5" :circular="true" :showItemNavigators="true" :showThumbnails="false">
       <template #item="slotProps">
-        <img :src="require(`@/assets/section/package/images/${slotProps.item}`)" :alt="slotProps.item.alt" style="width: 100%; display: block;" />
+        <!-- <img :src="require(`@/assets/section/package/images/${slotProps.item}`)" :alt="slotProps.item.alt" style="width: 100%; display: block;" /> -->
+        <img :src="slotProps.item" :alt="slotProps.item.alt" style="width: 100%; display: block;" />
       </template>
     </Galleria>
   </div>
@@ -37,7 +38,11 @@ export default {
   },
 
   updated() {
+
     this.images = this.pkgImgs;
+    // this.pkgImgs.map(e => "data:image/jpeg;base64," + e);
+    // console.log(this.pkgImgs);
+
   }
 
 }
