@@ -24,12 +24,12 @@
           </Column>
           <!-- 작성자가 admin으로 다 동일하기 때문에 주석처리...
           <Column field="writerId" header="작성자" style="width: 100px;"></Column>-->
-          <Column field="wdate" header="작성일" style="width: 100px;"></Column>
+          <Column field="wdate" header="작성일" style="width: 150px;"></Column>
           <Column field="hit" header="조회수" style="width: 100px;"></Column>
         </DataTable>
       </div>
       <div class="board-footer">
-        <Button color="#67AB9F" @click="onWrite">공지등록</Button>
+        <Button v-if="this.tempAuth=='admin'" color="#67AB9F" @click="onWrite">공지등록</Button>
         <Button color="#67AB9F" @click="onList">전체 글 보기</Button>
       </div>
     </div>
@@ -59,7 +59,8 @@ export default {
       searchOpt:["제목","내용","제목/내용"],
       list:[],
       pageIndex : 1,
-      filters:{}
+      filters:{},
+      tempAuth:this.$store.state.loginUser.auth
     }
   },
   created(){
@@ -87,19 +88,11 @@ export default {
         params:{}
       }).then(function(resp){
         this.list=resp.data;
-        for (let el of this.list)
-        {
-          el.wdate = this.getDate(el.wdate);
-        }
       }.bind(this));
     },
     onDetail(brdNum){
       console.log(brdNum);
       this.$router.push({name:"notice-detail",params:{brdNum:brdNum}})
-    },
-    getDate(ms) {
-      let date = new Date(ms);
-      return `${date.getUTCMonth() + 1}월 ${date.getUTCDate() + 1}일`;
     },
     initFilters() {
       this.filters = {

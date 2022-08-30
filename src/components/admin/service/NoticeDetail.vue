@@ -7,8 +7,8 @@
       <div class="board-main">
         <table class="article-header">
           <tr>
+            <th width="150px">[ {{article.category}} ]</th>
             <th style="text-align: start; padding-left: 20px;">{{article.title}}</th>
-            <th width="200px">{{article.writerId}}</th>
             <th width="200px">{{article.wdate}}</th>
           </tr>
         </table>
@@ -18,8 +18,8 @@
         <div class="article-footer"></div>
       </div>
       <div class="board-footer">
-        <Button @click="$router.push(`/service/notices/${this.$route.params.brdNum}/update`)">수정</Button>
-        <Button class="p-button-danger" @click="onDelete">삭제</Button>
+        <Button v-if="this.tempAuth=='admin'" @click="$router.push(`/service/notices/${this.$route.params.brdNum}/update`)">수정</Button>
+        <Button v-if="this.tempAuth=='admin'" class="p-button-danger" @click="onDelete">삭제</Button>
         <Button @click="onList">목록으로</Button>
       </div>
     </div>
@@ -45,7 +45,8 @@
           writerId:"",
           wdate:"",
           contents:""
-        }
+        },
+        tempAuth:this.$store.state.loginUser.auth
       }
     },
     created(){

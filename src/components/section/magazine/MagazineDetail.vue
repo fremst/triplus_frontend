@@ -13,7 +13,7 @@
                     </tr>
                 </table>
                 <br>
-                <Button @click="onRecommend" id="recommendBtn">추천하기</Button><br>
+<!--                <Button @click="onRecommend" id="recommendBtn">추천하기</Button><br>-->
                 <div class="article-main">
                     <pre v-html="article.contents"></pre>
                 </div>
@@ -21,23 +21,22 @@
                 </div>
             </div>
             <div class="board-footer">
-                <Button @click="$router.push(`/section/magazines/${this.$route.params.brdNum}/update`)" >수정</Button>
-                <Button class="p-button-danger" @click="onDelete">삭제</Button>
+                <Button v-if="this.tempAuth=='admin'" @click="$router.push(`/section/magazines/${this.$route.params.brdNum}/update`)" >수정</Button>
+                <Button v-if="this.tempAuth=='admin'" class="p-button-danger" @click="onDelete">삭제</Button>
                 <Button @click="onList">목록으로</Button>
             </div>
             <div class="comm-list">
                 <table class="comm-main">
                     <tr v-for="comm in comments" :key="comm.brdCmtNum">
-<!--                        <th width="100px" style="text-align:left">{{comm.brdCmtNum}}</th>-->
-                        <th width="100px" style="text-align:left">{{comm.id}}</th>
-                        <td style="width:70%; text-align:left">{{comm.contents}}</td>
-                        <Button @click="deleteComm(comm.brdCmtNum)" id="deleteCommBtn" class="p-button-danger">X</Button>
+                        <td style="width:100px; text-align:left;">{{comm.id}} </td>
+                        <td style="width:800px; text-align:left">{{comm.contents}}</td>
+                        <Button v-if="comm.id==this.tempId" @click="deleteComm(comm.brdCmtNum)" id="deleteCommBtn" class="p-button-danger">X</Button>
                     </tr>
                 </table>
 
             </div>
             <div class="board-reply">
-            <Textarea v-model="value" :autoResize="true" rows="3" cols="125" />
+            <Textarea v-model="commContents" :autoResize="true" rows="3" cols="125" />
             <Button @click="insertComm" id="replyBtn" class="p-button-lg">등록</Button>
             </div>
         </div>
@@ -58,10 +57,10 @@
                 article:{
                     pageTitle: "",
                     brdNum:0,
-                    title:"미리 준비할수록 저렴해요 제주 여름휴가",
-                    writerId:"admin",
-                    wdate:"2022/08/23",
-                    contents:"제주 매거진에 대한 내용과 이미지들",
+                    title:"",
+                    writerId:"",
+                    wdate:"",
+                    contents:"",
                     category:""
                 },
                 comments:[
@@ -71,8 +70,11 @@
                         id:"",
                         contents:""
                     }
-                ]
-            }
+                ],
+                commContents:"",
+                tempId:localStorage.getItem("id"),
+                tempAuth:this.$store.state.loginUser.auth
+        }
         },
         created(){
             this.getArticle();
@@ -127,6 +129,31 @@
                         this.getCommList();
                     }else{
                         alert('삭제 실패');
+                    }
+                }.bind(this));
+            },
+            insertComm(){
+                const id = localStorage.getItem("id")
+                const writeParam = new URLSearchParams();
+                writeParam.append('id',id);
+                writeParam.append('contents',this.commContents);
+                if(id == null){
+                    this.$router.push({name:"member-login"})
+                    alert("회원만 등록 가능합니다.")
+                }
+                axios.post(`http://localhost:8082/triplus/api/section/magazines/comments/${this.$route.params.brdNum}`,writeParam,{
+                    headers:{
+                        'Access-Control-Allow-Origin' : '*'
+                    }
+                }).then(function(resp) {
+                    if(resp.data.result =="success"){
+                        alert("댓글 등록 성공");
+                        this.commContents="";
+                        this.getCommList();
+                    }else{
+                        alert("댓글 등록 실패");
+                        this.commContents="";
+                        this.getCommList();
                     }
                 }.bind(this));
             }
@@ -234,9 +261,13 @@
         width: 100%;
         margin: 0 0 20px 0;
     }
+    .comm-list{
+        width: 100%;
+    }
     .comm-main{
-        margin-left: 20px;
-        padding-right: 800px;
+        width : 100%;
+        margin-left: 25px;
+        padding-right: 850px;
         margin-bottom: 5px;
     }
 

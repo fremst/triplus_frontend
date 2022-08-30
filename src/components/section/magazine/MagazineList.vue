@@ -11,7 +11,6 @@
                     </div>
                 </div>
             </template>
-
             <template #list="slotProps">
                 <div class="col-12">
                     <div class="product-list-item">
@@ -21,31 +20,36 @@
                             <i class="pi pi-tag product-category-icon"></i><span class="product-category">{{slotProps.data.category}}</span>
                         </div>
                         <div class="product-list-action">
-                            <Button icon="pi pi-search" class="p-button" @click="onDetail(slotProps.data.brdNum)">상세내용</Button>
+                            <Button class="p-button" @click="onDetail(slotProps.data.brdNum)">상세내용</Button>
+                            <i class="pi pi-eye" style="font-size: 1.2rem; margin-bottom:5px">{{slotProps.data.hit}}</i>
+                            <p >{{slotProps.data.wdate}}</p>
                         </div>
                     </div>
                 </div>
             </template>
-            <template #grid="slotProps">
-                <div class="col-12 md:col-4">
-                    <div class="product-grid-item card">
-                        <div class="product-grid-item-top">
-                            <div>
-                                <i class="pi pi-tag product-category-icon"></i>
-                                <span class="product-category">{{slotProps.data.category}}</span>
-                            </div>
-                        </div>
-                        <div class="product-grid-item-content">
-                            <img :src="require('@/assets/magazine/제주.png')" :alt="slotProps.data.tImg" class="tImg" />
-                            <div class="product-name">{{slotProps.data.title}}</div>
-                        </div>
-                        <div class="product-grid-item-bottom">
-                            <Button icon="pi pi-search" class="p-button-lg" @click="onDetail(slotProps.data.brdNum)">상세내용</Button>
-                        </div>
-                    </div>
-                </div>
-            </template>
+<!--            <template #grid="slotProps">-->
+<!--                <div class="col-12 md:col-4">-->
+<!--                    <div class="product-grid-item card">-->
+<!--                        <div class="product-grid-item-top">-->
+<!--                            <div>-->
+<!--                                <i class="pi pi-tag product-category-icon"></i>-->
+<!--                                <span class="product-category">{{slotProps.data.category}}</span>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                        <div class="product-grid-item-content">-->
+<!--                            <img :src="`data:image/jpeg;base64,${slotProps.data.timg}`" :alt="slotProps.data.tImg" class="tImg" />-->
+<!--                            <div class="product-name">{{slotProps.data.title}}</div>-->
+<!--                        </div>-->
+<!--                        <div class="product-grid-item-bottom">-->
+<!--                            <Button class="p-button-lg" @click="onDetail(slotProps.data.brdNum)">상세내용</Button>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </template>-->
         </DataView>
+        <div class="insertBtn">
+            <Button v-if="this.tempAuth=='admin'" color="#67AB9F" @click="onWrite">매거진등록</Button>
+        </div>
     </div>
 </template>
 
@@ -67,15 +71,20 @@
                 sortOrder: null,
                 sortField: null,
                 sortOptions: [
-                    {label: '조회 많은순', value: '!hit'},
-                    {label: '조회 적은순', value: 'hit'},
-                ]
+                    {label: '조회 순', value: '!hit'},
+                    {label: '최신 순', value: '!brdNum'}
+                ],
+                like:0,
+                tempAuth:this.$store.state.loginUser.auth
             }
         },
         created(){
             this.getList();
         },
         methods:{
+            getLike(){
+
+            },
             onWrite(){
                 this.$router.push({name:'magazine-write'})
             },
@@ -95,9 +104,6 @@
                 console.log(brdNum);
                 this.$router.push({name:"magazine-detail",params:{brdNum:brdNum}})
             },
-            // onList(){
-            //     this.$router.push({name:'magazines'})
-            // }
             onSortChange(event){
                 const value = event.value.value;
                 const sortValue = event.value;
@@ -120,18 +126,9 @@
 </script>
 
 <style lang="scss" scoped>
-    #searchGroup{
-        margin-bottom: 10px;
-    }
-    #keyword{
-        height: 50px;
-        width: 300px;
-        margin-left: 735px;
-    }
-    #icon{
-        margin-left: 735px;
-    }
     .card {
+        width:1080px;
+        margin: auto;
         background: #ffffff;
         padding: 1rem;
         box-shadow: 0 2px 1px -1px rgba(0,0,0,.2), 0 1px 1px 0 rgba(0,0,0,.14), 0 1px 3px 0 rgba(0,0,0,.12);
