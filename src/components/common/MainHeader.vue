@@ -37,13 +37,18 @@
             <div class="mypage">
 
               <ol class="ol-first">
-                <li><h1>{{a}}</h1></li>
+                <li><h1>{{myScheduleCnt}}</h1></li>
                 <li><h1>{{b}}</h1></li>
                 <li><h1>{{c}}</h1></li>
               </ol>
 
               <ol class="ol-second">
-                <li><h3>내 일정</h3></li>
+                <li>
+                 <router-link to="/member/mypage/myschedule">
+                  <h3>&nbsp;내 일정</h3>
+                </router-link>
+                </li>
+
                 <li><h3>&nbsp;내 글</h3></li>
                 <li><h3>&nbsp;내 예약</h3></li>
               </ol>
@@ -70,7 +75,7 @@
 
 <script>
 import Sidebar from 'primevue/sidebar';
-
+import axios from "axios";
 
 export default {
   name: 'MainHeader',
@@ -78,7 +83,7 @@ export default {
     Sidebar
   },
   mounted() {
-
+    this.scheduleCnt()
   }
 ,
   computed:{
@@ -90,9 +95,10 @@ export default {
   data() {
     return {
       visibleRight: false,
-      a:0,
+      myScheduleCnt:0,
       b:0,
-      c:0
+      c:0,
+      id:localStorage.getItem("id")
     }
 
   },
@@ -102,7 +108,21 @@ export default {
       localStorage.removeItem("token");
       localStorage.removeItem("auth");
       this.$store.commit('keepId',2);
+    },
+    scheduleCnt(){
+      axios.get('http://localhost:8082/triplus/api/member/mypage/myscheduleCnt', {
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+        },
+        params:{
+          "id":this.id
+        }
+      }).then(function (resp) {
+        this.myScheduleCnt = resp.data.myscheduleCnt;
+
+      }.bind(this));
     }
+
   }
 }
 </script>
