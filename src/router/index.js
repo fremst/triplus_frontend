@@ -44,6 +44,7 @@ import MyPageUpdateView from "@/views/member/mypage/MyPageUpdateView";
 
 import checkListView from "@/views/member/plan/CheckListView";
 import ExpensesView from "@/views/member/plan/ExpensesView";
+import InviteView from "@/views/member/plan/InviteView";
 
 import MainView from "../views/MainView.vue";
 
@@ -303,7 +304,12 @@ const routes = [
     path: "/section/member/schedule/weather",
     name: "schedule-weather",
     component: WeatherView
-  }
+  },
+  { //일정 초대
+    path: "/section/member/schedule/invite",
+    name: "invite-schedule",
+    component: InviteView
+  },
 ];
 
 const router = createRouter({
