@@ -39,7 +39,7 @@
               <ol class="ol-first">
                 <li><h1>{{myScheduleCnt}}</h1></li>
                 <li><h1>{{b}}</h1></li>
-                <li><h1>{{c}}</h1></li>
+                <li><h1>{{myReservationCnt}}</h1></li>
               </ol>
 
               <ol class="ol-second">
@@ -50,7 +50,11 @@
                 </li>
 
                 <li><h3>&nbsp;내 글</h3></li>
-                <li><h3>&nbsp;내 예약</h3></li>
+                <li>
+                  <router-link to="/member/mypage/reservation">
+                    <h3>&nbsp;내 예약</h3>
+                  </router-link>
+                </li>
               </ol>
             </div>
             </div>
@@ -71,6 +75,7 @@
       </a>
     </div>
   </div>
+
 </template>
 
 <script>
@@ -82,10 +87,13 @@ export default {
   components: {
     Sidebar
   },
+
   mounted() {
-    this.scheduleCnt()
+    this.scheduleCnt();
+    this.reserveCnt();
   }
 ,
+
   computed:{
     user(){
       return this.$store.state.userId;
@@ -97,7 +105,7 @@ export default {
       visibleRight: false,
       myScheduleCnt:0,
       b:0,
-      c:0,
+      myReservationCnt:0,
       id:localStorage.getItem("id")
     }
 
@@ -109,6 +117,7 @@ export default {
       localStorage.removeItem("auth");
       this.$store.commit('keepId',2);
     },
+    
     scheduleCnt(){
       axios.get('http://localhost:8082/triplus/api/member/mypage/myscheduleCnt', {
         headers: {
@@ -121,9 +130,23 @@ export default {
         this.myScheduleCnt = resp.data.myscheduleCnt;
 
       }.bind(this));
+    },
+     reserveCnt(){
+      axios.get('http://localhost:8082/triplus/api/member/mypage/reservationCnt', {
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+        },
+        params:{
+          "id":this.id
+        }
+      }).then(function (resp) {
+        this.myReservationCnt = resp.data.reservationCnt;
+
+      }.bind(this));
     }
 
-  }
+  },
+ 
 }
 </script>
 
