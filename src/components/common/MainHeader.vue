@@ -37,13 +37,18 @@
             <div class="mypage">
 
               <ol class="ol-first">
-                <li><h1>{{a}}</h1></li>
+                <li><h1>{{myScheduleCnt}}</h1></li>
                 <li><h1>{{b}}</h1></li>
                 <li><h1>{{myReservationCnt}}</h1></li>
               </ol>
 
               <ol class="ol-second">
-                <li><h3>내 일정</h3></li>
+                <li>
+                 <router-link to="/member/mypage/myschedule">
+                  <h3>&nbsp;내 일정</h3>
+                </router-link>
+                </li>
+
                 <li><h3>&nbsp;내 글</h3></li>
                 <li>
                   <router-link to="/member/mypage/reservation">
@@ -83,6 +88,12 @@ export default {
     Sidebar
   },
 
+  mounted() {
+    this.scheduleCnt();
+    this.reserveCnt();
+  }
+,
+
   computed:{
     user(){
       return this.$store.state.userId;
@@ -92,7 +103,7 @@ export default {
   data() {
     return {
       visibleRight: false,
-      a:0,
+      myScheduleCnt:0,
       b:0,
       myReservationCnt:0,
       id:localStorage.getItem("id")
@@ -106,7 +117,21 @@ export default {
       localStorage.removeItem("auth");
       this.$store.commit('keepId',2);
     },
-    reserveCnt(){
+    
+    scheduleCnt(){
+      axios.get('http://localhost:8082/triplus/api/member/mypage/myscheduleCnt', {
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+        },
+        params:{
+          "id":this.id
+        }
+      }).then(function (resp) {
+        this.myScheduleCnt = resp.data.myscheduleCnt;
+
+      }.bind(this));
+    },
+     reserveCnt(){
       axios.get('http://localhost:8082/triplus/api/member/mypage/reservationCnt', {
         headers: {
           'Access-Control-Allow-Origin': '*',
@@ -120,11 +145,8 @@ export default {
       }.bind(this));
     }
 
-
   },
-  mounted() {
-    this.reserveCnt()
-  }
+ 
 }
 </script>
 
