@@ -54,6 +54,11 @@ const routes = [
     component: AdminPackageWriteView
   },
   {
+    path: "/admin/packages/:brdNum/update",
+    name: "package-update",
+    component: AdminPackageWriteView
+  },
+  {
     path: "/admin",
     name: "admin",
     component: AdminView
@@ -270,8 +275,8 @@ const routes = [
     component: () => import("@/views/section/magazine/MagazineListView.vue")
   },
   {
-    path:"/section/magazines/:brdNum",
-    name:"magazine-detail",
+    path: "/section/magazines/:brdNum",
+    name: "magazine-detail",
     component: () => import("@/views/section/magazine/MagazineDetailView.vue")
   },
   //일정등록 첫 페이지
