@@ -11,14 +11,14 @@
          <a  href="/member/login">로그인  |  회원가입</a>
       </div>
 
-          <Sidebar v-model:visible="visibleRight" position="right">
+          <Sidebar v-model:visible="visibleRight" position="right" >
             <div class="user" v-if="user===null">
               <a  href="/member/login"><h2>로그인  |  회원가입</h2><br></a>
 
               <div class="mypage">
 
                 <ol class="ol-first">
-                  <li><h1>1</h1></li>
+                  <li><h1>-</h1></li>
                   <li><h1>-</h1></li>
                   <li><h1>-</h1></li>
                 </ol>
@@ -66,8 +66,8 @@
             <a href="#" @click.prevent="logout">로그아웃</a>
         </div>
           </Sidebar>
-          <div class="H-button">
-          <Button icon="pi pi-bars" @click="visibleRight = true"/>
+          <div class="H-button" >
+          <Button icon="pi pi-bars" @click="showSidebar" />
           </div>
         </div>
       <a href="/" class="logo">
@@ -88,16 +88,10 @@ export default {
     Sidebar
   },
 
-  mounted() {
-    this.scheduleCnt();
-    this.reserveCnt();
-  }
-,
-
   computed:{
     user(){
       return this.$store.state.userId;
-    }
+    },
 
   },
   data() {
@@ -106,7 +100,7 @@ export default {
       myScheduleCnt:0,
       b:0,
       myReservationCnt:0,
-      id:localStorage.getItem("id")
+      id:null
     }
 
   },
@@ -117,35 +111,43 @@ export default {
       localStorage.removeItem("auth");
       this.$store.commit('keepId',2);
     },
-    
-    scheduleCnt(){
-      axios.get('http://localhost:8082/triplus/api/member/mypage/myscheduleCnt', {
-        headers: {
-          'Access-Control-Allow-Origin': '*',
-        },
-        params:{
-          "id":this.id
+    showSidebar(){
+        this.id=localStorage.getItem("id");
+      this.visibleRight = true
+        if(this.id!==null){
+
+          //내일정
+          axios.get('http://localhost:8082/triplus/api/member/mypage/myscheduleCnt', {
+            headers: {
+              'Access-Control-Allow-Origin': '*',
+            },
+            params:{
+              "id":this.id
+            }
+          }).then(function (resp) {
+            this.myScheduleCnt = resp.data.myscheduleCnt;
+          }.bind(this));
+
+          //내 에약
+          axios.get('http://localhost:8082/triplus/api/member/mypage/reservationCnt', {
+            headers: {
+              'Access-Control-Allow-Origin': '*',
+            },
+            params:{
+              "id":this.id
+            }
+          }).then(function (resp) {
+            this.myReservationCnt = resp.data.reservationCnt;
+
+          }.bind(this));
         }
-      }).then(function (resp) {
-        this.myScheduleCnt = resp.data.myscheduleCnt;
 
-      }.bind(this));
-    },
-     reserveCnt(){
-      axios.get('http://localhost:8082/triplus/api/member/mypage/reservationCnt', {
-        headers: {
-          'Access-Control-Allow-Origin': '*',
-        },
-        params:{
-          "id":this.id
-        }
-      }).then(function (resp) {
-        this.myReservationCnt = resp.data.reservationCnt;
 
-      }.bind(this));
-    }
 
-  },
+
+     }
+
+  }
  
 }
 </script>
