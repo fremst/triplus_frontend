@@ -42,6 +42,9 @@ import changePwdView from "@/views/member/ChangePwdView";
 import joinCompleteView from "@/views/member/JoinCompleteView";
 import myPageCheckPwdView from "@/views/member/mypage/MyPageCheckPwdView";
 import MyPageUpdateView from "@/views/member/mypage/MyPageUpdateView";
+import MyReservationView from "@/views/member/mypage/MyReservationView";
+import MyScheduleView from "@/views/member/mypage/MyScheduleView";
+
 
 import checkListView from "@/views/member/plan/CheckListView";
 import ExpensesView from "@/views/member/plan/ExpensesView";
@@ -236,6 +239,17 @@ const routes = [
       next('/member/mypage/chkpwd');
     }
   },
+  {  //내 예약보기
+    path: "/member/mypage/reservation",
+    name: "mypage-reservation",
+    component: MyReservationView
+  },
+  { //내 일정
+    path: "/member/mypage/myschedule",
+    name: "mypage-myschedule",
+    component: MyScheduleView
+  },
+
   {
     path: "/section/packages",
     name: "package-list",
