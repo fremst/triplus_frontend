@@ -28,7 +28,6 @@ import AccommodationDetailView from "@/views/section/place/accommodation/Accommo
 import AddMyScheduleView from "@/views/section/member/AddMyScheduleView";
 import MyScheduleMainView from "@/views/section/member/MyScheduleMainView";
 import AddSchedulePlaceView from "@/views/section/member/AddSchedulePlaceView";
-import AddScheduleMemoView from "@/views/section/member/AddScheduleMemoView";
 import WeatherView from "@/views/section/member/WeatherView";
 
 import MemberJoinView from "@/views/member/MemberJoinView";
@@ -270,8 +269,8 @@ const routes = [
     component: () => import("@/views/section/magazine/MagazineListView.vue")
   },
   {
-    path:"/section/magazines/:brdNum",
-    name:"magazine-detail",
+    path: "/section/magazines/:brdNum",
+    name: "magazine-detail",
     component: () => import("@/views/section/magazine/MagazineDetailView.vue")
   },
   //일정등록 첫 페이지
@@ -286,17 +285,11 @@ const routes = [
     name: "add-schedule-main",
     component: MyScheduleMainView
   },
-  //일정등록 장소추가
+  //일정등록 추가
   {
     path: "/section/member/schedule/add-place",
     name: "add-schedule-place",
     component: AddSchedulePlaceView
-  },
-  //일정등록 메모추가
-  {
-    path: "/section/member/schedule/add-memo",
-    name: "add-schedule-memo",
-    component: AddScheduleMemoView
   },
   //날씨보기
   {

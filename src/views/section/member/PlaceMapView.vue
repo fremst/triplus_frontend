@@ -1,32 +1,9 @@
 <template>
-  <Dialog
-    v-model:visible="showDialog"
-    :modal="true"
-    :breakpoints="{ '960px': '75vw', '640px': '90vw' }"
-    :style="{ width: '50vw' }"
-    header="일정추가"
-  >
-    <div class="wrap">
-      <!-- <div id="map"></div> -->
-      <div class="confirmation-content">
-        장소명 <InputText type="text" v-model="place" /><br />
-        주소 <InputText type="text" v-model="addr" /><br />
-        위도 <InputText type="text" v-model="mapx" /><br />
-        경도 <InputText type="text" v-model="mapy" /><br />
-        <label for="memo">메모</label>
-        <Textarea aria-label="memo" v-model="memo" rows="5" cols="30" />
-      </div>
-    </div>
-    <template #footer>
-      <Button class="p-button-text" icon="pi pi-times" label="취소" @click="closeDialog(false)" />
-      <Button class="p-button-text" icon="pi pi-check" label="추가" @click="closeDialog(true)" />
-    </template>
-  </Dialog>
+  <div id="map1"></div>
 </template>
-
 <script>
 export default {
-  name: "AddScheduleDialog",
+  name: "PlaceMapView",
   props: {
     visible: {
       type: Boolean,
@@ -35,30 +12,12 @@ export default {
       }
     }
   },
-  emits: ["update:visible", "closeDialog"],
   data() {
     return {
-      container: null,
       test: true,
-      place: null,
-      addr: null,
-      mapx: null,
-      mapy: null,
-      memo: null,
       markers: [],
       infowindow: null
     };
-  },
-  computed: {
-    //자식에서 값이 변경될 수 있으므로 computed로 처리. computed는 변경된 값을 바로 계산해줌.
-    showDialog: {
-      get() {
-        return this.visible;
-      },
-      set(value) {
-        this.$emit("update:visible", value);
-      }
-    }
   },
   mounted() {
     if (!window.kakao || !window.kakao.maps) {
@@ -81,25 +40,25 @@ export default {
       document.head.appendChild(script);
     } else {
       // 이미 카카오맵 API가 로딩되어 있다면 바로 지도를 생성한다.
-      //this.initMap();
+      this.initMap();
     }
   },
   methods: {
-    // initMap() {
-    //   const container = document.getElementById("map"); //지도 표시 영역
-    //   const options = {
-    //     // 처음 지도의 위치를 lat, lng(위도, 경도) 값으로 설정한다.
-    //     center: new kakao.maps.LatLng(37.566815190669736, 126.97864094233952), //지도 중심좌표
-    //     level: 5
-    //   };
+    initMap() {
+      const container = document.getElementById("map1"); //지도 표시 영역
+      const options = {
+        // 처음 지도의 위치를 lat, lng(위도, 경도) 값으로 설정한다.
+        center: new kakao.maps.LatLng(37.566815190669736, 126.97864094233952), //지도 중심좌표
+        level: 5
+      };
 
-    //   this.map = new kakao.maps.Map(container, options);
-    // },
+      this.map = new kakao.maps.Map(container, options);
+    },
     changeSize(size) {
-      const container = document.getElementById("map");
+      const container = document.getElementById("map1");
       container.style.width = `${size}px`;
       container.style.height = `${size}px`;
-      this.map.relayout();
+      this.map1.relayout();
     },
     displayMarker(markerPositions) {
       if (this.markers.length > 0) {
@@ -112,20 +71,20 @@ export default {
         this.markers = positions.map(
           position =>
             new kakao.maps.Marker({
-              map: this.map,
+              map: this.map1,
               position
             })
         );
 
         const bounds = positions.reduce((bounds, latlng) => bounds.extend(latlng), new kakao.maps.LatLngBounds());
 
-        this.map.setBounds(bounds);
+        this.map1.setBounds(bounds);
       }
     },
     displayInfoWindow() {
       if (this.infowindow && this.infowindow.getMap()) {
         //이미 생성한 인포윈도우가 있기 때문에 지도 중심좌표를 인포윈도우 좌표로 이동시킨다.
-        this.map.setCenter(this.infowindow.getPosition());
+        this.map1.setCenter(this.infowindow.getPosition());
         return;
       }
 
@@ -134,7 +93,7 @@ export default {
         iwRemoveable = true; // removeable 속성을 ture 로 설정하면 인포윈도우를 닫을 수 있는 x버튼이 표시됩니다
 
       this.infowindow = new kakao.maps.InfoWindow({
-        map: this.map, // 인포윈도우가 표시될 지도
+        map: this.map1, // 인포윈도우가 표시될 지도
         position: iwPosition,
         content: iwContent,
         removable: iwRemoveable
@@ -142,23 +101,28 @@ export default {
 
       this.map.setCenter(iwPosition);
     }
-  },
-  closeDialog(returnValue) {
-    this.showDialog = false;
-    this.$emit("closeDialog", returnValue);
   }
 };
 </script>
+
 <style lang="scss" scoped>
 .wrap {
   width: 100%;
 }
+
 .p-dialog .product-image {
   width: 300px;
   height: 200px;
   margin: 0 auto 2rem auto;
   display: block;
 }
+
+.confirmation-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 @media screen and (max-width: 960px) {
   ::v-deep(.p-toolbar) {
     flex-wrap: wrap;
@@ -168,8 +132,8 @@ export default {
     }
   }
 }
-#map {
-  width: 400px;
+#map1 {
+  width: 600px;
   height: 350px;
 }
 
