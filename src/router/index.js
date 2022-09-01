@@ -100,6 +100,7 @@ const routes = [
     name: "notice-update",
     component: () => import("@/views/admin/service/NoticeUpdateView.vue")
   },
+  // 문의글
   {
     path: "/service/qna",
     name: "qna",
@@ -111,7 +112,7 @@ const routes = [
     component: QnAWriteView
   },
   {
-    path: "/service/qna/detail",
+    path: "/service/qna/:brdNum/detail",
     name: "qna-detail",
     component: QnADetailView
   },
@@ -181,7 +182,7 @@ const routes = [
     component: checkListView
   },
   {
-    path: "/member/plan/expenses",
+    path: "/member/plan/:skdNum/expenses",
     name: "member-expenses",
     component: ExpensesView
   },

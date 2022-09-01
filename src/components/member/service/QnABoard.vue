@@ -23,12 +23,12 @@
           <Column field="title" header="제목" alignHeader="center">
             <template #body="slotProps">
               <div v-if="slotProps.data.published == true">
-                <a :href="getDetailLink(slotProps.data.brdNum)" v-text="slotProps.data.title" />
+                <a href="#" @click="onDetail(slotProps.data.brdNum)" v-text="slotProps.data.title" />
               </div>
               <div v-else>
                 <i class="pi pi-lock"></i>
                 &nbsp;
-                <a :href="getDetailLink(slotProps.data.brdNum)" v-text="slotProps.data.title" />
+                <a href="#" @click="onDetail(slotProps.data.brdNum)" v-text="slotProps.data.title" />
               </div>
             </template>
           </Column>
@@ -57,9 +57,8 @@
     },
     props: {
       title: String, // 타이틀
-      listLink: String, // 목록 링크
-      detailLink: String, // 자세히 보기 링크
-      writeLink: String, // 쓰기 링크
+      listLink: String, // 서버 목록 링크
+      URL: String, // 링크
     },
     data() {
       return {
@@ -78,7 +77,10 @@
         alert("미구현");
       },
       onWrite() {
-        this.$router.push(this.writeLink)
+        this.$router.push(`${this.URL}/write`)
+      },
+      onDetail(brdNum) {
+        this.$router.push({name: "qna-detail", params: {brdNum: brdNum}});
       },
       onPageChange(n) {
         this.curPage = n;
@@ -98,9 +100,6 @@
             el.wdate = this.getDate(el.wdate);
           }
         }.bind(this));
-      },
-      getDetailLink(brdNum) {
-        return `${this.detailLink}?num=${brdNum}`;
       },
       getDate(ms) {
         let date = new Date(ms);

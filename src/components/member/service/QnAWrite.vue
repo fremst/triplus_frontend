@@ -75,9 +75,8 @@ export default
   },
   props: {
     title: String, // 글쓰기 타이틀(제목 아님)
-    link: String,
-    cancelLink: String, // 취소 링크
-    detailURL: String
+    link: String, // 서버 링크
+    URL: String, // 링크
   },
   data() {
     return {
@@ -171,12 +170,12 @@ export default
         if (resp.data.result === true)
         {
           alert("문의글 작성 성공");
-          this.$router.push(this.getDetailLink(resp.data.brdNum));
+          this.onDetail(resp.data.brdNum);
         }
         else
         {
           alert(resp.data.reason);
-          this.$router.push(this.cancelLink);
+          this.$router.push(this.URL);
         }
 
       }.bind(this));
@@ -211,17 +210,17 @@ export default
         if (resp.data.result === true)
         {
           alert("문의글 수정 성공");
-          this.$router.push(this.getDetailLink(resp.data.brdNum));
+          this.onDetail(resp.data.brdNum);
         }
         else
         {
           alert(resp.data.reason);
-          this.$router.push(this.cancelLink);
+          this.$router.push(this.URL);
         }
       }.bind(this));
     },
     onCancel() {
-      this.$router.push(this.cancelLink);
+      this.$router.push(this.URL);
     },
     checkTitle() {
       return this.aTitle.length >= 4 && this.aTitle.length <= 30;
@@ -247,8 +246,8 @@ export default
     checkContent() {
       return this.content.length > 0;
     },
-    getDetailLink(brdNum) {
-      return `${this.detailURL}?num=${brdNum}`;
+    onDetail(brdNum) {
+      this.$router.push({name: "qna-detail", params: {brdNum: brdNum}});
     },
     getArticleForUpdate(tempNum, tempPwd) {
       axios.get(`${this.link}/${tempNum}/password`, {

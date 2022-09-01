@@ -3,8 +3,7 @@
     <QnADetail
       :title="title"
       :link="link"
-      :updateLink="updateLink"
-      :listLink="listLink"/>
+      :URL="URL"/>
   </div>
 </template>
 
@@ -27,9 +26,8 @@ export default {
         date: "1970.01.01",
         content: "<p>testtest</p><p>testtest2</p><p>testtest3</p>"
       },
-      link: "http://localhost:8082/triplus/api/service/qna",
-      updateLink: "/service/qna/write",
-      listLink: "/service/qna/",
+      link: `${process.env.VUE_APP_API_URL || ""}/service/qna`,
+      URL: "/service/qna",
     };
   },
   created() {
