@@ -270,8 +270,8 @@ const routes = [
     component: () => import("@/views/section/magazine/MagazineListView.vue")
   },
   {
-    path:"/section/magazines/:brdNum",
-    name:"magazine-detail",
+    path: "/section/magazines/:brdNum",
+    name: "magazine-detail",
     component: () => import("@/views/section/magazine/MagazineDetailView.vue")
   },
   //일정등록 첫 페이지
@@ -303,6 +303,11 @@ const routes = [
     path: "/section/member/schedule/weather",
     name: "schedule-weather",
     component: WeatherView
+  },
+  {
+    path: "/admin/service/faq",
+    name: "faqs",
+    component: () => import("@/views/admin/service/FAQView.vue")
   }
 ];
 
