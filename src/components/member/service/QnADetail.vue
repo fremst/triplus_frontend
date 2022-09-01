@@ -43,7 +43,7 @@
           <h3>해당 글은 잠겨있습니다.</h3>
         </div>
       </div>
-      <div class="board-footer" v-show="article.published" style="flex-direction: column; justify-content: end; align-items: flex-end;">
+      <div class="board-footer" v-show="article.published" style="flex-direction: column; justify-content: flex-end; align-items: flex-end;">
         <!-- 답글 -->
         <div v-if="isLogin">
           <Button @click="onReply">질문에 답변하기</Button>
@@ -91,9 +91,8 @@
     },
     props: {
       title: String, // 타이틀
-      link: String, // 링크
-      updateLink: String, // 수정 링크
-      listLink: String, // 목록 링크
+      link: String, // 서버 링크
+      URL: String, // 링크
     },
     data() {
       return {
@@ -114,7 +113,7 @@
     },
     methods: {
       onUpdate() {
-        let tempBrdNum = this.$route.query.num;
+        let tempBrdNum = this.$route.params.brdNum;
         this.article = axios.get(`${this.link}/${tempBrdNum}/password`, {
           headers: {
             'Access-Control-Allow-Origin': '*'
@@ -133,7 +132,7 @@
           {
             localStorage.setItem("qnaNum", tempBrdNum);
             localStorage.setItem("qnaPwd", this.pwd);
-            this.$router.push(this.updateLink);
+            this.$router.push(`${this.URL}/write`);
           }
         }.bind(this));
       },
@@ -141,8 +140,8 @@
         if (localStorage.getItem("id") == null)
           return alert("로그인이 필요한 서비스입니다.");
 
-        localStorage.setItem("qnaReplyNum", this.$route.query.num);
-        this.$router.push(this.updateLink);
+        localStorage.setItem("qnaReplyNum", this.$route.params.brdNum);
+        this.$router.push(`${this.URL}/write`);
       },
       viewUpdate() {
         this.displayUpdate = !this.displayUpdate;
@@ -151,7 +150,7 @@
         const writeParam = new URLSearchParams();
         writeParam.append('pwd', this.pwd);
 
-        axios.delete(`${this.link}/${this.$route.query.num}/${this.pwd}`, "", {
+        axios.delete(`${this.link}/${this.$route.params.brdNum}/${this.pwd}`, "", {
           headers: {
             'Access-Control-Allow-Origin': '*'
           }
@@ -160,7 +159,7 @@
           if (resp.data.result == true)
           {
             alert("문의글이 제거되었습니다.");
-            this.$router.push(this.listLink);
+            this.$router.push(this.URL);
           }
           else
           {
@@ -173,15 +172,15 @@
         this.displayDelete = !this.displayDelete;
       },
       onList() {
-        this.$router.push(this.listLink);
+        this.$router.push(this.URL);
       },
       getArticle() {
-        this.article = axios.get(`${this.link}/${this.$route.query.num}`, {
+        this.article = axios.get(`${this.link}/${this.$route.params.brdNum}`, {
           headers: {
             'Access-Control-Allow-Origin': '*'
           },
           params: {
-            num: this.$route.query.num,
+            num: this.$route.params.brdNum,
             id: localStorage.getItem("id"),
             token: localStorage.getItem("token")
           }
@@ -191,12 +190,12 @@
         }.bind(this));
       },
       getReplyList() {
-        axios.get(`${this.link}/${this.$route.query.num}/reply`, {
+        axios.get(`${this.link}/${this.$route.params.brdNum}/reply`, {
           headers: {
             'Access-Control-Allow-Origin': '*'
           },
           params: {
-            num: this.$route.query.num,
+            num: this.$route.params.brdNum,
           }
         }).then(function(resp) {
           console.log(resp);
@@ -204,12 +203,12 @@
         }.bind(this));
       },
       inputPassword() {
-        axios.get(`${this.link}/${this.$route.query.num}/password`, {
+        axios.get(`${this.link}/${this.$route.params.brdNum}/password`, {
           headers: {
             'Access-Control-Allow-Origin': '*'
           },
           params: {
-            num: this.$route.query.num,
+            num: this.$route.params.brdNum,
             pwd: this.pwd
           }
         }).then(function(resp) {
@@ -310,7 +309,7 @@
   .board-footer {
     display: flex;
     flex-direction: row;
-    justify-content: end;
+    justify-content: flex-end;
     width: 100%;
     align-items: center;
     padding: 20px;

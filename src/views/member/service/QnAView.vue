@@ -3,8 +3,7 @@
     <QnABoard
       :title="title"
       :listLink="listLink"
-      :detailLink="detailLink"
-      :writeLink="writeLink"/>
+      :URL="URL"/>
   </div>
 </template>
 
@@ -21,9 +20,8 @@ export default {
   },
   data() {
     return {
-      listLink: "http://localhost:8082/triplus/api/service/qna/",
-      detailLink: "/service/qna/detail",
-      writeLink: "/service/qna/write",
+      listLink: `${process.env.VUE_APP_API_URL || ""}/service/qna`,
+      URL: "/service/qna",
       title: "Q&A 게시판",
       pageCur: 6,
       pageEnd: 70
@@ -31,7 +29,7 @@ export default {
   },
   methods: {
     getList() {
-      axios.get("http://localhost:8082/triplus/api/service/qna/", {
+      axios.get(`${process.env.VUE_APP_API_URL || ""}/service/qna/`, {
         headers: {
           'Access-Control-Allow-Origin': '*'
         },
