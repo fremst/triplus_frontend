@@ -62,6 +62,7 @@ export default {
       maxDate: null,
       invalidDates: null,
       destination: null,
+      id: localStorage.getItem("id"),
       responsiveOptions: [
         {
           breakpoint: "1400px",
@@ -90,14 +91,15 @@ export default {
       const params = {
         sDate: this.dates[0],
         eDate: this.dates[1],
-        destination: this.destination
+        destination: this.destination,
+        id: this.id
       };
       const postUrl = `${process.env.VUE_APP_API_URL || ""}/section/member/`;
       const response = await axios.post(postUrl, params, defaultOptions).catch(err => {
         alert("일정추가 실패", err);
       });
 
-      if (response.data?.result === "success") {
+      if (response.data.result === "success") {
         alert("일정추가 성공");
         router.push("/section/member/MyScheduleMainView");
       } else {
