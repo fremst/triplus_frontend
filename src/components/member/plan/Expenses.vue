@@ -381,49 +381,6 @@
             return (this.eDate - this.sDate) / 1000 / 60 / 60 / 24 + 1; // 틱 > 초 > 분 > 시 순으로 나눔 (+1은 오늘도 포함시키기 위해서)
           }
         },
-        // 지출 데이터 (그냥 DB에서 끌어온 것)
-        expenseRawData: [
-          {
-            day: 0, // 0 = 여행준비, 1~ = day n
-            contents: 'test 내용',
-            payment: 90000,
-            payType: '카드', // 현금
-            category: '기타', // 숙소 교통 식비 쇼핑 관광
-            private: 0,
-            consumer: ['aaa', 'bbb'],
-            payer: ['aaa', 'ccc', 'eee'],
-          },
-          {
-            day: 1, // 0 = 여행준비, 1~ = day n
-            contents: 'test 내용2',
-            payment: 300000,
-            payType: '카드', // 현금
-            category: '숙소', // 숙소 교통 식비 쇼핑 관광
-            private: 0,
-            consumer: ['aaa', 'bbb'],
-            payer: ['aaa', 'ccc', 'eee'],
-          },
-          {
-            day: 0, // 0 = 여행준비, 1~ = day n
-            contents: 'test 내용3',
-            payment: 500000,
-            payType: '현금', // 현금
-            category: '교통', // 숙소 교통 식비 쇼핑 관광
-            private: 0,
-            consumer: ['aaa', 'bbb'],
-            payer: ['aaa', 'ccc', 'eee'],
-          },
-          {
-            day: 2, // 0 = 여행준비, 1~ = day n
-            contents: 'test 내용3',
-            payment: 500000,
-            payType: '카드', // 현금
-            category: '기타', // 숙소 교통 식비 쇼핑 관광
-            private: 0,
-            consumer: ['aaa', 'bbb'],
-            payer: ['aaa', 'ccc', 'eee'],
-          }
-        ],
         // 지출 데이터 (적절히 정돈해놓은 것)
         expenseData: [[]],
         // 지출 데이터 (카테고리 필터링)
@@ -500,36 +457,38 @@
       }
 
       // 지출 내역 따오기
-      axios.get(`${this.apiURL}/${this.scheduleData.skdNum}`, {
+      axios.get(`${this.apiURL}/${this.scheduleData.skdNum}/expense`, {
           headers: {
             'Access-Control-Allow-Origin': '*'
           },
           params: { }
         }).then(function(resp) {
-          this.expenseData = resp.data;
+          this.expenseData = JSON.parse(resp.data.jsonData);
+          console.log(this.expenseData);
+          
+          // 지출 내역 정리
+          this.expNum = 0;
+          if (this.expenseData.length == 0)
+          {
+            for (let i = 0; i < this.scheduleData.getDayCount() + 1; i++)
+              this.expenseData.push([]);
+          }
+          for (let arr of this.expenseData)
+          {
+            for (let expense of arr)
+            {
+              if (expense.expNum > this.expNum)
+                this.expNum = expense.expNum + 1;
+            }
+          }
+          this.filteredExpenseData = this.getFilteredExpenseData(this.selectedCategory);
+
+          // 통계 정리
+          this.summaryData.data = this.getChartData();
+
+          // 정산 정리
+          this.calculateData = this.calculate();
         }.bind(this));
-
-      // 지출 내역 정리
-      this.expNum = 0;
-      this.expenseData = [];
-      for (let i = 0; i < this.scheduleData.getDayCount() + 1; i++)
-        this.expenseData.push([]);
-      for (let arr of this.expenseData)
-      {
-        for (let expense of arr)
-        {
-          if (expense.expNum > this.expNum)
-            this.expNum = expense.expNum + 1;
-          this.expenseData[expense.day].push(expense);
-        }
-      }
-      this.filteredExpenseData = this.getFilteredExpenseData(this.selectedCategory);
-
-      // 통계 정리
-      this.summaryData.data = this.getChartData();
-
-      // 정산 정리
-      this.calculateData = this.calculate();
     },
     mounted() {
     },
@@ -591,15 +550,7 @@
         this.displayEditExpense = false;
         
         // 업데이트
-        axios.put(`${this.apiURL}/${this.scheduleData.skdNum}`,
-          JSON.stringify(this.expenseData), {
-          headers: {
-            'Access-Control-Allow-Origin': '*',
-            'Content-Type': 'application/json'
-          }
-        }).then(function(resp) {
-          console.log(resp);
-        }.bind(this));
+        this.updateExpenseData();
       },
       deleteExpense(exp) {
         for (let expArr of this.expenseData)
@@ -608,11 +559,15 @@
           if (index > -1)
             expArr.splice(index, 1);
         }
+        // 업데이트
+        this.updateExpenseData();
       },
       addExpense() {
         let available = this.checkAvailable();
         if (available.result == false)
           return alert(available.reason);
+        console.log(this.expenseData);
+        console.log(this.expDay.code);
         this.expenseData[this.expDay.code].push({
           expNum: this.expNum++,
           day: this.expDay.code,
@@ -636,8 +591,14 @@
         this.expConsumers = [];
         this.expPayers = [];
         // 업데이트
-        axios.put(`${this.apiURL}/${this.scheduleData.skdNum}`,
-          JSON.stringify(this.expenseData), {
+        this.updateExpenseData();
+      },
+      // 서버에 업데이트
+      updateExpenseData() {
+        axios.put(`${this.apiURL}/${this.scheduleData.skdNum}/expense`,
+          JSON.stringify({
+            skdNum: this.scheduleData.skdNum,
+            jsonData: JSON.stringify(this.expenseData)}), {
           headers: {
             'Access-Control-Allow-Origin': '*',
             'Content-Type': 'application/json'
@@ -679,15 +640,12 @@
           for (let element of arr)
           {
             let index = result.labels.indexOf(element.category);
-            console.log(index);
             result.datasets[0].data[index] += element.payment;
           }
         }
-        console.log(result);
         return result;
       },
       getFilteredExpenseData(category) {
-        console.log(category);
         if (category == '전체 보기')
           return this.expenseData;
         let result = JSON.parse(JSON.stringify(this.expenseData));
@@ -741,7 +699,6 @@
             }
           }
         }
-        console.log(result);
         return result;
       },
     }

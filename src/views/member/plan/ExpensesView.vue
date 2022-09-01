@@ -14,7 +14,7 @@ export default {
   },
   data() {
     return {
-      apiURL: `${process.env.VUE_APP_API_URL || ""}/member/plan/expense`
+      apiURL: `${process.env.VUE_APP_API_URL || ""}/member/plan`
     };
   }
 }

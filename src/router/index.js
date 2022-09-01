@@ -181,7 +181,7 @@ const routes = [
     component: checkListView
   },
   {
-    path: "/member/plan/expenses",
+    path: "/member/plan/:skdNum/expenses",
     name: "member-expenses",
     component: ExpensesView
   },
@@ -270,8 +270,8 @@ const routes = [
     component: () => import("@/views/section/magazine/MagazineListView.vue")
   },
   {
-    path:"/section/magazines/:brdNum",
-    name:"magazine-detail",
+    path: "/section/magazines/:brdNum",
+    name: "magazine-detail",
     component: () => import("@/views/section/magazine/MagazineDetailView.vue")
   },
   //일정등록 첫 페이지
