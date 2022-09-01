@@ -21,7 +21,7 @@
                 </div>
             </div>
             <div class="board-footer">
-                <Button v-if="this.tempAuth=='admin'" @click="$router.push(`/section/magazines/${this.$route.params.brdNum}/update`)" >수정</Button>
+                <Button v-if="this.tempAuth=='admin'" @click="$router.push(`/admin/magazines/${this.$route.params.brdNum}/update`)" >수정</Button>
                 <Button v-if="this.tempAuth=='admin'" class="p-button-danger" @click="onDelete">삭제</Button>
                 <Button @click="onList">목록으로</Button>
             </div>
@@ -36,7 +36,7 @@
 
             </div>
             <div class="board-reply">
-            <Textarea v-model="commContents" :autoResize="true" rows="3" cols="125" />
+            <Textarea v-model="commContents" :autoResize="true" rows="3" cols="120" />
             <Button @click="insertComm" id="replyBtn" class="p-button-lg">등록</Button>
             </div>
         </div>
@@ -85,7 +85,7 @@
                 this.$router.push({name:'magazines'});
             },
             onDelete(){
-                axios.delete(`http://localhost:8082/triplus/api/section/magazines/${this.$route.params.brdNum}`,{
+                axios.delete(`http://localhost:8082/triplus/api/admin/magazines/${this.$route.params.brdNum}`,{
                     headers: {
                         'Access-Control-Allow-Origin': '*'
                     }

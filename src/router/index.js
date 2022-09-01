@@ -255,14 +255,14 @@ const routes = [
     component: AccommodationDetailView
   },
   {
-    path: "/admin/magazine/write",
+    path: "/admin/magazines/write",
     name: "magazine-write",
     component: () => import("@/views/admin/magazine/MagazineWriteView.vue")
   },
   {
-    path: "/admin/magazine/update",
+    path: "/admin/magazines/:brdNum/update",
     name: "magazine-update",
-    component: () => import("@/views/admin/magazine/MagazineUpdateView.vue")
+    component: () => import("@/views/admin/magazine/MagazineWriteView.vue")
   },
   {
     path: "/section/magazines",

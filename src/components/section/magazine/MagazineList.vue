@@ -6,9 +6,9 @@
                     <div class="col-6" style="text-align: left">
                         <Dropdown v-model="sortKey" :options="sortOptions" optionLabel="label" placeholder="정렬 옵션 선택" @change="onSortChange($event)"/>
                     </div>
-                    <div class="col-6" style="text-align: right">
-                        <DataViewLayoutOptions v-model="layout" />
-                    </div>
+<!--                    <div class="col-6" style="text-align: right">-->
+<!--                        <DataViewLayoutOptions v-model="layout" />-->
+<!--                    </div>-->
                 </div>
             </template>
             <template #list="slotProps">
