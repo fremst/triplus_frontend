@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <Expenses />
+    <Expenses :apiURL="apiURL" />
   </div>
 </template>
 
@@ -14,6 +14,7 @@ export default {
   },
   data() {
     return {
+      apiURL: `${process.env.VUE_APP_API_URL || ""}/member/plan`
     };
   }
 }

@@ -13,7 +13,7 @@
 
       <Button type="submit" label="다음" class="p-button-primary" @click.prevent="showId" />
      {{rnd}}
-      
+      {{a}}{{b}}
       
     </div>
 	</TabPanel>
@@ -41,6 +41,8 @@ import axios from 'axios';
 import TabView from 'primevue/tabview';
 import TabPanel from 'primevue/tabpanel';
 
+
+
 export default {
   name: 'FindView',
   components:{
@@ -50,12 +52,13 @@ export default {
   data() {
     return {
       name: "이강준",
-      email: "test@",
+      email: "dlrkdwnszz@gmail.com",
       id:"KJtest",
       cert:"", //인증번호 입력
       rnd: "", // 서버에서 보낸 인증번호
-      errMsg:""
-     
+      errMsg:"",
+      a:this.$store.state.loginUser.auth,
+      b:this.$store.state.loginUser.id
     }
   },
   methods: {

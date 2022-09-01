@@ -1,7 +1,7 @@
 <template>
   <div class="home">
-    <QnAWrite :title="title" :detailURL="detailURL"
-      :link="link" :cancelLink="cancelLink"/>
+    <QnAWrite :title="title" :URL="URL"
+      :link="link"/>
   </div>
 </template>
 
@@ -17,9 +17,8 @@ export default {
   data() {
     return {
       title: "Q&A 게시글 작성",
-      link: "http://localhost:8082/triplus/api/service/qna",
-      cancelLink: "/service/qna",
-      detailURL: "/service/qna/detail",
+      link: `${process.env.VUE_APP_API_URL || ""}/service/qna`,
+      URL: "/service/qna",
     };
   }
 }

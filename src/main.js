@@ -203,3 +203,6 @@ app.component("VirtualScroller", VirtualScroller);
 
 app.config.productionTip = false;
 app.mount("#app");
+
+//카카오 로그인
+window.Kakao.init('b8ecc1a13cb67c69c64998efd84606b2');
