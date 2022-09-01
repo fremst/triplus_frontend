@@ -1,6 +1,7 @@
 <template>
   <div>
-    <h1>패키지 상품 등록</h1>
+    <h1 v-if="!this.$route.params.brdNum">패키지 상품 등록</h1>
+    <h1 v-else>패키지 상품 수정</h1>
     <table>
       <tr>
         <td>
@@ -24,7 +25,7 @@
         <td>
           <InputNumber
             v-model="adultPrice"
-            min="0"
+            :min="0"
             :class="{ 'p-invalid': submitted && !this.adultPrice }"
             placeholder="성인 요금을 입력해주세요."
             style="width: 350px"
@@ -39,7 +40,7 @@
         <td>
           <InputNumber
             v-model="childPrice"
-            min="0"
+            :min="0"
             currency="KRW"
             locale="ko-KR"
             :class="{ 'p-invalid': submitted && !this.childPrice }"
@@ -114,7 +115,7 @@
         <td>
           <InputNumber
             v-model="rcrtCnt"
-            min="1"
+            :min="1"
             :class="{ 'p-invalid': submitted && !this.rcrtCnt }"
             placeholder="모집 인원을 입력해주세요."
             style="width: 350px"
@@ -205,11 +206,20 @@
       </tr>
     </table>      
     <Button
-      @click="submitForm"
+      v-if="!$route.params.brdNum"
+      @click="write"
       :disabled="!sDate"
       class="p-button p-component p-button-label"
       icon="pi pi-upload">
       등록
+    </Button>
+    <Button
+      v-else
+      @click="update"
+      :disabled="!sDate"
+      class="p-button p-component p-button-label"
+      icon="pi pi-upload">
+      수정
     </Button>
   </div>
 </template>
@@ -217,6 +227,8 @@
 <script>
 import axios from "axios";
 import Editor from 'primevue/editor';
+import { defaultOptions } from "@/constant/axios.js";
+import { multipartOptions } from "@/constant/axios.js";
 
 export default {
 
@@ -247,23 +259,19 @@ export default {
 
   },
 
+  created() {
+    if(this.$route.params.brdNum){
+      this.getData();
+    }
+  },
+
   methods: {
 
     changeTImg(e){
+      
+      let uploadFile = e.target.files[0];
 
-      let uploadFiles = e.target.files;
-
-          this.tImgFile = uploadFiles[0];
-
-          let reader = new FileReader();
-
-          reader.onload = (e) => {
-
-            this.tImgPreview = e.target.result;
-
-          }
-
-          reader.readAsDataURL(e.target.files[0]);
+      this.setTImgFileAndPreview(uploadFile);
 
     },
 
@@ -273,86 +281,166 @@ export default {
 
       for (let i = 0; i < uploadFiles.length; i++){
 
-        // if(!this.pkgImgFiles.includes(uploadFiles[i])){ // 파일 중복 검사 로직 수정 필요
-
-
-          let reader = new FileReader();
-
-          reader.onload = (e) => {
-
-            let img = e.target.result;
-
-            if(!this.pkgImgPreview.includes(img)){
-              
-              this.pkgImgFiles.push(uploadFiles[i]);
-              this.pkgImgPreview.push(img);
-            }
-
-          }
-
-          reader.readAsDataURL(e.target.files[i]);
-
-        // }
+          this.setImgFilesAndPreview(uploadFiles[i]);
 
       }
 
     },
 
     deleteImg(i){
+
       this.pkgImgFiles.splice(i, 1);
       this.pkgImgPreview.splice(i, 1);
+
     },
 
-    submitForm(){
+    bindForm(){
 
       const formData = new FormData();
 
-        formData.append('title', this.title);
-        formData.append('adultPrice', this.adultPrice);
-        formData.append('childPrice', this.childPrice);
-        formData.append('sDate', this.sDate);
-        formData.append('eDate', this.eDate);
-        formData.append('mtgPlace', this.mtgPlace);
-        formData.append('region', this.eDate);
-        formData.append('rcrtCnt', this.rcrtCnt);
-        formData.append('trans', this.trans);
-        formData.append('tImgFile', this.tImgFile);
-        formData.append('contents', this.contents);
+      formData.append('title', this.title);
+      formData.append('adultPrice', this.adultPrice);
+      formData.append('childPrice', this.childPrice);
+      formData.append('sDate', this.sDate);
+      formData.append('eDate', this.eDate);
+      formData.append('mtgPlace', this.mtgPlace);
+      formData.append('region', this.region);
+      formData.append('rcrtCnt', this.rcrtCnt);
+      formData.append('trans', this.trans);
+      formData.append('tImgFile', this.tImgFile);
+      formData.append('contents', this.contents);
 
       for(let i = 0; i < this.pkgImgFiles.length; i++){
-
         formData.append('pkgImgFiles', this.pkgImgFiles[i], this.pkgImgFiles[i].name);
-      
       }
 
-      axios.post("http://localhost:8082/triplus/api/section/packages/", formData, {
-
-        headers:{
-
-          'Access-Control-Allow-Origin' : '*',
-          // 'Content-Type' : 'multipart/form-data',
-          'enctype' : 'multipart/form-data',
-          // 'ContentType' : false,
-          // 'processData' : false
-
-        }
-
-      }).then(function (resp) {
-
-        if (resp.data.result === "success") {
-
-          alert("파일 업로드 성공");
-          this.$router.push({ name: "admin-packages",})
-
-        } else {
-
-          alert("파일 업로드 실패");
-
-        }
-
-      }.bind(this));
+      return formData;
 
     },
+
+    async write(){
+
+      const formData = this.bindForm();
+
+      const postUrl = `${process.env.VUE_APP_API_URL || ""}/section/packages/`;
+
+      const resp = await axios.post(postUrl, formData, multipartOptions).catch(err => {
+        alert("서버 연결 실패", err);
+      });
+
+      const brdNum = resp.data.brdNum;
+
+      if (resp.data.result === "success") {
+        alert("패키지 상품 등록 성공");
+          this.$router.push({ name: "package-detail", params: {brdNum: brdNum}});
+      } else {
+        alert("패키지 상품 등록 실패");
+      }
+
+    },
+
+    async update(){
+
+      const formData = this.bindForm();
+
+      const putUrl = `${process.env.VUE_APP_API_URL || ""}/section/packages/${this.$route.params.brdNum}`;
+
+      const resp = await axios.post(putUrl, formData, multipartOptions).catch(err => {
+        alert("서버 연결 실패", err);
+      });
+
+      const brdNum = resp.data.brdNum;
+
+      if (resp.data.result === "success") {
+        alert("패키지 상품 수정 성공");
+          this.$router.push({ name: "package-detail", params: {brdNum: brdNum}});
+      } else {
+        alert("패키지 상품 수정 실패");
+      }
+
+    },
+
+    async getData(){
+
+      const getUrl = `${process.env.VUE_APP_API_URL || ""}/section/packages/${this.$route.params.brdNum}`;
+
+      const resp = await axios.get(getUrl, defaultOptions).catch(err => {
+        alert("서버 연결 실패", err);
+      });
+
+      this.title = resp.data.dto.title;
+      this.contents = resp.data.dto.contents;
+      this.adultPrice = resp.data.dto.adultPrice;
+      this.childPrice = resp.data.dto.childPrice;
+      this.sDate = new Date(resp.data.dto.sdate).toISOString().substring(0,10);
+      this.eDate = new Date(resp.data.dto.edate).toISOString().substring(0,10);
+      this.mtgPlace = resp.data.dto.mtgPlace;
+      this.region = resp.data.dto.region;
+      this.rcrtCnt = resp.data.dto.rcrtCnt;
+      this.trans = resp.data.dto.trans;
+
+      const tImgFile = this.base64ImgtoFile(resp.data.dto.timg, "썸네일 이미지");
+      this.setTImgFileAndPreview(tImgFile)
+
+      let pkgImgDtos = resp.data.map.pkgImgDtos;
+      for(let i = 0; i < pkgImgDtos.length; i++){
+        const dImgFile = this.base64ImgtoFile(pkgImgDtos[i].pkgImg, pkgImgDtos[i].pkgImgName);
+        this.setImgFilesAndPreview(dImgFile);
+      }
+
+    },
+
+    base64ImgtoFile(base64Img, fileName){
+
+      let bstr = atob(base64Img), 
+          n = bstr.length, 
+          u8arr = new Uint8Array(n);
+          
+      while(n--){
+          u8arr[n] = bstr.charCodeAt(n);
+      }
+      
+      return new File([u8arr], fileName, {type:"image/jpeg"});
+
+    },
+
+    setTImgFileAndPreview(file){
+
+      let reader = new FileReader();
+
+      reader.onload = (e) => {
+
+        let img = e.target.result;
+
+        this.tImgFile = file;
+        this.tImgPreview = img;
+
+      }
+
+      reader.readAsDataURL(file);
+
+    },
+
+    setImgFilesAndPreview(file){
+
+      let reader = new FileReader();
+
+      reader.onload = (e) => {
+
+        let img = e.target.result;
+
+        if(!this.pkgImgPreview.includes(img)){
+          
+          this.pkgImgFiles.push(file);
+          this.pkgImgPreview.push(img);
+
+        }
+
+      }
+
+      reader.readAsDataURL(file);
+
+    }
 
   }
 
@@ -368,9 +456,5 @@ export default {
 .file-preview{
   width: 200px;
 }
-
-/* .md\:col-4 {
-  padding: 0;
-} */
 
 </style>

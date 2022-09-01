@@ -56,6 +56,11 @@ const routes = [
     component: AdminPackageWriteView
   },
   {
+    path: "/admin/packages/:brdNum/update",
+    name: "package-update",
+    component: AdminPackageWriteView
+  },
+  {
     path: "/admin",
     name: "admin",
     component: AdminView,
