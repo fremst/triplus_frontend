@@ -506,7 +506,7 @@
           },
           params: { }
         }).then(function(resp) {
-          this.expenseRawData = resp.data;
+          this.expenseData = resp.data;
         }.bind(this));
 
       // 지출 내역 정리
@@ -514,10 +514,14 @@
       this.expenseData = [];
       for (let i = 0; i < this.scheduleData.getDayCount() + 1; i++)
         this.expenseData.push([]);
-      for (let expense of this.expenseRawData)
+      for (let arr of this.expenseData)
       {
-        expense.expNum = this.expNum++;
-        this.expenseData[expense.day].push(expense);
+        for (let expense of arr)
+        {
+          if (expense.expNum > this.expNum)
+            this.expNum = expense.expNum + 1;
+          this.expenseData[expense.day].push(expense);
+        }
       }
       this.filteredExpenseData = this.getFilteredExpenseData(this.selectedCategory);
 
@@ -610,6 +614,7 @@
         if (available.result == false)
           return alert(available.reason);
         this.expenseData[this.expDay.code].push({
+          expNum: this.expNum++,
           day: this.expDay.code,
           contents: this.expContent,
           payment: this.expPayment,
