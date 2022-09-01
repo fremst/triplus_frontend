@@ -5,29 +5,18 @@
 
 <template>
   <div class="main">
-    <div class="header-dummy">
-      <div>
-        <h2>제주 여행</h2><a href="#">설정</a>
-        <p>2022.08.08 ~ 08.12</p>
-      </div>
-      <div>
-        <div class="navi-btnlist">
-          <Button class="violet-btn">일행과 함께 일정 짜기</Button>
-          <Button>채팅</Button>
-        </div>
-        <div class="navi-btnlist">
-          <Button>체크리스트</Button>
-          <Button>가계부</Button>
-          <Button @click="displaySummary = true">지출 통계</Button>
-          <Button @click="displayCalculate = true">정산하기</Button>
-        </div>
-      </div>
-    </div>
+    <PlanHeader />
     <Divider style="border-top: 2px solid lightgray" />
     <div class="board">
       <div class="board-header">
         <Dropdown style="width: 200px;" optionLabel="name"
           v-model="selectedDay" :options="days" placeholder="전체 보기"></Dropdown>
+        <br>
+        <div>
+          <Button class="p-button-secondary p-button-rounded p-button-sm mr-4" @click="displaySummary = true">지출 통계</Button>
+          &nbsp;
+          <Button class="p-button-secondary p-button-rounded p-button-sm mr-4" @click="displayCalculate = true">정산하기</Button>
+        </div>
       </div>
       <div class="board-main">
         <div v-for="day of (scheduleData.getDayCount() + 1)" :key="day"
@@ -61,12 +50,12 @@
             </Column>
             <Column field="payType" header="수정버튼" style="width: 120px;">
               <template #body="slotProps">
-                <Button @click="console.log(slotProps)" >수정</Button>
+                <Button @click="openEditExpense(slotProps.data)" >수정</Button>
               </template>
             </Column>
             <Column field="payType" header="삭제버튼" style="width: 120px;">
               <template #body="slotProps">
-                <Button @click="console.log(slotProps)">삭제</Button>
+                <Button @click="deleteExpense(slotProps.data)">삭제</Button>
               </template>
             </Column>
           </DataTable>
@@ -83,7 +72,7 @@
 
         <!-- 비용 추가 다이얼로그 -->
         <Dialog class="dialog-addexpense" header="비용 추가하기" v-model:visible="displayAddExpense" :modal="true"
-          style="width: 800px;">>
+          style="width: 510px;">
           <div>
             <Divider />
             <div>
@@ -116,7 +105,24 @@
             </div>
             <Divider />
             <div>
-              <h3>함께한 사람</h3>
+              <DataTable class="add-table" :value="scheduleData.users"
+                responsiveLayout="scroll" :rows="10">
+                <Column field="contents" header="함께한 사람" alignHeader="center">
+                  <template #body="slotProps">
+                    <p style="font-size: 20px; font-weight: 500;">{{slotProps.data}}</p>
+                  </template>
+                </Column>
+                <Column field="pay" header="결제" style="width: 70px;">
+                  <template #body="slotProps">
+                    <Checkbox name="consumers" :value="slotProps.data" v-model="expPayers" />
+                  </template>
+                </Column>
+                <Column field="consume" header="함께" style="width: 70px;">
+                  <template #body="slotProps">
+                    <Checkbox name="payers" :value="slotProps.data" v-model="expConsumers" />
+                  </template>
+                </Column>
+              </DataTable>
             </div>
             <Divider />
             <div style="display: flex; width: 100%; font-size: 20px; align-items: center; justify-content: flex-end;">
@@ -130,6 +136,72 @@
           </div>
         </Dialog>
         
+        <!-- 비용 수정 다이얼로그 -->
+        <Dialog class="dialog-editexpense" header="비용 수정하기" v-model:visible="displayEditExpense" :modal="true"
+          style="width: 510px;">
+          <div>
+            <Divider />
+            <div>
+              <h3>날짜 선택</h3>
+              <Dropdown style="width: 200px;" :options="getDays()" optionLabel="name" v-model="expDay" />
+            </div>
+            <Divider />
+            <div>
+              <h3>결제 수단 & 비용</h3>
+              <Dropdown style="width: 140px;" :options="['현금', '카드']" v-model="expPayType" />
+              <InputNumber style="width: auto;" v-model="expPayment"></InputNumber>원
+            </div>
+            <Divider />
+            <div>
+              <h3>내용</h3>
+              <InputText style="width: 100%" placeholder="이곳에 내용 입력" v-model="expContent"></InputText>
+            </div>
+            <Divider />
+            <div>
+              <h3>카테고리</h3>
+              <SelectButton v-model="expCategory" :options="categoryIconOptions">
+                <template #option="slotProps">
+                  <div style="display: flex; flex-direction: column;">
+                    <i :class="slotProps.option.icon" style="font-size: 2rem"></i>
+                    <br>
+                    {{slotProps.option.value}}
+                  </div>
+                </template>
+              </SelectButton>
+            </div>
+            <Divider />
+            <div>
+              <DataTable class="add-table" :value="scheduleData.users"
+                responsiveLayout="scroll" :rows="10">
+                <Column field="contents" header="함께한 사람" alignHeader="center">
+                  <template #body="slotProps">
+                    <p style="font-size: 20px; font-weight: 500;">{{slotProps.data}}</p>
+                  </template>
+                </Column>
+                <Column field="pay" header="결제" style="width: 70px;">
+                  <template #body="slotProps">
+                    <Checkbox name="consumers" :value="slotProps.data" v-model="expPayers" />
+                  </template>
+                </Column>
+                <Column field="consume" header="함께" style="width: 70px;">
+                  <template #body="slotProps">
+                    <Checkbox name="payers" :value="slotProps.data" v-model="expConsumers" />
+                  </template>
+                </Column>
+              </DataTable>
+            </div>
+            <Divider />
+            <div style="display: flex; width: 100%; font-size: 20px; align-items: center; justify-content: flex-end;">
+              <Checkbox v-model="expPrivate" :binary="true"></Checkbox>&nbsp;이 비용 나만 보기
+            </div>
+            <div style="display: flex; width: 100%; align-items: flex-end; justify-content: flex-end;">
+              <Button class="p-button-warning" @click="displayAddExpense = false">취소</Button>
+              &nbsp;
+              <Button @click="editExpense()">수정</Button>
+            </div>
+          </div>
+        </Dialog>
+        
         <!-- 지출 통계 다이얼로그 -->
         <Dialog class="dialog-summary" header="지출 통계" v-model:visible="displaySummary" :modal="true"
           style="width: 800px;">
@@ -137,7 +209,7 @@
             <Divider />
             <div>
               <h3>총 지출 금액</h3>
-              <h1><span style="color: #009688">{{summaryData.getSummary()}}</span>원</h1>
+              <h1><span style="color: #009688">{{new Intl.NumberFormat('en-US').format(summaryData.getSummary())}}</span>원</h1>
               <p>{{summaryData.getTop()}}에 가장 많이 썼어요.</p>
             </div>
             <Divider />
@@ -148,7 +220,7 @@
                   <h3>{{cat}}</h3>
                   <h1 class="summary-h1">
                     <span style="color: #aaaaaa; font-size: 12px;">{{summaryData.getPercentage(cat)}}</span>
-                    <span style="color: #009688">{{summaryData.getCategory(cat)}}</span>
+                    <span style="color: #009688">{{new Intl.NumberFormat('en-US').format(summaryData.getCategory(cat))}}</span>
                     원
                   </h1>
                 </div>
@@ -201,28 +273,41 @@
 
         <!-- 정산 다이얼로그 -->
         <Dialog class="dialog-calculate" header="정산" v-model:visible="displayCalculate" :modal="true"
-          style="width: 800px;">
+          style="width: 510px;">
           <div>
             <Divider />
             <div>
               <h3>총 지출 금액</h3>
-              <h1><span style="color: #009688">{{summaryData.getSummary()}}</span>원</h1>
+              <h1><span style="color: #009688">{{new Intl.NumberFormat('en-US').format(summaryData.getSummary())}}</span>원</h1>
             </div>
             <Divider />
             <div>
-              <h3>누가 누구에게</h3>
+              <div class="calculate-subtitle" style="display: flex; justify-content: space-between">
+                <h3>누가 누구에게</h3>
+                <h3>얼마를</h3>
+              </div>
               <div v-for="user in scheduleData.users" :key="user">
-                <div v-show="user != 'aaa'">
-                  <p v-show="calculateData['aaa'][user] > 0">당신이 {{user}}에게 {{calculateData['aaa'][user].toFixed(0)}}원을 줘야 해요.</p>
-                  <p v-show="calculateData['aaa'][user] < 0">당신이 {{user}}에게 {{-calculateData['aaa'][user].toFixed(0)}}원을 받아야 해요.</p>
+                <div v-show="user != 'aaa' && calculateData['aaa'][user] != 0" style="display: flex; justify-content: space-between">
+                  <h3 v-show="calculateData['aaa'][user] > 0">당신 → {{user}}</h3>
+                  <h3 v-show="calculateData['aaa'][user] < 0">{{user}} → 당신</h3>
+                  <h3>
+                    <span style="color: #009688">{{new Intl.NumberFormat('en-US').format(Math.abs(calculateData['aaa'][user].toFixed(0)))}}</span>
+                    원
+                  </h3>
                 </div>
               </div>
             </div>
             <Divider />
             <div>
-              <h3>개인별 지출금액</h3>
-              <div v-for="user in scheduleData.users" :key="user">
-                {{user}} {{calculateData[user][user].toFixed(0)}}원
+              <div class="calculate-subtitle">
+                <h3>개인별 지출금액</h3>
+              </div>
+              <div v-for="user in scheduleData.users" :key="user" style="display: flex; justify-content: space-between">
+                <h3>{{user}}</h3>
+                <h3>
+                  <span style="color: #009688">{{new Intl.NumberFormat('en-US').format(calculateData[user][user].toFixed(0))}}</span>
+                  원
+                </h3>
               </div>
             </div>
             <Divider />
@@ -239,10 +324,12 @@
 </template>
 <script>
   import 'primeicons/primeicons.css';
+  import axios from 'axios';
   import Dialog from 'primevue/dialog';
   import Divider from 'primevue/divider';
   import Dropdown from 'primevue/dropdown';
   import Chart from 'primevue/chart';
+  import PlanHeader from './PlanHeader.vue';
 
   const iconMap = {
           '기타': 'pi-map-marker',
@@ -257,9 +344,14 @@
   {
     name: 'QnABoard',
     components: {
-      Divider, Dropdown, Dialog, Chart
+    Divider,
+    Dropdown,
+    Dialog,
+    Chart,
+    PlanHeader
     },
     props: {
+      apiURL: String
     },
     data() {
       return {
@@ -272,6 +364,7 @@
           { icon: 'pi pi-map', value: '관광' },
         ],
         displayAddExpense: false,
+        displayEditExpense: false,
         displaySummary: false,
         displayCalculate: false,
         days: [],
@@ -279,6 +372,7 @@
         selectedCategory: '전체 보기',
         // 일정 데이터
         scheduleData: {
+          skdNum: 1,
           sDate: new Date(2022, 8, 1).getTime(),
           eDate: new Date(2022, 8, 5).getTime(),
           site: '',
@@ -287,49 +381,6 @@
             return (this.eDate - this.sDate) / 1000 / 60 / 60 / 24 + 1; // 틱 > 초 > 분 > 시 순으로 나눔 (+1은 오늘도 포함시키기 위해서)
           }
         },
-        // 지출 데이터 (그냥 DB에서 끌어온 것)
-        expenseRawData: [
-          {
-            day: 0, // 0 = 여행준비, 1~ = day n
-            contents: 'test 내용',
-            payment: 90000,
-            payType: '카드', // 현금
-            category: '기타', // 숙소 교통 식비 쇼핑 관광
-            private: 0,
-            consumer: ['aaa', 'bbb'],
-            payer: ['aaa', 'ccc', 'eee'],
-          },
-          // {
-          //   day: 1, // 0 = 여행준비, 1~ = day n
-          //   contents: 'test 내용2',
-          //   payment: 300000,
-          //   payType: '카드', // 현금
-          //   category: '숙소', // 숙소 교통 식비 쇼핑 관광
-          //   private: 0,
-          //   consumer: ['aaa', 'bbb'],
-          //   payer: ['aaa', 'ccc', 'eee'],
-          // },
-          // {
-          //   day: 0, // 0 = 여행준비, 1~ = day n
-          //   contents: 'test 내용3',
-          //   payment: 500000,
-          //   payType: '카드', // 현금
-          //   category: '교통', // 숙소 교통 식비 쇼핑 관광
-          //   private: 0,
-          //   consumer: ['aaa', 'bbb'],
-          //   payer: ['aaa', 'ccc', 'eee'],
-          // },
-          // {
-          //   day: 2, // 0 = 여행준비, 1~ = day n
-          //   contents: 'test 내용3',
-          //   payment: 500000,
-          //   payType: '카드', // 현금
-          //   category: '기타', // 숙소 교통 식비 쇼핑 관광
-          //   private: 0,
-          //   consumer: ['aaa', 'bbb'],
-          //   payer: ['aaa', 'ccc', 'eee'],
-          // }
-        ],
         // 지출 데이터 (적절히 정돈해놓은 것)
         expenseData: [[]],
         // 지출 데이터 (카테고리 필터링)
@@ -380,16 +431,24 @@
         },
         // 정산 데이터
         calculateData: [],
-        expDay: '',
+        expDay: 0,
         expPayType: '',
         expPayment: 0,
         expContent: '',
         expCategory: '',
-        expConsumers: '',
         expPrivate: false,
+        expConsumers: [],
+        expPayers: [],
+
+        // 기타
+        tempEditExpense: {},
+        expNum: 0,
       }
     },
     created() {
+      // TODO 일정 따오기
+
+      // 일정 따와서 날짜 정리
       this.days.push({name: `전체 보기`, code: -1});
       this.days.push({name: `여행 준비`, code: 0});
       for (let i = 0; i < this.scheduleData.getDayCount(); i++)
@@ -397,19 +456,39 @@
         this.days.push({name: `day ${i + 1}`, code: i + 1});
       }
 
-      // 지출 내역 정리
-      this.expenseData = [];
-      for (let i = 0; i < this.scheduleData.getDayCount() + 1; i++)
-        this.expenseData.push([]);
-      for (let expense of this.expenseRawData)
-        this.expenseData[expense.day].push(expense);
-      this.filteredExpenseData = this.getFilteredExpenseData(this.selectedCategory);
+      // 지출 내역 따오기
+      axios.get(`${this.apiURL}/${this.scheduleData.skdNum}/expense`, {
+          headers: {
+            'Access-Control-Allow-Origin': '*'
+          },
+          params: { }
+        }).then(function(resp) {
+          this.expenseData = JSON.parse(resp.data.jsonData);
+          console.log(this.expenseData);
+          
+          // 지출 내역 정리
+          this.expNum = 0;
+          if (this.expenseData.length == 0)
+          {
+            for (let i = 0; i < this.scheduleData.getDayCount() + 1; i++)
+              this.expenseData.push([]);
+          }
+          for (let arr of this.expenseData)
+          {
+            for (let expense of arr)
+            {
+              if (expense.expNum > this.expNum)
+                this.expNum = expense.expNum + 1;
+            }
+          }
+          this.filteredExpenseData = this.getFilteredExpenseData(this.selectedCategory);
 
-      // 통계 정리
-      this.summaryData.data = this.getChartData();
+          // 통계 정리
+          this.summaryData.data = this.getChartData();
 
-      // 정산 정리
-      this.calculateData = this.calculate();
+          // 정산 정리
+          this.calculateData = this.calculate();
+        }.bind(this));
     },
     mounted() {
     },
@@ -436,22 +515,114 @@
       getCategories() {
         return ['전체 보기', '기타', '숙소', '교통', '식비', '쇼핑', '관광'];
       },
+      openEditExpense(exp) {
+        console.log(this.getDays().filter(val => val.code == exp.day)[0]);
+        this.expDay = this.getDays().filter(val => val.code == exp.day)[0];
+        this.expContent = exp.contents;
+        this.expPayment = exp.payment;
+        this.expPayType = exp.payType;
+        this.expCategory = this.categoryIconOptions.filter(val => val.value == exp.category)[0];
+        this.expPrivate = exp.private;
+        this.expConsumers = exp.consumer;
+        this.expPayers = exp.payer;
+        this.tempEditExpense = exp;
+        this.displayEditExpense = true;
+      },
+      editExpense() {
+        let available = this.checkAvailable();
+        if (available.result == false)
+          return alert(available.reason);
+        let expense = this.expenseData[this.tempEditExpense.day].filter(a => a.expNum == this.tempEditExpense.expNum)[0];
+        if (expense.day != this.expDay) // 날짜 다른 경우 옮겨야 함
+        {
+          let index = this.expenseData[this.tempEditExpense.day].findIndex(e => e.expNum == this.tempEditExpense.expNum);
+          this.expenseData[expense.day].splice(index, 1);
+          this.expenseData[this.expDay.code].push(expense);
+        }
+        expense.day = this.expDay.code;
+        expense.contents = this.expContent;
+        expense.payment = this.expPayment;
+        expense.payType = this.expPayType;
+        expense.category = this.expCategory.value;
+        expense.private = this.expPrivate;
+        expense.consumer = this.expConsumers;
+        expense.payer = this.expPayers;
+        this.displayEditExpense = false;
+        
+        // 업데이트
+        this.updateExpenseData();
+      },
+      deleteExpense(exp) {
+        for (let expArr of this.expenseData)
+        {
+          let index = expArr.findIndex(item => item.expNum == exp.expNum);
+          if (index > -1)
+            expArr.splice(index, 1);
+        }
+        // 업데이트
+        this.updateExpenseData();
+      },
       addExpense() {
-        console.log(`${this.expDay.code} ${this.expPayType} ${this.expPayment}
-        ${this.expContent} ${this.expCategory.value} ${this.expConsumers} ${this.expPrivate}`);
+        let available = this.checkAvailable();
+        if (available.result == false)
+          return alert(available.reason);
+        console.log(this.expenseData);
+        console.log(this.expDay.code);
         this.expenseData[this.expDay.code].push({
+          expNum: this.expNum++,
           day: this.expDay.code,
           contents: this.expContent,
           payment: this.expPayment,
           payType: this.expPayType,
           category: this.expCategory.value,
           private: this.expPrivate,
-          consumer: [],
-          payer: []
+          consumer: this.expConsumers,
+          payer: this.expPayers
         });
         this.displayAddExpense = false;
         this.summaryData.data = this.getChartData();
         this.calculateData = this.calculate();
+        this.expDay = null;
+        this.expContent = "";
+        this.expPayment = 0;
+        this.expPayType = "";
+        this.expCategory = null;
+        this.expPrivate = false;
+        this.expConsumers = [];
+        this.expPayers = [];
+        // 업데이트
+        this.updateExpenseData();
+      },
+      // 서버에 업데이트
+      updateExpenseData() {
+        axios.put(`${this.apiURL}/${this.scheduleData.skdNum}/expense`,
+          JSON.stringify({
+            skdNum: this.scheduleData.skdNum,
+            jsonData: JSON.stringify(this.expenseData)}), {
+          headers: {
+            'Access-Control-Allow-Origin': '*',
+            'Content-Type': 'application/json'
+          }
+        }).then(function(resp) {
+          console.log(resp);
+        }.bind(this));
+      },
+      checkAvailable() {
+        if (this.expDay == null || this.expDay.code == undefined)
+          return { result: false, reason: "날짜를 선택하세요." };
+        if (this.expContent == "")
+          return { result: false, reason: "내용을 입력하세요." };
+        if (this.expPayment == "" || this.expPayment == 0)
+          return { result: false, reason: "금액을 입력하세요." };
+        if (this.expPayType == "")
+          return { result: false, reason: "현금/카드 여부를 선택하세요." };
+        if (this.expCategory == null || this.expCategory.value == undefined)
+          return { result: false, reason: "소비 카테고리를 선택하세요." };
+        if (this.expConsumers.length == 0)
+          return { result: false, reason: "함께한 사람을 최소 한 명 이상 선택하세요." };
+        if (this.expPayers.length == 0)
+          return { result: false, reason: "결제한 사람을 최소 한 명 이상 선택하세요." };
+        return { result: true };
       },
       getChartData() {
         let result = {
@@ -469,15 +640,12 @@
           for (let element of arr)
           {
             let index = result.labels.indexOf(element.category);
-            console.log(index);
             result.datasets[0].data[index] += element.payment;
           }
         }
-        console.log(result);
         return result;
       },
       getFilteredExpenseData(category) {
-        console.log(category);
         if (category == '전체 보기')
           return this.expenseData;
         let result = JSON.parse(JSON.stringify(this.expenseData));
@@ -489,7 +657,6 @@
         return result;
       },
       // 계산
-      // 같이 놀고 돈도 낸 사람 -> 아무것도 아님 (정산 열외, 자신이 쓴 금액만큼 지출금액에 추가)
       // 놀기만 한 사람 -> 1/[같이 논 사람들] 의 금액을 돈 낸 사람에게 지불
       // 돈만 낸 사람 -> 1/[같이 논 사람들] 의 금액을 놀기만 한 사람에게 받기
       // 아무것도 아님 -> 아무것도 아님 (정산 열외)
@@ -497,7 +664,7 @@
         let result = [];
         for (let user of this.scheduleData.users)
         {
-          result[user] = []; // payed = 지불, consumed = 함께함
+          result[user] = [];
           for (let user2 of this.scheduleData.users)
             result[user][user2] = 0; // user가 user2에게 n원을 줘야한다는 뜻, 스스로가 스스로에게 주는 경우[user][user] 지출을 뜻함
         }
@@ -530,77 +697,22 @@
                 }
               }
             }
-
-            // 1안
-            // let money = element.payment / element.consumer.length; // 금액 분할 (9000원을 2명이서 놀면 4500원)
-            
-            // for (let user of element.consumer) // 논 사람 검색
-            // {
-            //   if (element.payer.includes(user)) // 돈도 냈음
-            //   {
-            //     let gap = money - (money / element.payer.length); // 논 사람으로 분할한 금액 - 낸 사람으로 분할한 금액
-            //     result[user][user] += money / element.payer.length;
-            //     for (let user2 of element.payer)
-            //     {
-            //       if (user == user2) continue;
-            //       result[user][user2] += gap / (element.payer.length - 1);
-            //       result[user2][user2] += gap / (element.payer.length - 1);
-            //       result[user2][user] -= gap / (element.payer.length - 1);
-            //     }
-            //   }
-            //   else  // 놀아놓고 돈을 안 낸 경우
-            //   {
-            //     // 지불한 사람이 3명인 경우 돈을 안 낸 1명이 2500 / 3의 금액을 내 준 사람들에게 준다
-            //     // 1명이라면 돈을 안 낸 3명이 2500 / 1의 금액을 주면 됨
-            //     for (let user2 of element.payer)
-            //     {
-            //       result[user][user2] += money / element.payer.length;
-            //       result[user2][user2] += money / element.payer.length;
-            //       result[user2][user] -= money / element.payer.length;
-            //     }
-            //   }
-            // }
           }
         }
-        console.log(result);
         return result;
       },
-      // // 해당 ID가 누구에게 얼마를 줘야하는지를 표현
-      // getCalculatedData(id) {
-
-      // },
-      // // 해당 ID가 돈을 얼마나 썼는지를 표현
-      // getUserExpenseData(id) {
-
-      // }
     }
   }
 </script>
 <style scoped>
-  .board-table::v-deep thead {
+  .board-table::v-deep(thead) {
     display: none;
   }
-  .p-datatable::v-deep .p-datatable-tbody > tr > td {
+  .p-datatable::v-deep(.p-datatable-tbody > tr > td) {
     border: none;
   }
   a {
     text-decoration: none;
-  }
-  .header-dummy {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: flex-start;
-    width: 100%;
-  }
-  .header-dummy > div {
-    margin: 5px;
-  }
-  .header-dummy div Button {
-    margin-top: 5px;
-  }
-  .header-dummy div .navi-btnlist * {
-    margin-right: 10px;
   }
   .main {
     display: flex;
@@ -670,7 +782,7 @@
   .board-footer {
     display: flex;
     flex-direction: row;
-    justify-content: end;
+    justify-content: flex-end;
     width: 100%;
     align-items: center;
     padding: 20px;
@@ -692,6 +804,13 @@
 
   .summary-h1 {
     text-align: end;
+  }
+
+  .calculate-subtitle {
+    padding: 5px 0px;
+    margin: 5px 0px;
+    border-top: 1px dashed gray;
+    border-bottom: 1px dashed gray;
   }
 
 </style>

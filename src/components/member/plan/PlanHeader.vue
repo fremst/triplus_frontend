@@ -45,7 +45,9 @@
         router.push("/member/plan/checklist");
       },
       goExpenses() {
-        router.push("/member/plan/expenses");
+        // TODO 일정번호 임시값
+        router.push({name: "member-expenses", params: {skdNum: 1}});
+        // router.push("/member/plan/expenses");
       },
       goWeather() {
         router.push("/section/member/schedule/weather");
