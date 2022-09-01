@@ -350,6 +350,11 @@ const routes = [
     name: "schedule-weather",
     component: WeatherView
   },
+  {
+    path: "/admin/service/faq",
+    name: "faqs",
+    component: () => import("@/views/admin/service/FAQView.vue")
+  },
   { //일정 초대
     path: "/section/member/schedule/invite",
     name: "invite-schedule",
