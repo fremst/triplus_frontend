@@ -100,7 +100,17 @@ export default {
     logout(){
       localStorage.removeItem("id");
       localStorage.removeItem("token");
-      localStorage.removeItem("auth");
+      window.Kakao.API.request({
+        url: '/v1/user/unlink',
+        success: function (response) {
+          console.log(response);
+
+        },
+        fail: function (error) {
+          console.log(error);
+        },
+      });
+
       this.$store.commit('keepId',2);
     }
   }
@@ -125,7 +135,7 @@ a {
   width: 100%;
   /* text-align: center; */
   text-align: left;
-  margin-left: 15%;
+  padding-left: 15%;
 
 }
 
