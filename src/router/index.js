@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
+import store from "@/store"
 
 import AdminView from "@/views/admin/AdminView";
 
@@ -47,6 +48,7 @@ import ExpensesView from "@/views/member/plan/ExpensesView";
 
 import MainView from "../views/MainView.vue";
 
+
 const routes = [
   {
     path: "/admin/packages/write",
@@ -56,7 +58,16 @@ const routes = [
   {
     path: "/admin",
     name: "admin",
-    component: AdminView
+    component: AdminView,
+    beforeEnter:function (to, from, next){
+      if(store.state.auth==='admin'){
+        next();
+      }else{
+        alert('권한이 없습니다');
+        next('/');
+      }
+
+    }
   },
   {
     path: "/",
@@ -126,7 +137,11 @@ const routes = [
     //회원가입 view
     path: "/memberjoin",
     name: "memberjoin",
-    component: MemberJoinView
+    component: MemberJoinView,
+    beforeEnter:function (to, from, next){
+      alert('잘못된 요청입니다');
+      next('/');
+    }
     // meta:{member:true}
   },
   {
@@ -145,7 +160,12 @@ const routes = [
     // 찾는 아이디 보여주는 view
     path: "/member/showid",
     name: "showId",
-    component: showIDView
+    component: showIDView,
+    beforeEnter:function (to, from, next){
+      alert('잘못된 요청입니다');
+      next('/');
+    }
+
   },
   {
     // 비밀번호 찾기 view
@@ -157,28 +177,36 @@ const routes = [
     // 비밀번호 변경 view
     path: "/member/changepwd",
     name: "changePwd",
-    component: changePwdView
+    component: changePwdView,
+    beforeEnter:function (to, from, next){
+      alert('잘못된 요청입니다');
+      next('/');
+    }
   },
   {
     path: "/memberjoin/complete",
     name: "join-complete",
-    component: joinCompleteView
+    component: joinCompleteView,
+    beforeEnter:function (to, from, next){
+      alert('잘못된 요청입니다');
+      next('/');
+    }
+
   },
   {
     path: "/member/myreservation/:oid",
     name: "myreservation",
     component: MyReservationDetailView
   },
-  {
-    // 회원가입 완료 view
-    path: "/memberjoin/complete",
-    name: "join-complete",
-    component: joinCompleteView
-  },
+
   {
     path: "/member/plan/checklist",
     name: "member-checklist",
-    component: checkListView
+    component: checkListView,
+    beforeEnter:function (to, from, next){
+      alert('잘못된 요청입니다');
+      next('/');
+    }
   },
   {
     path: "/member/plan/expenses",
@@ -196,7 +224,11 @@ const routes = [
     //회원정보 수정 view
     path: "/member/mypage/update",
     name: "mypage-update",
-    component: MyPageUpdateView
+    component: MyPageUpdateView,
+    beforeEnter:function (to, from, next){
+      alert('잘못된 요청입니다');
+      next('/member/mypage/chkpwd');
+    }
   },
   {
     path: "/section/packages",
@@ -311,19 +343,19 @@ const router = createRouter({
   routes
 });
 
-//라우터 전역 가드 test
-router.beforeEach(function (to, from, next) {
-  if (
-    to.matched.some(function (info) {
-      return info.meta.member;
-    })
-  ) {
-    // 회원만 가능페이지 라우터 meta 속성의 member(boolean) true 설정 예시) memberjoin
-    alert("회원만 이용가능 로그인해주세요");
-    next("/member/login"); // 리다이렉트
-  } else {
-    next();
-  }
-});
+// //라우터 전역 가드 test
+// router.beforeEach(function (to, from, next) {
+//   if (
+//     to.matched.some(function (info) {
+//       return info.meta.member; // true
+//     })
+//   ) {
+//     // 회원만 가능페이지 라우터 meta 속성의  true이면
+//     alert("회원만 이용가능");
+//     next("/member/login"); // 리다이렉트
+//   } else {
+//     next();
+//   }
+// });
 
 export default router;
