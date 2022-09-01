@@ -2,7 +2,8 @@
     <div class="main">
         <div class="board">
             <div class="board-header">
-                <h1>매거진 등록</h1>
+                <h1 v-if="!this.$route.params.brdNum">패키지 상품 등록</h1>
+                <h1 v-else>패키지 상품 수정</h1>
             </div>
             <div class="board-main">
                 <div class="board-input">
@@ -18,26 +19,53 @@
                 <h2>내용</h2>
                 <Editor v-model="contents" editorStyle="height: 320px">
                 </Editor>
-                <FileUpload name="demo[]" url="./upload.php" @upload="onUpload" :multiple="true" accept="image/*" :maxFileSize="5000000" :fileLimit="1">
-                    <template #empty>
-                        <p>여기에 파일을 드래그하여 올리세요.</p>
-                    </template>
-                </FileUpload>
+                <div class="file-box">
+                    <input type="file" id="tImgFile" accept="image/*" @change="changeTImg">
+                    <label for="tImgFile" class="p-button p-component p-button-label" style="width:90px; margin-top:5px;">썸네일 선택</label>
+                </div>
+                <table v-if="tImgFile">
+                    <tr>
+                        <td>
+                            <img class="file-preview" :src="tImgPreview" style="width:200px;">
+                        </td>
+                        <td>
+                            {{ tImgFile.name }}
+                        </td>
+                        <td>
+                            {{ tImgFile.size/1000 }} KB
+                        </td>
+                    </tr>
+                </table>
+
             </div>
             <div class="board-footer">
                 <Button @click="onCancel">취소</Button>
-                <Button @click="onSubmit">등록</Button>
+                <Button
+                        v-if="!$route.params.brdNum"
+                        @click="write"
+                        class="p-button p-component p-button-label"
+                        icon="pi pi-upload">
+                    등록
+                </Button>
+                <Button
+                        v-else
+                        @click="update"
+                        class="p-button p-component p-button-label"
+                        icon="pi pi-upload">
+                    수정
+                </Button>
             </div>
         </div>
     </div>
 </template>
 
 <script>
-    // import axios from 'axios';
+    import axios from 'axios';
     import Dropdown from 'primevue/dropdown';
     import Editor from 'primevue/editor';
     import InputText from 'primevue/inputtext';
-    import FileUpload from 'primevue/fileupload';
+    import { defaultOptions } from "@/constant/axios.js";
+    import { multipartOptions } from "@/constant/axios.js";
 
     export default {
         name: "MagazineWrite.vue",
@@ -45,51 +73,136 @@
             Dropdown,
             Editor,
             InputText,
-            FileUpload
         },
         data() {
             return {
                 category: "",
                 categories: [
-                    {name: '제주', code: 'JEJU'},
-                    {name: '서울', code: 'SEOUL'},
-                    {name: '부산', code: 'PUSAN'},
+                    {name: '맛집투어', code: '맛집투어'},
+                    {name: '엑티비티', code: '엑티비티'},
+                    {name: '사진명소', code: '사진명소'},
+                    {name: '힐링', code: '힐링'},
                 ],
                 title: "",
                 contents: "",
+                tImgFile: null,
+                tImgPreview: null,
+            }
+        },
+        created() {
+            if (this.$route.params.brdNum) {
+                this.getData();
             }
         },
         methods: {
-            // onSubmit() {
-            //     const writeParam = new URLSearchParams();
-            //     writeParam.append('writerId', "admin");
-            //     writeParam.append('noticeNum', 0);
-            //     writeParam.append('title', this.title);
-            //     writeParam.append('category', this.category.code);
-            //     writeParam.append('contents', this.contents);
-            //
-            //     axios.post('http://localhost:8082/triplus/api/admin/magazines/write', writeParam, {
-            //         headers:{
-            //             'Access-Control-Allow-Origin' : '*'
-            //         }
-            //     }).then(function(resp) {
-            //         if (resp.data.result == true) {
-            //             alert("매거진 등록 성공");
-            //             this.$router.push({name:"magazines"});
-            //         } else {
-            //             alert("매거진 등록 실패");
-            //             this.$router.push({name:"magazines"});
-            //         }
-            //     }.bind(this));
-            // },
-            onUpload() {
-                this.$toast.add({severity: 'info', summary: 'Success', detail: 'File Uploaded', life: 3000});
-            },
             onCancel() {
                 this.$router.push({name:"magazines"});
-            }
+            },
+            changeTImg(e) {
+                let uploadFile = e.target.files[0];
+
+                this.setTImgFileAndPreview(uploadFile);
+            },
+            bindForm() {
+                const formData = new FormData();
+
+                formData.append('writerId',"admin")
+                formData.append('title', this.title);
+                formData.append('category', this.category.code);
+                formData.append('contents', this.contents);
+                formData.append('tImgFile', this.tImgFile);
+
+                return formData;
+
+            },
+            async write() {
+
+                const formData = this.bindForm();
+
+                const postUrl = `${process.env.VUE_APP_API_URL || ""}/admin/magazines/`;
+
+                const resp = await axios.post(postUrl, formData, multipartOptions).catch(err => {
+                    alert("서버 연결 실패", err);
+                });
+
+                if (resp.data.result === "success") {
+                    alert("매거진 등록 성공");
+                    this.$router.push({name: "magazines"});
+                } else {
+                    alert("매거진 등록 실패");
+                }
+
+            },
+
+            async update() {
+
+                const formData = this.bindForm();
+
+                const putUrl = `${process.env.VUE_APP_API_URL || ""}/admin/magazines/${this.$route.params.brdNum}`;
+
+                const resp = await axios.post(putUrl, formData, multipartOptions).catch(err => {
+                    alert("서버 연결 실패", err);
+                });
+
+                if (resp.data.result === "success") {
+                    alert("매거진 수정 성공");
+                    this.$router.push({name: "magazines"});
+                } else {
+                    alert("매거진 수정 실패");
+                }
+
+            },
+
+            async getData() {
+
+                const getUrl = `${process.env.VUE_APP_API_URL || ""}/section/magazines/${this.$route.params.brdNum}`;
+
+                const resp = await axios.get(getUrl, defaultOptions).catch(err => {
+                    alert("서버 연결 실패", err);
+                });
+
+                this.title = resp.data.title;
+                this.contents = resp.data.contents;
+                this.category = resp.data.category;
+
+                const tImgFile = this.base64ImgtoFile(resp.data.tImgFile, "썸네일 이미지");
+                this.setTImgFileAndPreview(tImgFile)
+
+            },
+
+            // base64ImgtoFile(base64Img, fileName) {
+            //
+            //     let bstr = atob(base64Img),
+            //         n = bstr.length,
+            //         u8arr = new Uint8Array(n);
+            //
+            //     while (n--) {
+            //         u8arr[n] = bstr.charCodeAt(n);
+            //     }
+            //
+            //     return new File([u8arr], fileName, {type: "image/jpeg"});
+            //
+            // },
+
+            setTImgFileAndPreview(file) {
+
+                let reader = new FileReader();
+
+                reader.onload = (e) => {
+
+                    let img = e.target.result;
+
+                    this.tImgFile = file;
+                    this.tImgPreview = img;
+
+                }
+
+                reader.readAsDataURL(file);
+
+            },
         }
     }
+
 
 
 </script>
@@ -159,5 +272,8 @@
     }
     .board-footer * {
         margin: 0px 4px;
+    }
+    .file-box input[type="file"] {
+        display: none;
     }
 </style>

@@ -21,7 +21,7 @@
             </div>
             <div class="board-footer">
                 <Button @click="onCancel">취소</Button>
-                <Button @click="onUpdate">등록</Button>
+                <Button v-if="this.tempAuth=='admin'" @click="onUpdate">수정</Button>
             </div>
         </div>
     </div>
@@ -46,14 +46,15 @@
                 data:{},
                 category: "",
                 categories: [
-                    {name: '패키지', code: 'PACKAGE'},
-                    {name: '이벤트', code: 'EVENT'},
-                    {name: '기타', code: 'ETC'},
+                    {name: '패키지', code: '패키지'},
+                    {name: '이벤트', code: '이벤트'},
+                    {name: '기타', code: '기타'},
                 ],
                 title: "",
                 contents: "",
                 noticeNum:0,
-                brdNum:0
+                brdNum:0,
+                tempAuth:this.$store.state.loginUser.auth
             }
         },
         mounted() {
