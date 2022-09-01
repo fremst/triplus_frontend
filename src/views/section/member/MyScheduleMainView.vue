@@ -2,26 +2,29 @@
   <div class="wrap">
     <div class="inner">
       <div class="main-table">
-        <h1>국내여행</h1>
-        <span>{{ this.list.destination }}여행, {{ this.list.sDate }} ~ {{ this.list.eDate }}</span
-        ><br />
-        <Button label="일행과 함께 일정짜기" icon="pi pi-plus" class="p-button-primary mr-3" /><br />
-        <Button label="숙소" icon="pi pi-plus" class="p-button-secondary p-button-rounded p-button-sm mr-4" /><Button
-          label="체크리스트"
-          class="p-button-secondary p-button-rounded p-button-sm mr-4"
-        />
-        <Button label="가계부" class="p-button-secondary p-button-rounded p-button-sm mr-4" @click="goWeather()" />
-        <Button label="날씨보기" class="p-button-secondary p-button-rounded p-button-sm mr-4" />
+        <PlanNavigator />
+        <PlaceMapView />
         <table class="schedule-table">
           <tr v-for="(day, i) in list.day" :key="i">
-            <td>
+            <td class="add-schedule">
               day{{ day }} / {{ dateCalc(i) }}<br />
-              <Button lable="장소추가" class="p-button-outlined p-button-success p-button-sm mr-6" @click="palceModal()"
-                >장소추가</Button
+              <Button
+                lable="일정추가"
+                class="p-button-outlined p-button-primary p-button-sm mb-3"
+                @click="openDialog('addPlace', true)"
+                >일정추가</Button
               >
-              <Button lable="메모추가" class="p-button-outlined p-button-success p-button-sm" @click="addMemo()"
-                >메모추가</Button
-              >
+              <AddScheduleDialog v-model:visible="showConfirmDialog" @closeDialog="closePlaceDialog" />
+              <div class="card">
+                <Timeline :value="events1">
+                  <template #opposite="slotProps">
+                    <small class="p-text-secondary">{{ slotProps.item.date }}</small>
+                  </template>
+                  <template #content="slotProps">
+                    {{ slotProps.item.status }}
+                  </template>
+                </Timeline>
+              </div>
             </td>
           </tr>
         </table>
@@ -33,29 +36,45 @@
 //import day from "public/demo/data/day.json";
 import axios from "axios";
 import router from "@/router";
+import PlanNavigator from "@/components/member/plan/PlanHeader.vue";
+import PlaceMapView from "@/views/section/member/PlaceMapView.vue";
+import AddScheduleDialog from "@/views/section/member/AddSchedulePlaceView.vue";
 export default {
   data() {
     return {
       list: [{ sDate: "", eDate: "", day: "", destination: "" }],
-      week: ["일", "월", "화", "수", "목", "금", "토"]
+      week: ["일", "월", "화", "수", "목", "금", "토"],
+      showConfirmDialog: false,
+      events1: [
+        { status: "Processing", date: "15/10/2020 14:00", icon: "pi pi-cog", color: "#673AB7" },
+        { status: "Processing", date: "15/10/2020 14:00", icon: "pi pi-cog", color: "#673AB7" },
+        { status: "Shipped", date: "2022/10/10 16:15", icon: "pi pi-shopping-cart", color: "#FF9800" },
+        { status: "Delivered", date: "16/10/2020 10:00", icon: "pi pi-check", color: "#607D8B" }
+      ],
+      schduleDialog: false
     };
+  },
+  components: {
+    PlanNavigator,
+    PlaceMapView,
+    AddScheduleDialog
   },
   created() {
     this.getDate();
     this.dateCalc();
   },
   methods: {
-    // getDate() {
-    //   const getUrl = `${process.env.VUE_APP_API_URL || ""}/section/member/`;
-    //   axios.get(getUrl, this.data);
-    // },
     getDate() {
-      axios.get("/demo/data/day.json").then(
-        function (resp) {
-          this.list = resp.data;
-        }.bind(this)
-      );
+      const getUrl = `${process.env.VUE_APP_API_URL || ""}/section/member/`;
+      axios.get(getUrl, this.data);
     },
+    // getDate() {
+    //   axios.get("/demo/data/day.json").then(
+    //     function (resp) {
+    //       this.list = resp.data;
+    //     }.bind(this)
+    //   );
+    // },
     getFormattedDate(date) {
       if (date) {
         return date.getMonth() + 1 + "-" + date.getDate() + " ( " + this.week[date.getDay()] + " )";
@@ -68,13 +87,18 @@ export default {
       calcDate.setDate(calcDate.getDate() + i);
       return this.getFormattedDate(calcDate);
     },
-    addPlace() {
-      router.push("/section/member/schedule/add-place");
+    openDialog(dialogType, show) {
+      if (dialogType === "addPlace") {
+        this.showConfirmDialog = show;
+      }
     },
-    addMemo() {
-      router.push("/section/member/schedule/add-memo");
+    closePlaceDialog(value) {
+      if (!value) {
+        return false;
+      } else {
+        this.goList(-1);
+      }
     },
-    palceModal() {},
     goWeather() {
       router.push("/section/member/schedule/weather");
     }
@@ -96,6 +120,9 @@ export default {
 .schedule-table {
   margin-left: 150px;
   margin-bottom: 20px;
+}
+.add-schedule {
+  padding-top: 30px;
 }
 Button {
   margin-top: 5px;

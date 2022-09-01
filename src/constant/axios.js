@@ -10,3 +10,10 @@ export const putOptions = {
     "Content-Type": "application/json"
   }
 };
+
+export const multipartOptions = {
+  headers: {
+    "Access-Control-Allow-Origin": "*",
+    enctype: "multipart/form-data"
+  }
+};

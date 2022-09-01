@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
+import store from "@/store"
 
 import AdminView from "@/views/admin/AdminView";
 
@@ -28,7 +29,6 @@ import AccommodationDetailView from "@/views/section/place/accommodation/Accommo
 import AddMyScheduleView from "@/views/section/member/AddMyScheduleView";
 import MyScheduleMainView from "@/views/section/member/MyScheduleMainView";
 import AddSchedulePlaceView from "@/views/section/member/AddSchedulePlaceView";
-import AddScheduleMemoView from "@/views/section/member/AddScheduleMemoView";
 import WeatherView from "@/views/section/member/WeatherView";
 
 import MemberJoinView from "@/views/member/MemberJoinView";
@@ -41,11 +41,16 @@ import changePwdView from "@/views/member/ChangePwdView";
 import joinCompleteView from "@/views/member/JoinCompleteView";
 import myPageCheckPwdView from "@/views/member/mypage/MyPageCheckPwdView";
 import MyPageUpdateView from "@/views/member/mypage/MyPageUpdateView";
+import MyReservationView from "@/views/member/mypage/MyReservationView";
+import MyScheduleView from "@/views/member/mypage/MyScheduleView";
+
 
 import checkListView from "@/views/member/plan/CheckListView";
 import ExpensesView from "@/views/member/plan/ExpensesView";
+import InviteView from "@/views/member/plan/InviteView";
 
 import MainView from "../views/MainView.vue";
+
 
 const routes = [
   {
@@ -54,9 +59,23 @@ const routes = [
     component: AdminPackageWriteView
   },
   {
+    path: "/admin/packages/:brdNum/update",
+    name: "package-update",
+    component: AdminPackageWriteView
+  },
+  {
     path: "/admin",
     name: "admin",
-    component: AdminView
+    component: AdminView,
+    beforeEnter:function (to, from, next){
+      if(store.state.auth==='admin'){
+        next();
+      }else{
+        alert('권한이 없습니다');
+        next('/');
+      }
+
+    }
   },
   {
     path: "/",
@@ -100,6 +119,7 @@ const routes = [
     name: "notice-update",
     component: () => import("@/views/admin/service/NoticeUpdateView.vue")
   },
+  // 문의글
   {
     path: "/service/qna",
     name: "qna",
@@ -111,7 +131,7 @@ const routes = [
     component: QnAWriteView
   },
   {
-    path: "/service/qna/detail",
+    path: "/service/qna/:brdNum/detail",
     name: "qna-detail",
     component: QnADetailView
   },
@@ -126,7 +146,11 @@ const routes = [
     //회원가입 view
     path: "/memberjoin",
     name: "memberjoin",
-    component: MemberJoinView
+    component: MemberJoinView,
+    beforeEnter:function (to, from, next){
+      alert('잘못된 요청입니다');
+      next('/');
+    }
     // meta:{member:true}
   },
   {
@@ -145,7 +169,12 @@ const routes = [
     // 찾는 아이디 보여주는 view
     path: "/member/showid",
     name: "showId",
-    component: showIDView
+    component: showIDView,
+    beforeEnter:function (to, from, next){
+      alert('잘못된 요청입니다');
+      next('/');
+    }
+
   },
   {
     // 비밀번호 찾기 view
@@ -157,31 +186,39 @@ const routes = [
     // 비밀번호 변경 view
     path: "/member/changepwd",
     name: "changePwd",
-    component: changePwdView
+    component: changePwdView,
+    beforeEnter:function (to, from, next){
+      alert('잘못된 요청입니다');
+      next('/');
+    }
   },
   {
     path: "/memberjoin/complete",
     name: "join-complete",
-    component: joinCompleteView
+    component: joinCompleteView,
+    beforeEnter:function (to, from, next){
+      alert('잘못된 요청입니다');
+      next('/');
+    }
+
   },
   {
     path: "/member/myreservation/:oid",
     name: "myreservation",
     component: MyReservationDetailView
   },
-  {
-    // 회원가입 완료 view
-    path: "/memberjoin/complete",
-    name: "join-complete",
-    component: joinCompleteView
-  },
+
   {
     path: "/member/plan/checklist",
     name: "member-checklist",
-    component: checkListView
+    component: checkListView,
+    beforeEnter:function (to, from, next){
+      alert('잘못된 요청입니다');
+      next('/');
+    }
   },
   {
-    path: "/member/plan/expenses",
+    path: "/member/plan/:skdNum/expenses",
     name: "member-expenses",
     component: ExpensesView
   },
@@ -196,8 +233,23 @@ const routes = [
     //회원정보 수정 view
     path: "/member/mypage/update",
     name: "mypage-update",
-    component: MyPageUpdateView
+    component: MyPageUpdateView,
+    beforeEnter:function (to, from, next){
+      alert('잘못된 요청입니다');
+      next('/member/mypage/chkpwd');
+    }
   },
+  {  //내 예약보기
+    path: "/member/mypage/reservation",
+    name: "mypage-reservation",
+    component: MyReservationView
+  },
+  { //내 일정
+    path: "/member/mypage/myschedule",
+    name: "mypage-myschedule",
+    component: MyScheduleView
+  },
+
   {
     path: "/section/packages",
     name: "package-list",
@@ -255,14 +307,14 @@ const routes = [
     component: AccommodationDetailView
   },
   {
-    path: "/admin/magazine/write",
+    path: "/admin/magazines/write",
     name: "magazine-write",
     component: () => import("@/views/admin/magazine/MagazineWriteView.vue")
   },
   {
-    path: "/admin/magazine/update",
+    path: "/admin/magazines/:brdNum/update",
     name: "magazine-update",
-    component: () => import("@/views/admin/magazine/MagazineUpdateView.vue")
+    component: () => import("@/views/admin/magazine/MagazineWriteView.vue")
   },
   {
     path: "/section/magazines",
@@ -286,17 +338,11 @@ const routes = [
     name: "add-schedule-main",
     component: MyScheduleMainView
   },
-  //일정등록 장소추가
+  //일정등록 추가
   {
     path: "/section/member/schedule/add-place",
     name: "add-schedule-place",
     component: AddSchedulePlaceView
-  },
-  //일정등록 메모추가
-  {
-    path: "/section/member/schedule/add-memo",
-    name: "add-schedule-memo",
-    component: AddScheduleMemoView
   },
   //날씨보기
   {
@@ -308,7 +354,12 @@ const routes = [
     path: "/admin/service/faq",
     name: "faqs",
     component: () => import("@/views/admin/service/FAQView.vue")
-  }
+  },
+  { //일정 초대
+    path: "/section/member/schedule/invite",
+    name: "invite-schedule",
+    component: InviteView
+  },
 ];
 
 const router = createRouter({
@@ -316,19 +367,19 @@ const router = createRouter({
   routes
 });
 
-//라우터 전역 가드 test
-router.beforeEach(function (to, from, next) {
-  if (
-    to.matched.some(function (info) {
-      return info.meta.member;
-    })
-  ) {
-    // 회원만 가능페이지 라우터 meta 속성의 member(boolean) true 설정 예시) memberjoin
-    alert("회원만 이용가능 로그인해주세요");
-    next("/member/login"); // 리다이렉트
-  } else {
-    next();
-  }
-});
+// //라우터 전역 가드 test
+// router.beforeEach(function (to, from, next) {
+//   if (
+//     to.matched.some(function (info) {
+//       return info.meta.member; // true
+//     })
+//   ) {
+//     // 회원만 가능페이지 라우터 meta 속성의  true이면
+//     alert("회원만 이용가능");
+//     next("/member/login"); // 리다이렉트
+//   } else {
+//     next();
+//   }
+// });
 
 export default router;

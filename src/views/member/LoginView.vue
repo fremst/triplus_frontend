@@ -22,12 +22,16 @@
     <div class="login_findpwd">아이디 또는 비밀번호를 잊었습니까? <a href="#" @click.prevent="goFind">아이디 비밀번호 찾기</a></div>
 
     <div class="login_sns">
-      <span>sns 로그인 자리</span>
+      <div class="kakao" >
+        <img :src="require('@/assets/kakao_login_medium_narrow.png')" @click="kakao" class="kimg"/><br>
+
+      </div>
+
     </div>
     </div>
     </div>
 
-    <!-- Ex) {{$store.state.loginUser.id}} -->
+
 
   </div>
 </template>
@@ -57,6 +61,113 @@ export default {
     }
   },
   methods:{
+    //카카오 로그인
+
+    kakao(){
+        let a = this;
+       window.Kakao.Auth.login({
+
+        success: function () {
+          window.Kakao.API.request({
+            url: '/v2/user/me',
+            data: {
+              property_keys: ['properties.nickname',
+                "kakao_account.email",
+                "kakao_account.birthday",
+                "kakao_account.gender"
+              ]
+            },
+            success: async function (response) {
+              console.log(response);
+              var id = response.id;
+              var nick = response.properties.nickname;
+              var email = response.kakao_account.email;
+              var gender = response.kakao_account.gender;
+
+
+              axios.get('http://localhost:8082/triplus/member/identifyid',{
+                headers:{
+                  'Access-Control-Allow-Origin': '*'
+                },
+                params:{
+                  'id':'kakao'+id
+                }
+
+              }).then(function(resp){
+                if(resp.data.result==='success'){ //아이디 존재
+                  alert('아이디 존재');
+                  localStorage.setItem('id',resp.data.dto.id);
+                  localStorage.setItem('auth',resp.data.dto.auth);
+
+
+                  a.$store.commit('keepId',1);
+                  a.$router.push({name:'main'});
+
+                }else{ //아이디 없음 -> 가입
+                  alert('아이디 없음');
+                  const joinparam = new URLSearchParams();
+                  /*
+                   alert('k'+id);
+                   alert(nick);
+                   alert(gender);
+                   alert(email);*/
+                  joinparam.append('id','kakao'+id);
+                  joinparam.append('nick',nick);
+                  joinparam.append('gen',gender);
+                  joinparam.append('email',email);
+                  //alert(id+','+nick+','+gender+','+email); 잘나옴
+                  axios.post('http://localhost:8082/triplus/api/memberjoin/sns',joinparam,{
+                    headers:{
+                      'Access-Control-Allow-Origin': '*'
+                    }
+                  }).then(function(resp){
+                    if(resp.data.result==='success'){ //회원가입 성공
+                      alert('회원가입 성공');
+                      localStorage.setItem('id',resp.data.dto.id);
+                      localStorage.setItem('auth',resp.data.dto.auth); //아이디,권한 localstorage
+                      a.$store.commit('keepId',1);
+                      a.$router.push({name:'main'});
+
+                    }else{
+                      alert('회원가입 실패');
+                    }
+                  }.bind(this));
+
+                }
+
+              }.bind(this));
+
+            },
+            fail: function (error) {
+              console.log(error)
+            },
+          })
+        },
+        fail: function (error) {
+          console.log(error)
+        },
+      })
+    },
+
+    //카카오 로그아웃
+    kakaoLogout() {
+
+
+      /*
+      if (!window.Kakao.Auth.getAccessToken()) {
+        console.log('Not logged in.');
+        return;
+      }
+      window.Kakao.Auth.logout(function () {
+        alert('로그아웃 되었습니다.', window.Kakao.Auth.getAccessToken());
+        localStorage.removeItem("id");
+      });*/
+    },
+
+
+
+
+    ////////////////////////////////////////
     goJoin(){
     this.$router.push({'path':'/memberjoin/tos'});
     },
@@ -75,6 +186,7 @@ export default {
         }
       }).then(function(resp){
         if(resp.data.result==='success'){
+          console.log(resp.data.dto);
           this.auth = resp.data.dto.auth;
           this.name = resp.data.dto.name;
           this.tel = resp.data.dto.tel;
@@ -85,15 +197,13 @@ export default {
           this.regdate = resp.data.dto.regdate;
           this.active = resp.data.dto.active;
           this.token = resp.data.token;
-
+          console.log(this.$store);
           this.$store.dispatch('loginInfo',{id:this.id,pwd:this.pwd,auth:this.auth,name:this.name,
             tel:this.tel,gender:this.gender,addr:this.addr,email:this.email,
             bdate:this.bdate,regdate:this.regdate,active:this.active});
           localStorage.setItem('id',this.id);
-          localStorage.setItem('auth',this.auth); //아이디,권한 localstorage
           localStorage.setItem('token',this.token); //토큰
           this.$store.commit('keepId',1);
-
           this.$router.push({name:'main'})
 
         }else{
@@ -174,6 +284,11 @@ a{
   font-weight: bold;
   color: black;
   text-decoration: none;
+}
+
+.kimg{
+
+
 }
 
 </style>

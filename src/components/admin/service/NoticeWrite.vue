@@ -21,7 +21,7 @@
             </div>
             <div class="board-footer">
                 <Button @click="onCancel">취소</Button>
-                <Button @click="onSubmit">등록</Button>
+                <Button v-if="this.tempAuth=='admin'" @click="onSubmit">등록</Button>
             </div>
         </div>
     </div>
@@ -44,12 +44,13 @@
             return {
                 category: "",
                 categories: [
-                    {name: '패키지', code: 'PACKAGE'},
-                    {name: '이벤트', code: 'EVENT'},
-                    {name: '기타', code: 'ETC'},
+                    {name: '패키지', code: '패키지'},
+                    {name: '이벤트', code: '이벤트'},
+                    {name: '기타', code: '기타'},
                 ],
                 aTitle: "",
                 contents: "",
+                tempAuth:this.$store.state.loginUser.auth
             }
         },
         methods: {

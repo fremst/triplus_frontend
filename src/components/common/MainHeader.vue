@@ -11,14 +11,14 @@
          <a  href="/member/login">로그인  |  회원가입</a>
       </div>
 
-          <Sidebar v-model:visible="visibleRight" position="right">
+          <Sidebar v-model:visible="visibleRight" position="right" >
             <div class="user" v-if="user===null">
               <a  href="/member/login"><h2>로그인  |  회원가입</h2><br></a>
 
               <div class="mypage">
 
                 <ol class="ol-first">
-                  <li><h1>1</h1></li>
+                  <li><h1>-</h1></li>
                   <li><h1>-</h1></li>
                   <li><h1>-</h1></li>
                 </ol>
@@ -37,28 +37,37 @@
             <div class="mypage">
 
               <ol class="ol-first">
-                <li><h1>{{a}}</h1></li>
+                <li><h1>{{myScheduleCnt}}</h1></li>
                 <li><h1>{{b}}</h1></li>
-                <li><h1>{{c}}</h1></li>
+                <li><h1>{{myReservationCnt}}</h1></li>
               </ol>
 
               <ol class="ol-second">
-                <li><h3>내 일정</h3></li>
+                <li>
+                 <router-link to="/member/mypage/myschedule">
+                  <h3>&nbsp;내 일정</h3>
+                </router-link>
+                </li>
+
                 <li><h3>&nbsp;내 글</h3></li>
-                <li><h3>&nbsp;내 예약</h3></li>
+                <li>
+                  <router-link to="/member/mypage/reservation">
+                    <h3>&nbsp;내 예약</h3>
+                  </router-link>
+                </li>
               </ol>
             </div>
             </div>
 
         <div class="content">
             Content<br><br>
-            <a href="/service/notices">공지사항</a><br><br>
+            <router-link to="/service/notices">공지사항</router-link><br>
             <a href="/service/qna/">Q & A</a><br><br>
             <a href="#" @click.prevent="logout">로그아웃</a>
         </div>
           </Sidebar>
-          <div class="H-button">
-          <Button icon="pi pi-bars" @click="visibleRight = true"/>
+          <div class="H-button" >
+          <Button icon="pi pi-bars" @click="showSidebar" />
           </div>
         </div>
       <a href="/" class="logo">
@@ -66,33 +75,32 @@
       </a>
     </div>
   </div>
+
 </template>
 
 <script>
 import Sidebar from 'primevue/sidebar';
-
+import axios from "axios";
 
 export default {
   name: 'MainHeader',
   components: {
     Sidebar
   },
-  mounted() {
 
-  }
-,
   computed:{
     user(){
       return this.$store.state.userId;
-    }
+    },
 
   },
   data() {
     return {
       visibleRight: false,
-      a:0,
+      myScheduleCnt:0,
       b:0,
-      c:0
+      myReservationCnt:0,
+      id:null
     }
 
   },
@@ -100,10 +108,57 @@ export default {
     logout(){
       localStorage.removeItem("id");
       localStorage.removeItem("token");
-      localStorage.removeItem("auth");
+      window.Kakao.API.request({
+        url: '/v1/user/unlink',
+        success: function (response) {
+          console.log(response);
+
+        },
+        fail: function (error) {
+          console.log(error);
+        },
+      });
+
       this.$store.commit('keepId',2);
-    }
+    },
+    showSidebar(){
+        this.id=localStorage.getItem("id");
+      this.visibleRight = true
+        if(this.id!==null){
+
+          //내일정
+          axios.get('http://localhost:8082/triplus/api/member/mypage/myscheduleCnt', {
+            headers: {
+              'Access-Control-Allow-Origin': '*',
+            },
+            params:{
+              "id":this.id
+            }
+          }).then(function (resp) {
+            this.myScheduleCnt = resp.data.myscheduleCnt;
+          }.bind(this));
+
+          //내 에약
+          axios.get('http://localhost:8082/triplus/api/member/mypage/reservationCnt', {
+            headers: {
+              'Access-Control-Allow-Origin': '*',
+            },
+            params:{
+              "id":this.id
+            }
+          }).then(function (resp) {
+            this.myReservationCnt = resp.data.reservationCnt;
+
+          }.bind(this));
+        }
+
+
+
+
+     }
+
   }
+ 
 }
 </script>
 
@@ -125,7 +180,7 @@ a {
   width: 100%;
   /* text-align: center; */
   text-align: left;
-  margin-left: 15%;
+  padding-left: 15%;
 
 }
 
