@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
-import store from "@/store"
+import store from "@/store";
 
 import AdminView from "@/views/admin/AdminView";
 
@@ -8,6 +8,7 @@ import ModifyPlaceView from "@/views/admin/place/ModifyPlaceView";
 import AdminPackageListView from "@/views/admin/item/AdminPackageListView";
 import AdminPackageWriteView from "@/views/admin/item/AdminPackageWriteView";
 
+import AdminQnACounselView from "../views/admin/service/AdminQnACounselView.vue";
 import QnAView from "../views/member/service/QnAView.vue";
 import QnAWriteView from "../views/member/service/QnAWriteView.vue";
 import QnADetailView from "../views/member/service/QnADetailView.vue";
@@ -44,13 +45,11 @@ import MyPageUpdateView from "@/views/member/mypage/MyPageUpdateView";
 import MyReservationView from "@/views/member/mypage/MyReservationView";
 import MyScheduleView from "@/views/member/mypage/MyScheduleView";
 
-
 import checkListView from "@/views/member/plan/CheckListView";
 import ExpensesView from "@/views/member/plan/ExpensesView";
 import InviteView from "@/views/member/plan/InviteView";
 
 import MainView from "../views/MainView.vue";
-
 
 const routes = [
   {
@@ -67,14 +66,13 @@ const routes = [
     path: "/admin",
     name: "admin",
     component: AdminView,
-    beforeEnter:function (to, from, next){
-      if(store.state.auth==='admin'){
+    beforeEnter: function (to, from, next) {
+      if (store.state.auth === "admin") {
         next();
-      }else{
-        alert('권한이 없습니다');
-        next('/');
+      } else {
+        alert("권한이 없습니다");
+        next("/");
       }
-
     }
   },
   {
@@ -121,6 +119,11 @@ const routes = [
   },
   // 문의글
   {
+    path: "/admin/service/qna/counsel",
+    name: "admin-qna-counsel",
+    component: AdminQnACounselView
+  },
+  {
     path: "/service/qna",
     name: "qna",
     component: QnAView
@@ -147,9 +150,9 @@ const routes = [
     path: "/memberjoin",
     name: "memberjoin",
     component: MemberJoinView,
-    beforeEnter:function (to, from, next){
-      alert('잘못된 요청입니다');
-      next('/');
+    beforeEnter: function (to, from, next) {
+      alert("잘못된 요청입니다");
+      next("/");
     }
     // meta:{member:true}
   },
@@ -170,11 +173,10 @@ const routes = [
     path: "/member/showid",
     name: "showId",
     component: showIDView,
-    beforeEnter:function (to, from, next){
-      alert('잘못된 요청입니다');
-      next('/');
+    beforeEnter: function (to, from, next) {
+      alert("잘못된 요청입니다");
+      next("/");
     }
-
   },
   {
     // 비밀번호 찾기 view
@@ -187,20 +189,19 @@ const routes = [
     path: "/member/changepwd",
     name: "changePwd",
     component: changePwdView,
-    beforeEnter:function (to, from, next){
-      alert('잘못된 요청입니다');
-      next('/');
+    beforeEnter: function (to, from, next) {
+      alert("잘못된 요청입니다");
+      next("/");
     }
   },
   {
     path: "/memberjoin/complete",
     name: "join-complete",
     component: joinCompleteView,
-    beforeEnter:function (to, from, next){
-      alert('잘못된 요청입니다');
-      next('/');
+    beforeEnter: function (to, from, next) {
+      alert("잘못된 요청입니다");
+      next("/");
     }
-
   },
   {
     path: "/member/myreservation/:oid",
@@ -212,9 +213,9 @@ const routes = [
     path: "/member/plan/checklist",
     name: "member-checklist",
     component: checkListView,
-    beforeEnter:function (to, from, next){
-      alert('잘못된 요청입니다');
-      next('/');
+    beforeEnter: function (to, from, next) {
+      alert("잘못된 요청입니다");
+      next("/");
     }
   },
   {
@@ -234,17 +235,19 @@ const routes = [
     path: "/member/mypage/update",
     name: "mypage-update",
     component: MyPageUpdateView,
-    beforeEnter:function (to, from, next){
-      alert('잘못된 요청입니다');
-      next('/member/mypage/chkpwd');
+    beforeEnter: function (to, from, next) {
+      alert("잘못된 요청입니다");
+      next("/member/mypage/chkpwd");
     }
   },
-  {  //내 예약보기
+  {
+    //내 예약보기
     path: "/member/mypage/reservation",
     name: "mypage-reservation",
     component: MyReservationView
   },
-  { //내 일정
+  {
+    //내 일정
     path: "/member/mypage/myschedule",
     name: "mypage-myschedule",
     component: MyScheduleView
@@ -355,11 +358,12 @@ const routes = [
     name: "faqs",
     component: () => import("@/views/admin/service/FAQView.vue")
   },
-  { //일정 초대
+  {
+    //일정 초대
     path: "/section/member/schedule/invite",
     name: "invite-schedule",
     component: InviteView
-  },
+  }
 ];
 
 const router = createRouter({
