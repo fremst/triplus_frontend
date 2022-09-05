@@ -163,7 +163,7 @@
     mounted() {
     },
     created() { 
-      console.log(store.state);
+      // console.log(store.state);
       this.sockJS = new SockJS(`http://localhost:8082/triplus/chat`);
       this.sockJS.onmessage = message => {
         this.getMessage(JSON.parse(message.data));

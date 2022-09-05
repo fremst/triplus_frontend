@@ -15,7 +15,7 @@
       <div class="errMsg">{{errMsg}}</div><br>
       <div><Button type="submit" label="로그인" class="p-button-primary" @click.prevent="login" /></div>
       <div class="kakao" >
-         <img :src="require('@/assets/kakao_login_large_narrow.png')" @click="kakao" class="kimg"/><br>
+         <img :src="require('@/assets/kakao_login_img.png')" @click="kakao" class="kimg"/><br>
       </div>
     </form>
 
@@ -270,11 +270,8 @@ a{
 }
 
 .kimg{
-  width: 350px;
-  height: 40px;
   padding: 0px;
-
-
+  border-radius: 0.5rem;
 }
 
 </style>

@@ -47,11 +47,11 @@ export default {
                     icon: 'pi pi-fw pi-building',
                     to: '/section/place/accommodation'
                 },
-                {
-                    label: '커뮤니티',
-                    icon: 'pi pi-fw pi-users',
-                    to: '/section/community'
-                },
+                // {
+                //     label: '커뮤니티',
+                //     icon: 'pi pi-fw pi-users',
+                //     to: '/section/community'
+                // },
                 {
                     label: '일정등록',
                     icon: 'pi pi-fw pi-calendar',

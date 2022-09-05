@@ -70,12 +70,12 @@ const routes = [
     path: "/admin",
     name: "admin",
     component: AdminView,
-    beforeEnter:function (to, from, next){
-      if(store.state.loginUser.auth==='admin'){
+    beforeEnter: function (to, from, next) {
+      if (store.state.loginUser.auth === "admin") {
         next();
-      }else{
+      } else {
         alert(store.state.loginUser.auth);
-        next('/');
+        next("/");
       }
     }
   },
@@ -90,6 +90,24 @@ const routes = [
     name: "place-add",
     component: AddPlaceView
   },
+  //관리자 명소 리스트
+  {
+    path: "/admin/place/attraction",
+    name: "admin-attraction-list",
+    component: AttractionListView
+  },
+  //관리자 맛집 리스트
+  {
+    path: "/admin/place/restaurant",
+    name: "admin-restaurant-list",
+    component: RestaurantListView
+  },
+  //관리자 숙소 리스트
+  {
+    path: "/admin/place/accommodation",
+    name: "admin-accommodation-list",
+    component: AccommodationListView
+  },
   //관리자 장소 수정
   {
     path: "/admin/place/:brdNum",
@@ -102,7 +120,6 @@ const routes = [
     component: AdminPackageListView
   },
   {
-
     path: "/admin/magazines",
     name: "admin-magazines",
     component: () => import("@/views/admin/magazine/AdminMagazineListView.vue")
@@ -111,7 +128,6 @@ const routes = [
     path: "/admin/reservations",
     name: "admin-reservations",
     component: AdminReservationView
-
   },
   {
     path: "/service/notices",
@@ -165,7 +181,7 @@ const routes = [
     //회원가입 view
     path: "/memberjoin",
     name: "memberjoin",
-    component: MemberJoinView,
+    component: MemberJoinView
     // meta:{member:true}
   },
   {
@@ -184,6 +200,7 @@ const routes = [
     // 찾는 아이디 보여주는 view
     path: "/member/showid",
     name: "showId",
+    component: showIDView
   },
   {
     // 비밀번호 찾기 view
@@ -195,12 +212,12 @@ const routes = [
     // 비밀번호 변경 view
     path: "/member/changepwd",
     name: "changePwd",
-    component: changePwdView,
+    component: changePwdView
   },
   {
     path: "/memberjoin/complete",
     name: "join-complete",
-    component: joinCompleteView,
+    component: joinCompleteView
   },
   {
     path: "/member/myreservation/:oid",
@@ -211,7 +228,7 @@ const routes = [
   {
     path: "/member/plan/checklist",
     name: "member-checklist",
-    component: checkListView,
+    component: checkListView
   },
   {
     path: "/member/plan/:skdNum/expenses",
@@ -229,7 +246,7 @@ const routes = [
     //회원정보 수정 view
     path: "/member/mypage/update",
     name: "mypage-update",
-    component: MyPageUpdateView,
+    component: MyPageUpdateView
   },
   {
     //내 예약보기

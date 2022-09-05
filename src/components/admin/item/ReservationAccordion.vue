@@ -14,9 +14,8 @@
           :rows="5"
           :rowsPerPageOptions="[5, 10, 25]"
           :value="pkg.resList"
-          currentPageReportTemplate="Showing {first} to {last} of {totalRecords} packages"
           dataKey="brdNum"
-          paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
+          paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink "
           responsiveLayout="scroll"
           style="text-align: center"
         >

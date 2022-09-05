@@ -8,7 +8,6 @@
       icon="pi pi-comment"
       label="문의하기"
       class="p-button-rounded"
-      :badge="chatBadgeCount" badgeClass="p-badge-danger"
       @click="chatWidget = true">
     </Button>
     <Dialog
@@ -119,7 +118,7 @@
     mounted() {
     },
     created() { 
-      console.log(store.state);
+      // console.log(store.state);
       this.sockJS = new SockJS(`http://localhost:8082/triplus/chat`);
       this.sockJS.onmessage = message => {
         this.getMessage(JSON.parse(message.data));

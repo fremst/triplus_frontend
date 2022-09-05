@@ -39,22 +39,14 @@ export default {
           to: { name: "admin-reservations" }
         },
         {
-          label: "신고글 관리",
-          icon: "pi pi-eye-slash"
+          label: "Q&A",
+          icon: "pi pi-comments",
+          to: { name: "admin-qna-counsel" }
         },
         {
-          label: "고객 관리",
-          icon: "pi pi-id-card",
-          items: [
-            {
-              label: "회원 조회",
-              to: { name: "" }
-            },
-            {
-              label: "신고 회원 관리",
-              to: { name: "" }
-            }
-          ]
+          label: "FAQ",
+          icon: "pi pi-list",
+          to: { name: "faqs-board" }
         },
         {
           label: "패키지 관리",
@@ -76,7 +68,7 @@ export default {
           items: [
             {
               label: "매거진 목록",
-              to: { name: "" }
+              to: { name: "admin-magazines" }
             },
             {
               label: "매거진 등록",
@@ -85,38 +77,24 @@ export default {
           ]
         },
         {
-          label: "쿠폰 관리",
-          icon: "pi pi-money-bill",
-          items: [
-            {
-              label: "쿠폰 발행",
-              to: "admin/coupons/issue"
-            },
-            {
-              label: "쿠폰 조회",
-              to: "admin/coupons"
-            }
-          ]
-        },
-        {
           label: "장소 관리",
           icon: "pi pi-map-marker",
           items: [
             {
-              label: "명소 관리",
-              to: { name: "" }
+              label: "관광 명소 목록",
+              to: { name: "admin-attraction-list" }
             },
             {
-              label: "맛집 관리",
-              to: { name: "" }
+              label: "맛집 목록",
+              to: { name: "admin-restaurant-list" }
             },
             {
-              label: "숙소 관리",
-              to: { name: "" }
+              label: "숙소 목록",
+              to: { name: "admin-accommodation-list" }
             },
             {
-              label: "장소 추가",
-              to: { name: "place-add" }
+              label: "장소 등록",
+              to: { name: "admin-place-add" }
             }
           ]
         }
