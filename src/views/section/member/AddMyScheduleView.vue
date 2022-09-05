@@ -88,20 +88,20 @@ export default {
     async goNext() {
       this.submitted = true;
 
-      const params = {
-        sDate: this.dates[0],
-        eDate: this.dates[1],
-        destination: this.destination,
-        id: this.id
-      };
-      const postUrl = `${process.env.VUE_APP_API_URL || ""}/section/member/`;
+      const params = new URLSearchParams();
+      params.append("sDate", this.dates[0].toISOString());
+      params.append("eDate", this.dates[1].toISOString());
+      params.append("destination", this.destination);
+      params.append("id", this.id);
+
+      const postUrl = `${process.env.VUE_APP_API_URL || ""}/section/schedules/`;
       const response = await axios.post(postUrl, params, defaultOptions).catch(err => {
         alert("일정추가 실패", err);
       });
 
       if (response.data.result === "success") {
         alert("일정추가 성공");
-        router.push("/section/member/MyScheduleMainView");
+        router.push("/section/member/schedule/main");
       } else {
         alert("일정추가 실패");
       }

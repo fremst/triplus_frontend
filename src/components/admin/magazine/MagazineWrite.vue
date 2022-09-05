@@ -2,8 +2,8 @@
     <div class="main">
         <div class="board">
             <div class="board-header">
-                <h1 v-if="!this.$route.params.brdNum">패키지 상품 등록</h1>
-                <h1 v-else>패키지 상품 수정</h1>
+                <h1 v-if="!this.$route.params.brdNum">매거진 등록</h1>
+                <h1 v-else>매거진 수정</h1>
             </div>
             <div class="board-main">
                 <div class="board-input">
@@ -26,7 +26,7 @@
                 <table v-if="tImgFile">
                     <tr>
                         <td>
-                            <img class="file-preview" :src="tImgPreview" style="width:200px;">
+                            <img class="file-preview" :src="tImgPreview" style="width:300px;">
                         </td>
                         <td>
                             {{ tImgFile.name }}
@@ -40,20 +40,8 @@
             </div>
             <div class="board-footer">
                 <Button @click="onCancel">취소</Button>
-                <Button
-                        v-if="!$route.params.brdNum"
-                        @click="write"
-                        class="p-button p-component p-button-label"
-                        icon="pi pi-upload">
-                    등록
-                </Button>
-                <Button
-                        v-else
-                        @click="update"
-                        class="p-button p-component p-button-label"
-                        icon="pi pi-upload">
-                    수정
-                </Button>
+                <Button v-if="!$route.params.brdNum" @click="write">등록</Button>
+                <Button v-else @click="update">수정</Button>
             </div>
         </div>
     </div>

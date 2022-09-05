@@ -7,7 +7,9 @@ import AddPlaceView from "@/views/admin/place/AddPlaceView";
 import ModifyPlaceView from "@/views/admin/place/ModifyPlaceView";
 import AdminPackageListView from "@/views/admin/item/AdminPackageListView";
 import AdminPackageWriteView from "@/views/admin/item/AdminPackageWriteView";
+import AdminReservationView from "@/views/admin/reservation/AdminReservationView";
 
+import AdminQnACounselView from "../views/admin/service/AdminQnACounselView.vue";
 import QnAView from "../views/member/service/QnAView.vue";
 import QnAWriteView from "../views/member/service/QnAWriteView.vue";
 import QnADetailView from "../views/member/service/QnADetailView.vue";
@@ -29,6 +31,7 @@ import AccommodationDetailView from "@/views/section/place/accommodation/Accommo
 import AddMyScheduleView from "@/views/section/member/AddMyScheduleView";
 import MyScheduleMainView from "@/views/section/member/MyScheduleMainView";
 import AddSchedulePlaceView from "@/views/section/member/AddSchedulePlaceView";
+import AddMyPlaceView from "@/views/section/member/AddMyPlaceView";
 import WeatherView from "@/views/section/member/WeatherView";
 
 import MemberJoinView from "@/views/member/MemberJoinView";
@@ -50,7 +53,7 @@ import InviteView from "@/views/member/plan/InviteView";
 
 import ModifyFAQView from "@/views/admin/service/ModifyFAQView";
 
-import MainView from "../views/MainView.vue";
+import MainView from "@/views/MainView.vue";
 
 const routes = [
   {
@@ -99,6 +102,18 @@ const routes = [
     component: AdminPackageListView
   },
   {
+
+    path: "/admin/magazines",
+    name: "admin-magazines",
+    component: () => import("@/views/admin/magazine/AdminMagazineListView.vue")
+  },
+  {
+    path: "/admin/reservations",
+    name: "admin-reservations",
+    component: AdminReservationView
+
+  },
+  {
     path: "/service/notices",
     name: "notices",
     component: () => import("@/views/admin/service/NoticeListView.vue")
@@ -119,6 +134,11 @@ const routes = [
     component: () => import("@/views/admin/service/NoticeUpdateView.vue")
   },
   // 문의글
+  {
+    path: "/admin/service/qna/counsel",
+    name: "admin-qna-counsel",
+    component: AdminQnACounselView
+  },
   {
     path: "/service/qna",
     name: "qna",
@@ -342,6 +362,12 @@ const routes = [
     path: "/section/member/schedule/add-place",
     name: "add-schedule-place",
     component: AddSchedulePlaceView
+  },
+  //나만의 장소 추가
+  {
+    path: "/section/member/schedule/add-my-place",
+    name: "add-my-place",
+    component: AddMyPlaceView
   },
   //날씨보기
   {

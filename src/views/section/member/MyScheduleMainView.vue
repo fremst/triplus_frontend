@@ -64,17 +64,17 @@ export default {
     this.dateCalc();
   },
   methods: {
-    getDate() {
-      const getUrl = `${process.env.VUE_APP_API_URL || ""}/section/member/`;
-      axios.get(getUrl, this.data);
-    },
     // getDate() {
-    //   axios.get("/demo/data/day.json").then(
-    //     function (resp) {
-    //       this.list = resp.data;
-    //     }.bind(this)
-    //   );
+    //   const getUrl = `${process.env.VUE_APP_API_URL || ""} api/section/schedules/{skdNum}`;
+    //   axios.get(getUrl, this.data);
     // },
+    getDate() {
+      axios.get("/demo/data/day.json").then(
+        function (resp) {
+          this.list = resp.data;
+        }.bind(this)
+      );
+    },
     getFormattedDate(date) {
       if (date) {
         return date.getMonth() + 1 + "-" + date.getDate() + " ( " + this.week[date.getDay()] + " )";
