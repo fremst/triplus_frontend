@@ -105,6 +105,9 @@ import "/node_modules/primeflex/primeflex.css";
 
 // import "./index.css";
 
+// 공통 메소드
+import formatUtil from "@/assets/util/formatUtil";
+
 const app = createApp(App);
 
 app.use(PrimeVue, { ripple: true });
@@ -112,6 +115,8 @@ app.use(ConfirmationService);
 app.use(ToastService);
 app.use(store);
 app.use(router);
+
+app.use(formatUtil);
 
 // PrimeVue의 컴포넌트를 전역으로 사용하고 싶을땐 여기에 등록해서 사용한다.
 app.component("Accordion", Accordion);
@@ -205,4 +210,4 @@ app.config.productionTip = false;
 app.mount("#app");
 
 //카카오 로그인
-window.Kakao.init('b8ecc1a13cb67c69c64998efd84606b2');
+window.Kakao.init("b8ecc1a13cb67c69c64998efd84606b2");

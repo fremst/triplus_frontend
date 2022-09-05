@@ -9,6 +9,7 @@ import AdminPackageListView from "@/views/admin/item/AdminPackageListView";
 import AdminPackageWriteView from "@/views/admin/item/AdminPackageWriteView";
 import AdminReservationView from "@/views/admin/reservation/AdminReservationView";
 
+import AdminQnACounselView from "../views/admin/service/AdminQnACounselView.vue";
 import QnAView from "../views/member/service/QnAView.vue";
 import QnAWriteView from "../views/member/service/QnAWriteView.vue";
 import QnADetailView from "../views/member/service/QnADetailView.vue";
@@ -123,6 +124,11 @@ const routes = [
     component: () => import("@/views/admin/service/NoticeUpdateView.vue")
   },
   // 문의글
+  {
+    path: "/admin/service/qna/counsel",
+    name: "admin-qna-counsel",
+    component: AdminQnACounselView
+  },
   {
     path: "/service/qna",
     name: "qna",

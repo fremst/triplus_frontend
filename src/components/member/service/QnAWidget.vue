@@ -17,24 +17,31 @@
       :draggable="false"
       v-model:visible="chatWidget">
       <div class="qna-chat-dialog">
-        <div style="height: 100%">
+        <div style="overflow: auto; height: 100%">
           <div v-for="chat of chatData" :key="chat">
-            <div class="qna-chat-element"
-              :class="{
+            <div class="qna-chat-element" :class="{
+                'flex-start': (chat.type == 'admin'),
+                'flex-end': (chat.type == 'user'),
+                }">
+              <div :class="{
                 'qna-chat-admin': (chat.type == 'admin'),
                 'qna-chat-user': (chat.type == 'user'),
                 }">
                 {{chat.content}}
+              </div>
             </div>
           </div>
         </div>
-        <InputText style="width: 100%"></InputText>
+        <InputText style="width: 100%" v-model="chatText"></InputText>
+        <Button @click="sendMessage()">보내기 테스트</Button>
       </div>
     </Dialog>
   </div>
 </template>
 <script>
+  import store from "@/store"
   import Dialog from 'primevue/dialog';
+  import SockJS from 'sockjs-client';
   export default
   {
     name: 'QnAWidget',
@@ -49,16 +56,76 @@
         chatBadgeCount: 0,
         chatData: [
           { type: "admin", content: "궁금한 점이 있으신가요? 상담사에게 물어보세요." },
-          { type: "user", content: "어 없어~" },
-          { type: "user", content: "레이아웃 테스트" }
-        ]
+        ],
+
+        chatText: "",
+
+        // 소켓 통신 변수
+        sockJS: null,
       }
     },
     methods: {
+      sendMessage() {
+        // console.log(this.stomp);
+        this.sockJS.send(JSON.stringify({
+          type: "CHAT",
+          data: JSON.stringify({
+            chatNum: 0,
+            id: store.state.userId == null ? "guest" : store.state.userId,
+            token: store.state.userId == null ? localStorage.getItem("chatToken") : "",
+            content: this.chatText,
+            date: 0,
+            managerChat: false
+          })
+        }));
+      },
+      sendAuthData() {
+        this.sockJS.send(JSON.stringify({
+          type: "AUTHORIZE",
+          data: JSON.stringify({
+            user: store.state.userId == null ? false : true,
+            id: store.state.userId == null ? localStorage.getItem("chatToken") : store.state.userId
+          })
+        }));
+      },
+      getMessage(jsonData) {
+        // console.log(jsonData);
+        switch(jsonData.type)
+        {
+          case "AUTHORIZE": // 인증 요청
+            // console.log("auth");
+            if (localStorage.getItem("chatToken") == null)
+              localStorage.setItem("chatToken", jsonData.data);
+            this.sendAuthData();
+            break;
+          case "CHAT": // 채팅 수신
+            // console.log("chat receive");
+            this.addMessage(JSON.parse(jsonData.data));
+            break;
+          case "CHATLIST": // 채팅 목록 수신
+            // console.log("chat list receive");
+            for (let ele of JSON.parse(jsonData.data))
+              this.addMessage(ele);
+            break;
+        }
+      },
+      addMessage(chat) {
+        this.chatData.push({
+          type: chat.managerChat ? "admin" : "user",
+          content: chat.content
+        })
+      }
     },
-    created() {
-    }
-  }
+    mounted() {
+    },
+    created() { 
+      console.log(store.state);
+      this.sockJS = new SockJS(`http://localhost:8082/triplus/chat`);
+      this.sockJS.onmessage = message => {
+        this.getMessage(JSON.parse(message.data));
+      }
+  },
+}
 </script>
 <style scoped>
   .qna-chat-widget {
@@ -76,8 +143,13 @@
   }
   .qna-chat-element {
     margin: 5px;
-    padding: 5px 10px;
     display: flex;
+  }
+  .flex-start {
+    justify-content: flex-start;
+  }
+  .flex-end {
+    justify-content: flex-end;
   }
   .qna-chat-admin {
     border-radius: 15px 15px 15px 0px;
@@ -85,6 +157,8 @@
     justify-content: flex-start;
     background-color: #67AB9F;
     color: white;
+    padding: 7px 13px;
+    width: auto;
   }
   .qna-chat-user {
     border-radius: 15px 15px 0px 15px;
@@ -92,5 +166,7 @@
     justify-content: flex-end;
     background-color: #9999cc;
     color: white;
+    padding: 5px 13px;
+    width: auto;
   }
 </style>

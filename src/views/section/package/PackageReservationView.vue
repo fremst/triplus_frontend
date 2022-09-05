@@ -3,330 +3,403 @@
     <div class="inner">
       <div>
         <h1>상품 정보</h1>
-        <br>
+        <br />
         <table>
           <tr>
             <td class="td-title">상품 번호</td>
-            <td>{{packageDetails.brdNum}}</td>
+            <td>{{ packageDetails.brdNum }}</td>
           </tr>
           <tr>
-            <td>상&nbsp;&nbsp;품&nbsp;&nbsp;명</td>
-            <td>{{packageDetails.title}}</td>
+            <td>상&ensp;품&ensp;명</td>
+            <td>{{ packageDetails.title }}</td>
           </tr>
           <tr>
             <td>여행 기간</td>
-            <td>{{packageDetails.period}}</td>
+            <td>{{ packageDetails.period }}</td>
           </tr>
           <tr>
-            <td>출&nbsp;&nbsp;발&nbsp;&nbsp;일</td>
-            <td>{{packageDetails.sDate}}</td>
+            <td>출&ensp;발&ensp;일</td>
+            <td>{{ $getFormattedDate(new Date(packageDetails.sdate)) }}</td>
           </tr>
           <tr>
-            <td>도&nbsp;&nbsp;착&nbsp;&nbsp;일</td>
-            <td>{{packageDetails.eDate}}</td>
+            <td>도&ensp;착&ensp;일</td>
+            <td>{{ $getFormattedDate(new Date(packageDetails.edate)) }}</td>
           </tr>
           <tr>
-            <td>여&nbsp;&nbsp;행&nbsp;&nbsp;자</td>
-            <td>성인 {{$route.query.adultCnt}}명 / 아동 {{$route.query.childCnt}}명</td>
+            <td>여&ensp;행&ensp;자</td>
+            <td>
+              성인 {{ $route.query.adultCnt }}명
+              <span v-if="$route.query.childCnt > 0">/ 아동 {{ $route.query.childCnt }}명</span>
+            </td>
           </tr>
         </table>
-        <br>
+        <br />
         <h1>예약자 정보</h1>
-        <br>
+        <br />
         <table>
           <tr>
-            <td class="td-title">이&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;름</td>
-            <td><InputText type="text" class="p-inputtext-sm" name="bookerName" v-model="bookerInfo.name"/></td>
+            <td class="td-title">이&emsp;&emsp;&nbsp;름</td>
+            <td>
+              {{ bookerInfo.name }}
+              <InputText type="text" class="p-inputtext-sm" name="bookerName" v-model="bookerInfo.name" hidden />
+            </td>
             <td>생년월일</td>
-            <td><InputText type="date" class="p-inputtext-sm" name="bookerBDate" v-model="bookerInfo.bDate"/></td>
+            <td>
+              <InputText type="date" class="p-inputtext-sm" name="bookerBDate" v-model="bookerInfo.bDate" />
+            </td>
           </tr>
           <tr>
-            <td>이&nbsp;&nbsp;메&nbsp;&nbsp;일</td>
+            <td>이&ensp;메&ensp;일</td>
             <td colspan="3">
-              <InputText type="text" class="p-inputtext-sm" v-model="bookerInfo.emailId"/>
+              <InputText
+                type="text"
+                class="p-inputtext-sm"
+                :class="{ 'p-invalid': submitted && !validateEmail }"
+                v-model="bookerInfo.emailId"
+              />
               &nbsp;@&nbsp;
-              <Dropdown v-model="selectedEmail" class="p-inputtext-sm" :options="domains" editable optionLabel="name" placeholder="직접입력"/>
+              <Dropdown
+                v-model="selectedEmail"
+                class="p-inputtext-sm"
+                :class="{ 'p-invalid': submitted && !validateEmail }"
+                :options="domains"
+                editable
+                optionLabel="name"
+                placeholder="직접입력"
+              />
+              <small v-if="submitted && !validateEmail" class="p-error">&nbsp;이메일을 정확히 입력해 주세요.</small>
             </td>
           </tr>
           <tr>
             <td>전화 번호</td>
             <td colspan="4">
-              <InputText type="text" class="p-inputtext-sm" name="bookerTel" v-model="bookerInfo.tel"/>
+              <InputText
+                type="text"
+                class="p-inputtext-sm"
+                :class="{ 'p-invalid': submitted && !bookerInfo.tel }"
+                name="bookerTel"
+                v-model="bookerInfo.tel"
+              />
+              <small v-if="submitted && !bookerInfo.tel" class="p-error">&nbsp;전화 번호를 입력해 주세요.</small>
             </td>
           </tr>
         </table>
-        <br>
-        <h1 v-if="list.length>0">동행자 정보</h1>
-        <br>
-        <table v-for="(pkgCom, index) in list" :key="index">
+        <br />
+        <h1 v-if="list.length > 0">동행자 정보</h1>
+        <br />
+        <table v-for="(pkgCom, i) in list" :key="i">
           <tr>
-            <td class="td-title">
-              구&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;분
-            </td>
+            <td class="td-title">구&emsp;&emsp;&nbsp;분</td>
             <td>
-              {{pkgCom.class}}
+              {{ pkgCom.class }}
             </td>
           </tr>
           <tr>
+            <td>이&emsp;&emsp;&nbsp;름</td>
             <td>
-              이&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;름
-            </td>
-            <td>
-              <InputText type="text" class="p-inputtext-sm" v-model="pkgCom.name"/>
+              <InputText
+                type="text"
+                class="p-inputtext-sm"
+                :class="{ 'p-invalid': submitted && !pkgCom.name }"
+                v-model="pkgCom.name"
+              />
+              <small v-if="submitted && !pkgCom.name" class="p-error">&nbsp;이름을 입력해 주세요.</small>
             </td>
           </tr>
           <tr>
             <td>전화 번호</td>
             <td>
-              <InputText type="text" class="p-inputtext-sm" v-model="pkgCom.tel" />
+              <InputText
+                type="text"
+                class="p-inputtext-sm"
+                :class="{ 'p-invalid': submitted && !pkgCom.tel }"
+                v-model="pkgCom.tel"
+              />
+              <small v-if="submitted && !pkgCom.tel" class="p-error">&nbsp;전화 번호를 입력해 주세요.</small>
             </td>
           </tr>
           <tr>
+            <td>성&emsp;&emsp;&nbsp;별</td>
             <td>
-              성&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;별
-            </td>
-            <td>
-              <RadioButton id="male" name="gender" value="M" v-model="pkgCom.gender" />
-              <label for="male">남성</label>
-              <RadioButton id="female" name="gender" value="F" v-model="pkgCom.gender" />
-              <label for="female">여성</label>
+              <RadioButton :id="'male' + i" name="gender" value="M" v-model="pkgCom.gender" />
+              <label :for="'male' + i">&nbsp;남성</label>
+              &nbsp;
+              <RadioButton :id="'female' + i" name="gender" value="F" v-model="pkgCom.gender" />
+              <label :for="'female' + i">&nbsp;여성</label>
             </td>
           </tr>
         </table>
-        <br>
+        <br />
         <h1>할인 쿠폰 선택</h1>
-        <br>
+        <br />
         <table>
           <tr>
             <td class="td-title">적용된 쿠폰</td>
             <td>
-              <Dropdown v-model="selectedCoupon" class="p-inputtext-sm" :options="coupons" optionLabel="name" placeholder="쿠폰 선택"
-                        empty-message="사용 가능한 쿠폰 없음"/>
+              <Dropdown
+                v-model="selectedCpnNum"
+                class="p-inputtext-sm"
+                :options="coupons"
+                optionLabel="name"
+                placeholder="쿠폰 선택"
+                empty-message="사용 가능한 쿠폰 없음"
+              />
               &nbsp;
-              <Button class="p-button-sm">
-                쿠폰 적용
-              </Button>
+              <Button class="p-button-sm"> 쿠폰 적용 </Button>
             </td>
           </tr>
-          <tr v-if="selectedCoupon">
+          <tr v-if="selectedCpnNum != 0">
             <td>할인금액</td>
-            <td>{{ discAmt }} 원</td>
+            <td>{{ $getFormattedCurrency(discAmt) }}</td>
           </tr>
         </table>
-        <br>
+        <br />
         <div class="box">
           <table>
             <tr>
-              <td class="td-price">
-                상품 금액
-              </td>
-              <td class="td-price">
-                할인 금액
-              </td>
-              <td class="td-price">
-                총&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;액
-              </td>
+              <td class="td-price">상품 금액</td>
+              <td class="td-price">할인 금액</td>
+              <td class="td-price">총&emsp;&emsp;&nbsp;액</td>
             </tr>
             <tr>
               <td class="td-price">
-                {{ this.packageDetails.adultPrice }} x {{ $route.query.adultCnt }}
-                + {{ this.packageDetails.childPrice }} x {{ $route.query.childCnt }}
-                = {{ this.packageDetails.adultPrice * $route.query.adultCnt + this.packageDetails.childPrice * $route.query.childCnt }} 원
+                {{ $getFormattedCurrency(packageDetails.adultPrice) }} x {{ $route.query.adultCnt }}
+                <span v-if="$route.query.childCnt > 0">
+                  +
+                  {{ $getFormattedCurrency(packageDetails.childPrice) }} x {{ $route.query.childCnt }}
+                </span>
+                =
+                {{
+                  $getFormattedCurrency(
+                    packageDetails.adultPrice * $route.query.adultCnt +
+                      packageDetails.childPrice * $route.query.childCnt
+                  )
+                }}
               </td>
+              <td class="td-price">{{ $getFormattedCurrency(discAmt) }}</td>
               <td class="td-price">
-                {{ discAmt }} 원
-              </td>
-              <td class="td-price">
-                {{ this.packageDetails.adultPrice * $route.query.adultCnt + this.packageDetails.childPrice * $route.query.childCnt - discAmt }} 원
+                {{
+                  $getFormattedCurrency(
+                    packageDetails.adultPrice * $route.query.adultCnt +
+                      packageDetails.childPrice * $route.query.childCnt -
+                      discAmt
+                  )
+                }}
               </td>
             </tr>
           </table>
         </div>
-          <form id="payForm" action="http://localhost:8082/triplus/api/v1/pay/pcpay" method="POST" target="payFormFrame" hidden>
+        <form
+          id="payForm"
+          action="http://localhost:8082/triplus/api/v1/pay/pcpay"
+          method="POST"
+          target="payFormFrame"
+          hidden
+        >
+          <input name="brdNum" type="text" :value="$route.params.brdNum" /><br />
+          <input name="goodName" type="text" :value="packageDetails.title" /><br />
 
-            <input name="brdNum" type="text" :value="$route.params.brdNum"><br>
-            <input name="goodName" type="text" :value="packageDetails.title"><br>
+          <input name="adultCnt" type="text" :value="$route.query.adultCnt" /><br />
+          <input name="childCnt" type="text" :value="$route.query.childCnt" /><br />
 
-            <input name="adultCnt" type="text" :value="$route.query.adultCnt"><br>
-            <input name="childCnt" type="text" :value="$route.query.childCnt "><br>
+          <input
+            name="price"
+            readonly
+            type="text"
+            :value="
+              packageDetails.adultPrice * $route.query.adultCnt +
+              packageDetails.childPrice * $route.query.childCnt -
+              discAmt
+            "
+          />원<br />
+          <input name="cpnNum" readonly type="text" :value="selectedCpnNum" /><br /><br />
 
-            <input name="price" readonly type="text" :value="this.packageDetails.adultPrice * $route.query.adultCnt + this.packageDetails.childPrice * $route.query.childCnt - discAmt">원<br>
-            <input name="cpnNum" readonly type="text" :value="0"><br><br>
+          <input name="id" type="text" :value="bookerInfo.id" /><br />
+          <input name="bookerName" type="text" :value="bookerInfo.name" /><br />
+          <input name="bookerTel" type="text" :value="bookerInfo.tel" /><br />
+          <input name="bookerEmail" type="text" :value="bookerEmail" /><br />
 
-            <input name="id" type="text" :value="bookerInfo.uesrId"><br>
-            <input name="bookerName" type="text" :value="bookerInfo.name"><br>
-            <input name="bookerTel" type="text" :value="bookerInfo.tel"><br>
-            <input name="bookerEmail" type="text" :value="bookerEmail"><br>
+          <input v-for="(pkgCom, index) in list" :key="index" :value="pkgCom.class" name="pkgComClass" /><br />
+          <input v-for="(pkgCom, index) in list" :key="index" :value="pkgCom.name" name="pkgComName" /><br />
+          <input v-for="(pkgCom, index) in list" :key="index" :value="pkgCom.tel" name="pkgComTel" /><br />
+          <input v-for="(pkgCom, index) in list" :key="index" :value="pkgCom.gender" name="pkgComGender" /><br />
 
-            <input v-for="(pkgCom, index) in list" :key="index" :value="pkgCom.class" name="pkgComClass"><br>
-            <input v-for="(pkgCom, index) in list" :key="index" :value="pkgCom.name" name="pkgComName"><br>
-            <input v-for="(pkgCom, index) in list" :key="index" :value="pkgCom.tel" name="pkgComTel"><br>
-            <input v-for="(pkgCom, index) in list" :key="index" :value="pkgCom.gender" name="pkgComGender"><br>
-
-            <button type="submit">결제하기</button>
-          </form>
-          <br>
-          <div class="btns">
-            <Button @click="$router.back()">뒤로가기</Button>&emsp;
-            <Button @click="pay()" form="payForm">결제하기</Button>
-          </div>
-          <br>
-          <iframe name="payFormFrame" :style="{position: 'fixed', top:0, left:0, width: '100%', height: '100%', display: iframeDisplay}"></iframe>
+          <button type="submit">결제하기</button>
+        </form>
+        <br />
+        <div class="btns">
+          <Button @click="$router.back()">뒤로가기</Button>&emsp;
+          <Button @click="pay()" form="payForm">결제하기</Button>
         </div>
-        </div>
+        <br />
+        <iframe
+          name="payFormFrame"
+          :style="{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', display: iframeDisplay }"
+        ></iframe>
       </div>
+    </div>
+  </div>
 </template>
 
 <script>
 import axios from "axios";
+import { defaultOptions } from "@/constant/axios.js";
 
 export default {
-
   data() {
     return {
-      aa:"none",
-      iframeDisplay: 'none',
-      packageDetails: {},
+      iframeDisplay: "none",
+      packageDetails: {
+        sDate: null,
+        eDate: null
+      },
       selectedEmail: "triplus.com",
       bookerInfo: {
-        uesrId: "test",
-        name: "홍길동",
-        bDate: "2000-10-10",
-        gender: "male",
-        emailId: "test",
-        tel: "0101112222",
+        name: null,
+        bDate: null,
+        gender: null,
+        emailId: null,
+        tel: null
       },
-      gender: 'female',
-      value1: 'XXXaaaa',
       list: [],
-      selectedCoupon: "",
-      domains: [
-        {name: 'naver.com'},
-        {name: 'gmail.com'},
-        {name: 'daum.net'},
-        {name: 'nate.com'}
-      ],
-      coupons: [
-        // {name: '없음', value: '0'}
-      ],
+      selectedCpnNum: 0,
+      domains: [{ name: "naver.com" }, { name: "gmail.com" }, { name: "daum.net" }, { name: "nate.com" }],
+      coupons: [],
       discAmt: 0,
-    }
+      submitted: false
+    };
   },
 
-  computed:{
-    bookerEmail(){
-      if(typeof this.selectedEmail == "object"){
+  computed: {
+    bookerEmail() {
+      if (typeof this.selectedEmail == "object") {
         return this.bookerInfo.emailId + "@" + this.selectedEmail.name;
       }
       return this.bookerInfo.emailId + "@" + this.selectedEmail;
+    },
+
+    validateEmail() {
+      if (!this.bookerInfo.emailId) {
+        return false;
+      } else {
+        return this.validateEmailDomain;
+      }
+    },
+
+    validateEmailDomain() {
+      if (typeof this.selectedEmail == "object") {
+        return true;
+      } else {
+        const indexOfDot = this.selectedEmail.indexOf(".");
+        if (indexOfDot == -1) {
+          return false;
+        } else {
+          return indexOfDot != this.selectedEmail.length - 1;
+        }
+      }
     }
   },
 
   mounted() {
-    for(let i=0; i<this.$route.query.adultCnt-1; i++){
-      this.list.push({name: '', class: '성인'})
+    for (let i = 0; i < this.$route.query.adultCnt - 1; i++) {
+      this.list.push({ name: "", class: "성인", gender: "M" });
     }
-    for(let i=0; i<this.$route.query.childCnt; i++){
-      this.list.push({name: '', class: '아동'})
+    for (let i = 0; i < this.$route.query.childCnt; i++) {
+      this.list.push({ name: "", class: "아동", gender: "M" });
     }
   },
 
   methods: {
-    formatCurrency(value) {
-      return value.toLocaleString('ko-KR')+' 원';
+    pay() {
+      this.submitted = true;
+      if (this.validateForm()) {
+        this.iframeDisplay = "block";
+        document.getElementById("payForm").submit();
+      }
     },
-    pay(){
-      this.iframeDisplay='block';
-      document.getElementById("payForm").submit();
+
+    validateForm() {
+      if (!this.bookerInfo.tel) {
+        return false;
+      }
+      if (!this.validateEmail) {
+        return false;
+      }
+      for (let i = 0; i < this.list.length; i++) {
+        if (!this.list[i].name || !this.list[i].tel) return false;
+      }
+      return true;
     }
   },
 
-  created() {
-    axios.get(`http://localhost:8082/triplus/api/section/packages/${this.$route.params.brdNum}`, {
+  async created() {
+    const getPkgUrl = `${process.env.VUE_APP_API_URL || ""}/section/packages/${this.$route.params.brdNum}`;
 
-      headers: {
-        'Access-Control-Allow-Origin': '*'
-      },
+    const pkgRes = await axios.get(getPkgUrl, defaultOptions).catch(err => {
+      alert("서버 연결 실패", err);
+    });
 
-    }).then(function(resp) {
+    this.packageDetails = Object.assign(pkgRes.data.dto, pkgRes.data.map);
 
-      this.packageDetails = Object.assign(resp.data.dto, resp.data.map);
+    const getMbrUrl = `${process.env.VUE_APP_API_URL || ""}/member/mypage/find/${localStorage.getItem("id")}`;
 
-    }.bind(this)).catch(err=> {
+    const mbrRes = await axios.get(getMbrUrl, defaultOptions).catch(err => {
+      alert("서버 연결 실패", err);
+    });
 
-          console.log(err)
-
-        }
-    );
-
-    // axios.get(`http://localhost:8082/triplus/api/members/${userId}`, {
-    //
-    //   headers: {
-    //     'Access-Control-Allow-Origin': '*'
-    //   },
-    //
-    // }).then(function(resp) {
-    //
-    //   this.bookerInfo = resp.data.dto;
-    //
-    // }.bind(this)).catch(err=> {
-    //
-    //       console.log(err)
-    //
-    //     }
-    // );
-  },
-}
+    this.bookerInfo = mbrRes.data.dto;
+    let bookerEmail = this.bookerInfo.email.split("@");
+    this.bookerInfo.emailId = bookerEmail[0];
+    this.selectedEmail = bookerEmail[1];
+  }
+};
 </script>
 
 <style scoped>
-
-
-.box{
+.box {
   border: 1px solid #dee2e6;
   padding: 30px 20px;
 }
 
-table{
+table {
   width: 100%;
   border-collapse: collapse;
 }
 
-tr{
+tr {
   border-top: 1px solid #dee2e6;
   border-bottom: 1px solid #dee2e6;
   height: 50px;
 }
 
-td{
+td {
   padding: 15px;
   text-align: left;
 }
 
-.td-title{
+.td-title {
   width: 150px;
 }
 
-td:not(:last-child){
+td:not(:last-child) {
   border-right: 1px solid #dee2e6;
 }
 
-.td-price{
+.td-price {
   text-align: center;
 }
 
-.wrapper{
+.wrapper {
   width: 1080px;
   margin: auto;
 }
 
-.inner{
+.inner {
   width: 900px;
   margin: auto;
 }
 
-.btns{
+.btns {
   text-align: center;
 }
-
 </style>
