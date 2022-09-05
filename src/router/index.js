@@ -51,7 +51,9 @@ import checkListView from "@/views/member/plan/CheckListView";
 import ExpensesView from "@/views/member/plan/ExpensesView";
 import InviteView from "@/views/member/plan/InviteView";
 
-import MainView from "../views/MainView.vue";
+import ModifyFAQView from "@/views/admin/service/ModifyFAQView";
+
+import MainView from "@/views/MainView.vue";
 
 const routes = [
   {
@@ -374,15 +376,30 @@ const routes = [
     component: WeatherView
   },
   {
-    path: "/admin/service/faq",
+    path: "/service/faq",
     name: "faqs",
-    component: () => import("@/views/admin/service/FAQView.vue")
+    component: () => import("@/views/member/service/FAQView.vue")
   },
   {
     //일정 초대
     path: "/section/member/schedule/invite",
     name: "invite-schedule",
     component: InviteView
+  },
+  {
+    path: "/admin/service/faq/add",
+    name: "faqs-add",
+    component: () => import("@/views/admin/service/AddFAQView.vue")
+  },
+  {
+    path: "/admin/service/faq/:faqNum",
+    name: "faqs-modify",
+    component: ModifyFAQView
+  },
+  {
+    path: "/admin/service/faq",
+    name: "faqs-board",
+    component: () => import("@/views/admin/service/FAQAdminView.vue")
   }
 ];
 
