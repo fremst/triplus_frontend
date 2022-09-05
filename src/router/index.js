@@ -31,6 +31,7 @@ import AccommodationDetailView from "@/views/section/place/accommodation/Accommo
 import AddMyScheduleView from "@/views/section/member/AddMyScheduleView";
 import MyScheduleMainView from "@/views/section/member/MyScheduleMainView";
 import AddSchedulePlaceView from "@/views/section/member/AddSchedulePlaceView";
+import AddMyPlaceView from "@/views/section/member/AddMyPlaceView";
 import WeatherView from "@/views/section/member/WeatherView";
 
 import MemberJoinView from "@/views/member/MemberJoinView";
@@ -352,6 +353,12 @@ const routes = [
     path: "/section/member/schedule/add-place",
     name: "add-schedule-place",
     component: AddSchedulePlaceView
+  },
+  //나만의 장소 추가
+  {
+    path: "/section/member/schedule/add-my-place",
+    name: "add-my-place",
+    component: AddMyPlaceView
   },
   //날씨보기
   {
