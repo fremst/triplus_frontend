@@ -6,7 +6,7 @@
     </div>
 
     <div class="content">
-      <div class="title"><h4>개인 정보 수정</h4></div>
+      <div class="title"><h3>개인 정보 수정</h3></div>
 
       <div class="name"><span>이름</span><InputText type="text" v-model="name"  class="name-txt"/><span>{{nameErr}}</span></div>
 
@@ -17,30 +17,30 @@
 
       <div class="addr">
 
-        <div>
+        <div class="a">
           <span>우편번호</span>
-          <InputText type="text" v-model="postcode"  class="post-txt"   /> <Button label="우편번호 찾기" class="p-button-outlined" @click="execDaumPostcode"/>
+          <InputText type="text" v-model="postcode"  class="post-txt"   /> <Button label="우편번호 찾기" class="p-button-outlined"  id= "btn1" @click="execDaumPostcode"/>
 
         </div>
 
-        <div><span>주소</span><InputText type="text" v-model="address" class="addr-txt" /><span>{{addrErr}}</span></div>
-        <div><span>상세주소</span><InputText type="text" v-model="detailAddress"  class="detail-txt"/><span>{{detailErr}}</span></div>
+        <div class="b"><span>주소</span><InputText type="text" v-model="address" class="addr-txt" /><span>{{addrErr}}</span></div>
+        <div class="c"><span>상세주소</span><InputText type="text" v-model="detailAddress"  class="detail-txt"/><span>{{detailErr}}</span></div>
 
 
       </div>
 
       <div class="email"><span>이메일 주소</span><InputText type="text" v-model="email"  class="email-txt"/></div>
       {{emailErr}}
-      {{namePass}} {{phonePass}} {{addressPass}} {{detailPass}} {{emailPass}}
-      <div><Button type="button" label="정보 수정" class="p-button-primary" @click="update" /></div>
+
+      <div><Button type="button" label="정보 수정" class="p-button-primary" id="btn2" @click="update" /></div>
 
       <div class="pwd">
-        <div class="title"><h4>비밀번호 수정</h4></div>
+        <div class="title"><h3>비밀번호 수정</h3></div>
 
-        <div><span>새 비밀번호</span><InputText v-model="pwd1" class="pwd1-txt" type="password"/></div>
-        <div><span>새 비밀번호 확인</span><InputText v-model="pwd2" class="pwd2-txt" type="password"/></div>
+        <div class="d"><span>새 비밀번호</span><InputText v-model="pwd1" class="pwd1-txt" type="password"/></div>
+        <div class="e"><span>새 비밀번호 확인</span><InputText v-model="pwd2" class="pwd2-txt" type="password"/></div>
         {{pwdErr}}
-        <div><Button type="button" label="비밀번호 수정" class="p-button-primary" @click.prevent="newPwd" /></div>
+        <div><Button type="button" label="비밀번호 수정" class="p-button-primary" id="btn3" @click.prevent="newPwd" /></div>
 
       </div>
 
@@ -325,9 +325,14 @@ export default {
 }
 
 .title{
-  margin-top: 50px;
+  margin-top: 20px;
   margin-bottom: 15px;
 }
+
+.name, .phone, .bdate, .regdate, .a, .b, .c, .email, .d, .e{
+  margin-bottom: 10px;
+}
+
 
 .name span, .bdate span, .addr span, .email span, .pwd span, .phone span, .regdate span{
   display: inline-block;
@@ -345,7 +350,17 @@ export default {
   width: 400px;
 }
 
+#btn1{
+  width: 190px;
+  height: 40px;
+  margin-left: 5px;
+}
 
+#btn2, #btn3{
+  width: 570px;
+  height: 40px;
+
+}
 
 
 </style>

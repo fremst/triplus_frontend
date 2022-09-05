@@ -186,7 +186,7 @@
     </div>
 
 </div>
-<div class="last-chk"><Checkbox v-model="chk3" :binary="true" /> &nbsp; 위의 이용약관 및 개인정보 수집 및 이용에 대한 안내에 동의합니다.</div>
+
 <div class="btn">
  <Button  type="button" label="확인" class="p-button-primary" @click.prevent="nextPage"/>
  <Button  label="취소" class="p-button-outlined" @click="gomain"/>
@@ -220,13 +220,13 @@ export default {
 
       chk1:false,
       chk2:false,
-      chk3:false,
+
     }
   },
 
   methods:{
     nextPage() {
-     if(this.chk1===true && this.chk2===true && this.chk3===true){
+     if(this.chk1===true && this.chk2===true ){
        this.$router.push({name:'memberjoin'})
      }else{
        alert('회원가입약관 내용에 동의하셔야 회원가입 하실 수 있습니다.');

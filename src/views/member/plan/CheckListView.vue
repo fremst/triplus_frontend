@@ -1,39 +1,36 @@
 <template>
   <div class="wrapper">
     <div class="inner">
-      <div class="title"><h1>~~여행</h1></div>
-      <div class="date"><h6>시작날짜~~끝날짜</h6></div><br>
-      <!-- navi 중복 / component.? -->
-        <div class="navi">
-          <Button type="button" label="체크리스트" class="p-button-primary" @click="c" />
-          <Button type="button" label="가계부" class="p-button-primary" @click="d" />
-          <Button type="button" label="지출내역" class="p-button-primary" @click="e" />
-          <Button type="button" label="정산하기" class="p-button-primary" @click="f" />
-        </div>
-
-        <br><hr><br>
-      <div class="title"><h2>체크리스트</h2></div>
+      <Dialog v-model:visible="display" class="box">
+        <template #header>
+          <h3>체크리스트</h3>
+        </template>
         <div class="list">
-         <div class="li" v-for="(row,index) in rows " :key="index">
-           <Checkbox v-model="row.checked"  :binary="true" />{{row.name}}
-         </div>
+          <div class="li" v-for="(row,index) in rows " :key="index">
+            <Checkbox v-model="row.checked"  :binary="true" />{{row.name}}&nbsp;<span @click="del(index)"><i class="pi pi-minus-circle" style="font-size: 1rem"></i></span>
+          </div>
 
-         <div class="add">
-
-         <div class="input" style="display:inline-block;"  >
-         <InputText type="text" v-model="txt" class="txt"/>
-
-         </div>
-           <span @click="addItem"><i class="pi pi-plus-circle" ></i>추가</span><span class="msg">{{msg}}</span>
-         </div>
+          <div class="add">
+            <div class="input" style="display:inline-block;"  >
+              <InputText type="text" v-model="txt" class="txt"/>
+            </div>
+            <span @click="addItem"><i class="pi pi-plus-circle" ></i>추가</span><span class="msg">{{msg}}</span>
+          </div>
 
         </div>
-        <br><br><hr><br>
-        <div class="save"><Button type="button" label="저장" class="p-button-primary" @click="f" /></div>
 
+        <template #footer  >
+
+
+          <Button label="취소" icon="pi pi-times" class="p-button-text" />
+          <Button label="확인" icon="pi pi-check" autofocus />
+        </template>
+
+      </Dialog>
 
     </div>
   </div>
+
 </template>
 
 <script>
@@ -55,15 +52,13 @@ export default {
         {name:'옷',checked:false },
         {name:'속옷',checked:false },
         {name:'양말',checked:false },
-        {name:'등등',checked:false },
-        {name:'item13',checked:false },
-        {name:'item14',checked:false },
-        {name:'item15',checked:false },
-        {name:'item16',checked:false },
+
+
       ],
        txt:'',
        chk:'',
-       msg:''
+       msg:'',
+      display: true,
     }
   },
   methods:{
@@ -76,6 +71,9 @@ export default {
         this.msg='항목을 입력해주세요';
       }
 
+    },
+    del(index){
+      this.rows.splice(index,1);
     }
   }
 }
@@ -90,8 +88,8 @@ export default {
 
 .title{
   margin-bottom: 30px;
-
 }
+
 .list{
   width: 1080px;
   display: flex;
@@ -107,15 +105,17 @@ export default {
 }
 
 .add{
-  width: 500px;
+  display: inline-block;
+  width: 600px;
+  padding-top: 20px;
 }
 
 .add span{
   cursor: pointer;
 }
 .add .txt{
-  width: 150px;
-  height: 30px;
+  width: 200px;
+  height: 40px;
 
 }
 

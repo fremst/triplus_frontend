@@ -16,7 +16,7 @@
       <div class="id">
         <div><label>아이디</label></div>
         <div><InputText type="text" v-model="id" @change="reCheck"  class="id-txt" placeholder="아이디(영어+숫자 6~12자)"/><Button label="중복확인" class="p-button-outlined" @click="idCheck" /></div>
-        <div><span>{{idErr}}</span></div> {{idPass}}
+        <div><span>{{idErr}}</span></div>
       </div>
 
       <div class="pwd">
@@ -24,27 +24,23 @@
         <div><InputText v-model="pwd1" class="pwd-txt" placeholder="영어+숫자+특수문자(8~16자)" type="password"/></div>
         <div><label>비밀번호 확인</label><span>{{pwdErr}}</span></div>
         <div><InputText v-model="pwd2" class="pwd2-txt" placeholder="비밀번호를 다시 한번 입력하세요" type="password"/></div>
-        {{pwdPass}}
       </div>
 
       <div class="name">
         <div><label>이름</label></div>
         <div><InputText type="text" v-model="name"  class="name-txt"/></div>
         <div><span>{{nameErr}}</span></div>
-        {{namePass}}
       </div>
 
       <div class="gender">
         <RadioButton name="gen" value="M" v-model="radio" class="men"  />남성
         <span><RadioButton name="gen" value="F" v-model="radio" class="women" />여성<span class="radioErr">{{genErr}}</span></span>
-        {{genPass}}
       </div>
 
       <div class="phone">
         <div><label>전화번호</label></div>
         <div><InputText type="text" v-model="phone" class="phone-txt" /></div>
         <span>{{phoneErr}}</span>
-        {{phonePass}}
       </div>
 
       <div class="addr">
@@ -60,7 +56,7 @@
         <span>{{emailErr}}</span>
         <div><InputText type="text" v-model="cert" placeholder="인증번호를 입력하세요" class="cert-txt" /><Button label="인증번호 확인" class="p-button-outlined" @click="checkRnd"  /></div>
         <span>{{check}}</span>
-        {{emailPass}}
+
       </div>
 
       <div class="bdate">

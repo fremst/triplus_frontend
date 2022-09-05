@@ -12,29 +12,29 @@
               :rows="5"
               :rowsPerPageOptions="[5, 10, 25]"
               :value="list"
-              currentPageReportTemplate="Showing {first} to {last} of {totalRecords} list"
+              currentPageReportTemplate=""
               dataKey="skdNum"
               paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-              style="text-align: left"
+              style=""
           >
             <template #header>
               <div class="table-header flex flex-column md:flex-row md:justiify-content-between">
-                <h3>내 일정</h3>
+                <h2>내 일정</h2>
               </div>
             </template>
 
 
-            <Column header="이름" field="destination" :sortable="true" style="min-width: 19rem; text-align: center">
+            <Column header="이름" field="destination" :sortable="true" style="min-width: 19rem;">
               <template #body="slotProps">
                 <span class="product-category">
-
                   <router-link :to="`/member/myreservation/`+slotProps.data.OID">
                     {{ slotProps.data.destination }}
                   </router-link>
                 </span>
               </template>
             </Column>
-            <Column header="시작일" field="sDate" :sortable="true" style="min-width: 9rem; text-align: center">
+
+            <Column header="시작일" field="sDate" :sortable="true" style="min-width: 9rem; ">
               <template #body="slotProps">
                 <span class="product-category">
                   {{ new Date(slotProps.data.sdate).toISOString().substring(0,10)}}
@@ -42,7 +42,7 @@
               </template>
             </Column>
 
-            <Column header="종료일" field="eDate" :sortable="true" style="min-width: 9rem; text-align: center">
+            <Column header="종료일" field="eDate" :sortable="true" style="min-width: 9rem; ">
               <template #body="slotProps">
                 <span class="product-category">
                     {{ new Date(slotProps.data.edate).toISOString().substring(0,10)}}

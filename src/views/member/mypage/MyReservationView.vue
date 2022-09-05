@@ -12,7 +12,7 @@
             :rows="5"
             :rowsPerPageOptions="[5, 10, 25]"
             :value="list"
-            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} list"
+            currentPageReportTemplate=""
             dataKey="brdNum"
             paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
 
@@ -20,12 +20,12 @@
         >
           <template #header>
             <div class="table-header flex flex-column md:flex-row md:justiify-content-between">
-              <h3>내 예약</h3>
+              <h2>내 예약</h2>
             </div>
           </template>
 
 
-          <Column header="패키지이름" field="title" :sortable="true" style="min-width: 19rem; text-align: center">
+          <Column header="패키지이름" field="title" :sortable="true" style="min-width: 19rem; ">
             <template #body="slotProps">
                 <span class="product-category">
                   <!-- http://localhost:8081/member/myreservation/INIpayTest_1661735541879 -->
@@ -35,7 +35,7 @@
                 </span>
             </template>
           </Column>
-          <Column header="출발일" field="SDATE" :sortable="true" style="min-width: 9rem; text-align: center">
+          <Column header="출발일" field="SDATE" :sortable="true" style="min-width: 9rem; ">
             <template #body="slotProps">
                 <span class="product-category">
                   {{ new Date(slotProps.data.SDATE).toISOString().substring(0,10)}}
@@ -43,7 +43,7 @@
             </template>
           </Column>
 
-          <Column header="상태" field="resSta" :sortable="true" style="min-width: 9rem; text-align: center">
+          <Column header="상태" field="resSta" :sortable="true" style="min-width: 9rem; ">
             <template #body="slotProps">
                 <span class="product-category">
                     {{ slotProps.data.RESSTA }}

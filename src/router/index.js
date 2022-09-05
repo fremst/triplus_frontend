@@ -70,12 +70,12 @@ const routes = [
     path: "/admin",
     name: "admin",
     component: AdminView,
-    beforeEnter: function (to, from, next) {
-      if (store.state.auth === "admin") {
+    beforeEnter:function (to, from, next){
+      if(store.state.loginUser.auth==='admin'){
         next();
-      } else {
-        alert("권한이 없습니다");
-        next("/");
+      }else{
+        alert(store.state.loginUser.auth);
+        next('/');
       }
     }
   },
@@ -166,10 +166,6 @@ const routes = [
     path: "/memberjoin",
     name: "memberjoin",
     component: MemberJoinView,
-    beforeEnter: function (to, from, next) {
-      alert("잘못된 요청입니다");
-      next("/");
-    }
     // meta:{member:true}
   },
   {
@@ -188,11 +184,6 @@ const routes = [
     // 찾는 아이디 보여주는 view
     path: "/member/showid",
     name: "showId",
-    component: showIDView,
-    beforeEnter: function (to, from, next) {
-      alert("잘못된 요청입니다");
-      next("/");
-    }
   },
   {
     // 비밀번호 찾기 view
@@ -205,19 +196,11 @@ const routes = [
     path: "/member/changepwd",
     name: "changePwd",
     component: changePwdView,
-    beforeEnter: function (to, from, next) {
-      alert("잘못된 요청입니다");
-      next("/");
-    }
   },
   {
     path: "/memberjoin/complete",
     name: "join-complete",
     component: joinCompleteView,
-    beforeEnter: function (to, from, next) {
-      alert("잘못된 요청입니다");
-      next("/");
-    }
   },
   {
     path: "/member/myreservation/:oid",
@@ -229,10 +212,6 @@ const routes = [
     path: "/member/plan/checklist",
     name: "member-checklist",
     component: checkListView,
-    beforeEnter: function (to, from, next) {
-      alert("잘못된 요청입니다");
-      next("/");
-    }
   },
   {
     path: "/member/plan/:skdNum/expenses",
@@ -251,10 +230,6 @@ const routes = [
     path: "/member/mypage/update",
     name: "mypage-update",
     component: MyPageUpdateView,
-    beforeEnter: function (to, from, next) {
-      alert("잘못된 요청입니다");
-      next("/member/mypage/chkpwd");
-    }
   },
   {
     //내 예약보기

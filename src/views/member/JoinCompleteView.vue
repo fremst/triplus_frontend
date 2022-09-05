@@ -2,6 +2,7 @@
 <div class="wrapper">
   <div class="inner">
 
+    <!--
     <div class="step">
       <ol class="step_list">
         <li><span>약관동의</span></li>
@@ -9,11 +10,11 @@
         <li class="on"><span>가입완료</span></li>
       </ol>
     </div>
-
+    -->
 
     <div class="title" >
-      <i class="pi pi-check-circle" style="font-size: 7rem;color:#009688; "></i>
-      <h1>Triplus 회원가입이 완료 되었습니다</h1>
+      <i class="pi pi-check-circle" style="font-size: 5rem;color:#009688; "></i>
+      <h2>Triplus 회원가입이 완료 되었습니다</h2>
     </div>
 
     <div class="btn">
@@ -43,7 +44,7 @@ export default {
 .inner{
   width: 1080px;
   height : 600px;
-  margin: 50px auto;
+  margin: 40px auto;
 }
 
 .step_list {
@@ -85,7 +86,7 @@ export default {
 
 .title{
   text-align: center;
-  height: 500px;
+  height: 450px;
 
 }
 
@@ -94,9 +95,9 @@ export default {
   top:12%;
 }
 
-.title h1{
+.title h2{
   position: relative;
-  top: 14%;
+  top: 20%;
 }
 
 .btn{
@@ -105,7 +106,7 @@ export default {
 
 }
 .btn button{
-  width:333px;
+  width:250px;
   height :50px;
 }
 

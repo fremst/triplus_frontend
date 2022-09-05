@@ -1,39 +1,58 @@
 <template>
 
 <div class="find">
-      
-<TabView v-model:activeIndex="activeIndex">
-	<TabPanel header="아이디 찾기">
+  <div class="find-title"><h2>아이디/비밀번호 찾기</h2></div><br>
+
+<div class="layout">
+<TabView v-model:activeIndex="activeIndex" >
+	<TabPanel header="아이디 찾기" class="panel">
+    <div class="ment">
+      <span>회원가입 시 등록한 이메일 주소를 입력해주세요.</span>
+    </div>
     <div class="find-form">
       
-      <div class="find-name"><label>이름</label><input v-model="name" type="text"></div>
-      <div class="find-email"><label>이메일 주소</label><input v-model="email" type="text">
-      <input type="button" value="인증번호 받기" @click.prevent="sendMail"></div>
-      <div class="find-cert"><label></label><input v-model="cert" placeholder="인증번호 6자리 숫자 입력" type="text"><span class="errMsg">{{errMsg}}</span></div>
+      <div class="find-name">
+        <label>이름</label><InputText type="text" v-model="name"  class="text1"/>
+      </div>
 
-      <Button type="submit" label="다음" class="p-button-primary" @click.prevent="showId" />
+      <div class="find-email"><label>이메일 주소</label>
+        <InputText type="text" v-model="email"  class="text2"/>
+        <Button type="button" label="인증번호 받기" class="p-button-outlined" id="btn1" @click.prevent="sendMail" />
+      </div>
+
+      <div class="find-cert"><label>인증번호 </label>
+        <InputText type="text" v-model="cert"  class="text1"/>
+      </div>
+
+        <Toast/>
+
+      <Button type="button" label="확인" class="p-button-primary" id="btn2" @click.prevent="showId" />
      {{rnd}}
-      {{a}}{{b}}
+
       
     </div>
 	</TabPanel>
 
 	<TabPanel header="비밀번호 찾기">
-		 <div class="find-form">
-      <div><h5>비밀번호를 찾고자 하는 아이디를 입력해 주세요.</h5></div>
-     
-      <div class="find-id"><input v-model="id" type="text" placeholder="네이버 아이디"></div>
-       <span class="errMsg">{{errMsg}}</span><br>
-      <Button type="submit" label="다음" class="p-button-primary" @click.prevent="showPwd" />
-     
-      
+    <div class="ment">
+      <span>ID를 입력해주세요</span>
+    </div>
+		 <div class="find-form2">
+       <div style="margin-bottom: 15px">
+       <label>ID</label><InputText type="text" v-model="id"  class="text1"/>
+       </div>
+
+
+      <Button type="submit" label="다음" class="p-button-primary" id="btn2" @click.prevent="showPwd" />
+
       
     </div>
 	</TabPanel>
 	
 </TabView>
-   
   </div>
+</div>
+
 </template>
 
 <script>
@@ -51,14 +70,13 @@ export default {
   },
   data() {
     return {
-      name: "이강준",
-      email: "dlrkdwnszz@gmail.com",
-      id:"KJtest",
+      name: "",
+      email: "",
+      id:"",
       cert:"", //인증번호 입력
       rnd: "", // 서버에서 보낸 인증번호
       errMsg:"",
-      a:this.$store.state.loginUser.auth,
-      b:this.$store.state.loginUser.id
+
     }
   },
   methods: {
@@ -73,13 +91,11 @@ export default {
         headers: {
           'Access-Control-Allow-Origin': '*',
           'token':this.$store.state.token  // 로그인이 필요한 경우 header에 token을 담는다
-
         }
       }).then(function (resp) {
-          
-          
-          if(resp.data.result=='success'){   //이름,이메일 user테이블과 일치하면 메일(인증번호 보내기)
-          alert('인증번호가 발송되었습니다.');
+
+          if(resp.data.result==='success'){   //이름,이메일 user테이블과 일치하면 메일(인증번호 보내기)
+            this.$toast.add({severity:'success', summary: '', detail:'인증번호를 발송했습니다.', life: 3000});
             this.errMsg="";
             const joinparam = new URLSearchParams();
            joinparam.append('email', this.email);
@@ -93,7 +109,7 @@ export default {
         }.bind(this));
 
         }else{ //일치하지 않은경우 이메일 전송X 
-          this.errMsg = '입력한 정보가 올바르지 않습니다.'
+         this.$toast.add({severity:'error', summary: '', detail:'입력한 정보가 올바르지 않습니다', life: 3000});
         }
       }.bind(this));
      
@@ -101,11 +117,12 @@ export default {
 
   showId(){
 
-    if(parseInt(this.rnd)==parseInt(this.cert)){
+    if(parseInt(this.rnd)===parseInt(this.cert)){
       this.$router.push({name:'showId',params:{'name1':this.name}})
-      this.errMsg="";
+
     }else{
-      this.errMsg = "인증번호가 일치하지 않습니다";
+
+      this.$toast.add({severity:'error', summary: '', detail:'인증번호가 일치하지 않습니다', life: 3000});
     }
   },
 
@@ -119,10 +136,10 @@ export default {
           'Access-Control-Allow-Origin': '*'
         }
       }).then(function (resp) {
-        if(resp.data.result=='success'){
+        if(resp.data.result==='success'){
           this.$router.push({name:'showPwd',params:{'id1':this.id}})
         }else{
-          this.errMsg='아이디가 존재하지 않습니다';
+          this.$toast.add({severity:'error', summary: '', detail:'아이디가 존재하지 않습니다.', life: 3000});
         }
 
       }.bind(this));
@@ -139,23 +156,47 @@ export default {
 
 <style lang="scss" scoped>
 .find{
-  width: 900px;
+  width: 1080px;
   margin: 0 auto;
   margin-top: 50px;
+  margin-bottom: 80px;
+
+}
+.find-title{
+  text-align: center;
+}
+
+.ment span{
+  font-weight: bold;
+  color: cornflowerblue;
 }
 
 .find-form{
   margin-top: 20px;
 }
-
-//..
-.p-tabview-nav-container{
-  margin: 0 auto;
+.find-form2{
+  margin-top: 20px;
+  margin-bottom: 100px;
 }
+
+
+.layout{
+  margin-left: 230px;
+  margin-bottom: 150px;
+}
+
+
+
+.p-tabview-nav-container{
+margin: 0 auto;
+
+}
+
 
 .tabview-custom {
     i, span {
         vertical-align: middle;
+
     }
 
     span {
@@ -166,11 +207,50 @@ export default {
 .p-tabview p {
     line-height: 1.5;
     margin: 0;
+
 }
+
+.p-tabview-nav {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+  -webkit-box-flex: 1;
+  -ms-flex: 1 1 auto;
+  flex: 1 1 auto;
+  text-align: center;
+}
+
+
+
 
 .find-name , .find-email, .find-cert {
   display: flex;
+  margin-bottom: 13px;
 }
+
+.text1{
+  width: 450px;
+  height: 50px;
+}
+.text2{
+  width: 300px;
+  height: 50px;
+}
+
+#btn1{
+ width: 140px;
+  height: 50px;
+  padding: 0px;
+  margin-left: 10px;
+}
+#btn2{
+  width: 570px;
+  height: 50px;
+
+ }
 
 .find-name, .find-email, .find-id{
   margin-bottom: 5px;
@@ -179,37 +259,19 @@ export default {
   margin: 0 auto;
 }
 
-.find-id input[type='text']{
-  width: 350px;
-  height: 37px;
-  padding: 3px;
-}
-
-input[type='text']{
-  width: 250px;
-  height: 30px;
-  border-radius: 5px;
-}
-
-input[type='button']{
-  margin-left: 5px;
-  font-weight: bold;
-  border-radius: 5px;
-}
 
 label{
   display: inline-block;
   width: 120px;
   text-align: left;
   font-weight: bold;
+  padding-top: 10px;
 }
 
 .errMsg{
   color: red;
 }
 
-button{
-  margin-top: 20px;;
-}
+
 
 </style>
