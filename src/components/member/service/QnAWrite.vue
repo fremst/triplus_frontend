@@ -159,8 +159,6 @@ export default {
 
       this.submitting = true;
 
-      console.log("code = " + this.category.code);
-
       const tempId = localStorage.getItem("id") == null ? "guest" : localStorage.getItem("id");
       const writeParam = new URLSearchParams();
       writeParam.append("brdNum", this.updateBrdNum);
@@ -184,10 +182,11 @@ export default {
         })
         .then(
           function (resp) {
-            console.log(resp);
-            if (resp.data.result === true) {
-              alert("문의글 작성 성공");
-              this.onDetail(resp.data.brdNum);
+            if (resp.data.result == true) {
+              if (this.$route.query.qnaReplyNum == undefined)
+                this.onDetail(resp.data.brdNum);
+              else
+                this.onDetail(this.$route.query.qnaReplyNum);
             } else {
               alert(resp.data.reason);
               this.$router.push(this.URL);
@@ -210,7 +209,7 @@ export default {
             token: localStorage.getItem("token"),
             brdNum: this.updateBrdNum,
             writerId: tempId,
-            answerNum: this.isReply ? parseInt(localStorage.getItem("qnaReplyNum")) : 0,
+            answerNum: this.isReply ? this.$route.query.qnaReplyNum : 0,
             title: this.aTitle,
             category: this.category.code,
             tempEmail: this.tempEmail,
@@ -278,27 +277,26 @@ export default {
         })
         .then(
           function (resp) {
-            console.log(resp);
             this.updateArticle(resp.data.article);
           }.bind(this)
         );
     },
     updateArticle(article) {
       this.updateBrdNum = article.brdNum;
-      this.category = article.category;
+      let catIndex = this.categories.findIndex(element => element.code == article.category);
+      this.category = this.categories[catIndex];
       this.tempEmail = article.tempEmail;
       this.tempPwd = article.tempPwd;
       this.isSecret = !article.published;
 
       this.aTitle = article.title;
       this.content = article.contents;
-      console.log(article);
     }
   },
   created() {
     this.isLogin = localStorage.getItem("id") != null;
-    if (localStorage.getItem("qnaNum") != null) {
-      let tempNum = localStorage.getItem("qnaNum");
+    if (this.$route.query.qnaNum != null) {
+      let tempNum = this.$route.query.qnaNum;
       axios
         .get(`${this.link}/${tempNum}/password`, {
           headers: {
@@ -306,20 +304,18 @@ export default {
           },
           params: {
             num: tempNum,
-            pwd: localStorage.getItem("qnaPwd")
+            pwd: this.$route.query.qnaPwd
           }
         })
         .then(
           function (resp) {
             this.isUpdate = true;
-            localStorage.removeItem("qnaNum");
-            localStorage.removeItem("qnaPwd");
             this.updateArticle(resp.data.article);
           }.bind(this)
         );
-    } else if (localStorage.getItem("qnaReplyNum") != null) {
+    } else if (this.$route.query.qnaReplyNum != undefined) {
       axios
-        .get(`${this.link}/${localStorage.getItem("qnaReplyNum")}`, {
+        .get(`${this.link}/${this.$route.query.qnaReplyNum}`, {
           headers: {
             "Access-Control-Allow-Origin": "*"
           },
@@ -327,12 +323,8 @@ export default {
         })
         .then(
           function (resp) {
-            this.replyBrdNum = localStorage.getItem("qnaReplyNum");
-            localStorage.removeItem("qnaNum");
-            localStorage.removeItem("qnaPwd");
-            localStorage.removeItem("qnaReplyNum");
+            this.replyBrdNum = this.$route.query.qnaReplyNum;
             this.replyArticle = resp.data;
-            console.log(this.replyArticle);
             this.isReply = true;
           }.bind(this)
         );
