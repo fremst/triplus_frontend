@@ -5,38 +5,37 @@
       <div class="magazineBox">
         <ul :style="`left: -${value * 11.16}px`">
           <li>
-        <!--<a href="#" @click.prevent="showDetail(111)">-->
-            <a href="#" @click.prevent="showDetail">
+            <a href="#" @click.prevent="showDetail(372)">
               <img :src="require('@/assets/magazine/제주.png')"  class="magazine" />
             </a>
           </li>
           <li>
-            <a href="/">
+            <a href="#" @click.prevent="showDetail(373)">
               <img :src="require('@/assets/magazine/전주.png')" class="magazine"/>
             </a>
           </li>
           <li>
-            <a href="/">
+            <a href="#" @click.prevent="showDetail(374)">
               <img :src="require('@/assets/magazine/서울.png')" class="magazine"/>
             </a>
           </li>
           <li>
-            <a href="/">
+            <a href="#" @click.prevent="showDetail(375)">
               <img :src="require('@/assets/magazine/부산.png')" class="magazine"/>
             </a>
           </li>
           <li>
-            <a href="/">
+            <a href="#" @click.prevent="showDetail(376)">
               <img :src="require('@/assets/magazine/매거진5.png')" class="magazine"/>
             </a>
           </li>
           <li>
-            <a href="/">
+            <a href="#" @click.prevent="showDetail(377)">
               <img :src="require('@/assets/magazine/매거진6.png')" class="magazine"/>
             </a>
           </li>
           <li class="lastImg">
-            <a href="/">
+            <a href="#" @click.prevent="showDetail(378)">
               <img :src="require('@/assets/magazine/매거진7.png')" class="magazine"/>
             </a>
           </li>
@@ -65,9 +64,9 @@ export default {
     changeMaga() {
       this.value
     },
-    showDetail(){
+    showDetail(n){
       // this.$router.push({name:"magazine-detail",params:{brdNum:n}})
-      this.$router.push({name:"magazine-detail"})
+      this.$router.push({name:"magazine-detail",params:{brdNum:n}})
     }
   }
 }

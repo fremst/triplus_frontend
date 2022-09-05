@@ -100,6 +100,11 @@ const routes = [
     component: AdminPackageListView
   },
   {
+    path: "/admin/magazines",
+    name: "admin-magazines",
+    component: () => import("@/views/admin/magazine/AdminMagazineListView.vue")
+  },
+  {
     path: "/service/notices",
     name: "notices",
     component: () => import("@/views/admin/service/NoticeListView.vue")
