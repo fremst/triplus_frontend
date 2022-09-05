@@ -1,67 +1,103 @@
 <template>
-    <div class="main">
-        <div class="faq-main">
-            <div class="faq-header">
-                <h1>{{title}}</h1>
-            </div>
-            <div>
-                <div class="card">
-                    <TabMenu :model="items" class="tabs" v-model:activeIndex="selectedIndex"/>
-                </div>
-            </div>
-            <div class="faq-accordian">
-            <Accordion :activeIndex="0" v-for="(list,index) in faqList" :key="index">
-                <AccordionTab :header="list.faqTitle" v-if="list.category==items[selectedIndex].label">
-                   <p> {{list.faqContent}} </p>
-                </AccordionTab>
-            </Accordion>
-            </div>
-        </div>
+  <div class="main">
+    <div class="board">
+      <div class="board-header">
+        <h1>{{title}}</h1>
+      </div>
+      <div class="board-main">
+        <DataTable class="board-table" :paginator="true"
+                   paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown"
+                   :value="list" responsiveLayout="scroll" :rows="10"
+                   :filters="filters">
+          <Column field="faqNum" header="글번호" style="width: 100px;" ></Column>
+          <Column field="category" header="카테고리" style="width: 100px;" ></Column>
+          <Column field="faqTitle" header="제목" alignHeader="center" ></Column>
+          <Column field="modify" header="수정" alignHeader="center" >
+             <template #body="slotProps">
+                <a href="#" @click="onModify(slotProps.data.faqNum)">수정하기</a>
+            </template>
+          </Column>
+        </DataTable>
+      </div>
+      <div class="board-footer">
+        <Button color="#67AB9F" @click="onWrite">FAQ 글 등록</Button>
+      </div>
     </div>
+  </div>
 </template>
 
 <script>
-import TabMenu from 'primevue/tabmenu';
-import Accordion from 'primevue/accordion';
-import AccordionTab from 'primevue/accordiontab';
+import axios from 'axios'
+import DataTable from 'primevue/datatable';
+import Column from 'primevue/column';
+import { FilterMatchMode } from 'primevue/api';
 
 export default {
-    name: 'FaqListTab',
-    components :{
-        TabMenu,
-        Accordion,
-        AccordionTab
+  name: "FaqList",
+  components:{
+    DataTable,
+    Column
+  },
+  props:{
+    title: String,
+    listLink: String,
+    writeLink: String
+  },
+  data(){
+    return{
+      list:[],
+      pageIndex : 1,
+      filters:{},
+      tempAuth:this.$store.state.loginUser.auth
+    }
+  },
+  created(){
+    this.getList();
+    this.initFilters();
+  },
+  mounted() {
+
+  },
+  methods:{
+    onWrite(){
+      this.$router.push({name:'faqs-add'})
     },
-    props:{
-        title: String,
-        faqList: Object
+    onPageChange(n){
+      this.curPage = n;
     },
-    data() {
-        return {
-            active: 3,
-            items: [
-                {
-                    label: '여행상품',
-                },
-                {
-                    label: '예약',
-                },
-                {
-                    label: '결제',
-                },
-                {
-                    label: '회원',
-                },
-            
-            ],
-            selectedIndex: 0,
-        };
+    onModify(faqNum) {
+      this.$router.push({name: "faqs-modify", params: {faqNum: faqNum}});
     },
-    
+    getList(){
+      axios.get('http://localhost:8082/triplus/api/service/faqs', {
+        headers: {
+          'Access-Control-Allow-Origin': '*'
+        },
+        params:{}
+      }).then(function(resp){
+        this.list=resp.data;
+      }.bind(this)).catch(err =>{
+        console.log(err);
+      });
+    },
+    initFilters() {
+      this.filters = {
+        'global': {value: null, matchMode: FilterMatchMode.CONTAINS},
+      }
+    }
+  }
 }
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
+* {
+  padding: 20px;
+  margin: 0px;
+  padding: 0px;
+}
+a {
+  text-decoration: none;
+}
 .main {
   display: flex;
   flex-direction: column;
@@ -69,8 +105,7 @@ export default {
   align-items: center;
   background-color: white;
 }
-.faq-main {
-  margin-top: 20px;
+.board {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -78,15 +113,7 @@ export default {
   width: 1080px;
   border: 1px solid lightgray;
 }
-.p-tabmenu .p-tabmenu-nav {
-  width: 100%;
-  justify-content: center;
-}
-.tabmenudemo-content {
-    padding: 2rem 1rem;
-    background-color: #91D9CC;
-}
-.faq-header {
+.board-header {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -95,35 +122,43 @@ export default {
   align-items: flex-start;
   padding: 20px;
 }
-.faq-header h1 {
+.board-header h1 {
   font-size: 50px;
   font-weight: bold;
   color: #222;
 }
-.accordion-custom {
-    i, span {
-        vertical-align: middle;
-    }
-
-    span {
-        margin: 0 .5rem;
-    }
+.board-main {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  align-items: center;
+  padding: 20px;
 }
-.faq-accordian{
-    width: 1040px;
-    margin-top: 50px;
-    margin-bottom: 50px;
+.board-table {
+  width: 100%;
+  margin: 0px 0px 20px 0px;
+  text-align: center;
+  border-top: 1px solid gray;
+  border-collapse: collapse;
 }
-.p-accordion{
-    margin-bottom: 20px;
+.board-page .currentPage {
+  color: #67AB9F;
 }
-.p-accordion p {
-    line-height: 1.5;
-    margin: 0;
-    margin-top: 50px;
-    margin-bottom: 5px;
+.board-page * {
+  margin: 0px 4px;
 }
-.card{
-    width: 1040px;
+.board-footer {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  width: 100%;
+  align-items: center;
+  padding: 20px;
+}
+.board-footer * {
+  margin: 0 4px;
+}
+#icon{
+  margin-left: 735px;
 }
 </style>

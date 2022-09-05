@@ -1,14 +1,14 @@
 <template>
     <div class="card">
-        <DataView :value="list" :layout="layout" :paginator="true" :rows="9" :sortOrder="sortOrder" :sortField="sortField">
+        <DataView :value="list" :layout="layout" :paginator="true" :rows="5" :sortOrder="sortOrder" :sortField="sortField">
             <template #header>
                 <div class="grid grid-no gutter">
                     <div class="col-6" style="text-align: left">
                         <Dropdown v-model="sortKey" :options="sortOptions" optionLabel="label" placeholder="정렬 옵션 선택" @change="onSortChange($event)"/>
                     </div>
-<!--                    <div class="col-6" style="text-align: right">-->
-<!--                        <DataViewLayoutOptions v-model="layout" />-->
-<!--                    </div>-->
+                  <div class="col-6" style="text-align: right">
+                       <Button v-if="this.tempAuth=='admin'" color="#67AB9F" @click="onWrite" style="margin-top: 10px">매거진등록</Button>
+                  </div>
                 </div>
             </template>
             <template #list="slotProps">
@@ -27,29 +27,7 @@
                     </div>
                 </div>
             </template>
-<!--            <template #grid="slotProps">-->
-<!--                <div class="col-12 md:col-4">-->
-<!--                    <div class="product-grid-item card">-->
-<!--                        <div class="product-grid-item-top">-->
-<!--                            <div>-->
-<!--                                <i class="pi pi-tag product-category-icon"></i>-->
-<!--                                <span class="product-category">{{slotProps.data.category}}</span>-->
-<!--                            </div>-->
-<!--                        </div>-->
-<!--                        <div class="product-grid-item-content">-->
-<!--                            <img :src="`data:image/jpeg;base64,${slotProps.data.timg}`" :alt="slotProps.data.tImg" class="tImg" />-->
-<!--                            <div class="product-name">{{slotProps.data.title}}</div>-->
-<!--                        </div>-->
-<!--                        <div class="product-grid-item-bottom">-->
-<!--                            <Button class="p-button-lg" @click="onDetail(slotProps.data.brdNum)">상세내용</Button>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </template>-->
         </DataView>
-        <div class="insertBtn">
-            <Button v-if="this.tempAuth=='admin'" color="#67AB9F" @click="onWrite">매거진등록</Button>
-        </div>
     </div>
 </template>
 

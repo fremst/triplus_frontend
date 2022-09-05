@@ -62,7 +62,8 @@
         <div class="content">
             Content<br><br>
             <router-link to="/service/notices">공지사항</router-link><br>
-            <a href="/service/qna/">Q & A</a><br><br>
+            <a href="/service/qna/">Q & A</a><br>
+            <router-link to="/service/faq">FAQ</router-link><br><br>
             <a href="#" @click.prevent="logout">로그아웃</a>
         </div>
           </Sidebar>

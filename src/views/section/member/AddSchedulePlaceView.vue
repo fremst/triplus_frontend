@@ -1,30 +1,75 @@
 <template>
-  <Dialog
-    v-model:visible="showDialog"
-    :modal="true"
-    :breakpoints="{ '960px': '75vw', '640px': '90vw' }"
-    :style="{ width: '50vw' }"
-    header="일정추가"
-  >
+  <Dialog v-model:visible="showDialog" :modal="true" :style="{ width: '900px' }" header="일정추가">
     <div class="wrap">
-      <!-- <div id="map"></div> -->
-      <div class="confirmation-content">
-        장소명 <InputText type="text" v-model="place" /><br />
-        주소 <InputText type="text" v-model="addr" /><br />
-        위도 <InputText type="text" v-model="mapx" /><br />
-        경도 <InputText type="text" v-model="mapy" /><br />
-        <label for="memo">메모</label>
-        <Textarea aria-label="memo" v-model="memo" rows="5" cols="30" />
+      <div class="inner">
+        <div class="card">
+          <DataTable
+            ref="dt"
+            v-model:selection="selectedProducts"
+            :filters="filters"
+            :paginator="true"
+            :rows="10"
+            :rowsPerPageOptions="[5, 10, 25]"
+            :value="products"
+            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} products"
+            dataKey="brdNum"
+            paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
+            responsiveLayout="scroll"
+            style="text-align: center"
+          >
+            <template #header>
+              <div class="table-header flex flex-column md:flex-row md:justiify-content-between">
+                <span class="p-input-icon-left">
+                  <i class="pi pi-search" />
+                  <InputText v-model="filters['global'].value" placeholder="검색어를 입력해주세요." />
+                </span>
+                <Button
+                  label="나만의 장소 추가"
+                  icon="pi pi-plus"
+                  class="p-button-rounded p-button-help p-button-sm"
+                  @click="goAddMyPlace"
+                />
+              </div>
+            </template>
+            <Column selectionMode="multiple" style="width: 3rem" :exportable="false"></Column>
+            <Column header="장소이미지" style="min-width: 8rem">
+              <template #body="slotProps">
+                <img
+                  :alt="slotProps.data.title"
+                  :src="`data:image/jpeg;base64,${slotProps.data.firstimage}`"
+                  class="product-image"
+                />
+              </template>
+            </Column>
+            <Column :sortable="true" field="title" header="장소명" style="min-width: 10rem; text-align: center">
+              <template #body="slotProps">
+                <span class="product-category">
+                  <router-link :to="`/section/place/accommodation/` + slotProps.data.brdNum">
+                    {{ slotProps.data.title }}
+                  </router-link>
+                </span>
+              </template>
+            </Column>
+            <Column :sortable="true" field="addr" header="주소" style="min-width: 16rem">
+              <template #body="slotProps">
+                <span class="product-category">{{ slotProps.data.addr }}</span>
+              </template>
+            </Column>
+          </DataTable>
+        </div>
       </div>
     </div>
     <template #footer>
       <Button class="p-button-text" icon="pi pi-times" label="취소" @click="closeDialog(false)" />
-      <Button class="p-button-text" icon="pi pi-check" label="추가" @click="closeDialog(true)" />
+      <Button class="p-button-text" icon="pi pi-check" label="추가" @click="addSchedulePlace" />
     </template>
   </Dialog>
 </template>
 
 <script>
+import { FilterMatchMode } from "primevue/api";
+import { defaultOptions } from "@/constant/axios.js";
+import axios from "axios";
 export default {
   name: "AddScheduleDialog",
   props: {
@@ -46,7 +91,16 @@ export default {
       mapy: null,
       memo: null,
       markers: [],
-      infowindow: null
+      infowindow: null,
+      products: null,
+      productDialog: false,
+      deleteProductDialog: false,
+      deleteProductsDialog: false,
+      product: {},
+      selectedProducts: null,
+      filters: {},
+      submitted: false,
+      productService: null
     };
   },
   computed: {
@@ -60,7 +114,11 @@ export default {
       }
     }
   },
+  created() {
+    this.initFilters();
+  },
   mounted() {
+    this.getList();
     if (!window.kakao || !window.kakao.maps) {
       const script = document.createElement("script");
       script.type = "text/javascript";
@@ -79,22 +137,25 @@ export default {
         });
       });
       document.head.appendChild(script);
-    } else {
-      // 이미 카카오맵 API가 로딩되어 있다면 바로 지도를 생성한다.
-      //this.initMap();
     }
   },
   methods: {
-    // initMap() {
-    //   const container = document.getElementById("map"); //지도 표시 영역
-    //   const options = {
-    //     // 처음 지도의 위치를 lat, lng(위도, 경도) 값으로 설정한다.
-    //     center: new kakao.maps.LatLng(37.566815190669736, 126.97864094233952), //지도 중심좌표
-    //     level: 5
-    //   };
-
-    //   this.map = new kakao.maps.Map(container, options);
-    // },
+    getList() {
+      const getUrl = `${process.env.VUE_APP_API_URL || ""}/section/places/`;
+      axios
+        .get(getUrl, this.data, defaultOptions)
+        .then(res => {
+          this.products = res.data;
+        })
+        .catch(err => {
+          console.log(err.response);
+        });
+    },
+    initFilters() {
+      this.filters = {
+        global: { value: null, matchMode: FilterMatchMode.CONTAINS }
+      };
+    },
     changeSize(size) {
       const container = document.getElementById("map");
       container.style.width = `${size}px`;
@@ -141,11 +202,19 @@ export default {
       });
 
       this.map.setCenter(iwPosition);
+    },
+    goAddMyPlace() {
+      this.$router.push({ name: "add-my-place" });
+    },
+    closeDialog(returnValue) {
+      this.showDialog = false;
+      this.$emit("closeDialog", returnValue);
+    },
+    addSchedulePlace() {
+      this.addr;
+      console.log(this.addr);
+      this.closeDialog(true);
     }
-  },
-  closeDialog(returnValue) {
-    this.showDialog = false;
-    this.$emit("closeDialog", returnValue);
   }
 };
 </script>
@@ -153,11 +222,9 @@ export default {
 .wrap {
   width: 100%;
 }
-.p-dialog .product-image {
-  width: 300px;
-  height: 200px;
-  margin: 0 auto 2rem auto;
-  display: block;
+.inner {
+  width: 90%;
+  margin: 0 auto;
 }
 @media screen and (max-width: 960px) {
   ::v-deep(.p-toolbar) {
@@ -179,5 +246,62 @@ export default {
 
 button {
   margin: 0 3px;
+}
+.table-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  @media screen and (max-width: 960px) {
+    align-items: start;
+  }
+}
+
+.p-input-icon-left > .p-inputtext {
+  width: 300px;
+}
+
+.p-datatable .p-datatable-thead > tr > th {
+  text-align: center;
+  align-content: center;
+  justify-content: center;
+  padding: 15px 15px;
+  border-width: 0 0 1px 0;
+  font-weight: 700;
+  font-size: 16px;
+  color: #343a40;
+  background: #f8f9fa;
+  transition: box-shadow 0.2s;
+}
+
+.p-datatable .p-datatable-tbody > tr > td {
+  text-align: center;
+  justify-content: center;
+  vertical-align: middle;
+  font-size: 14px;
+  border-width: 0 0 1px 0;
+  padding: 15px 15px;
+}
+
+.product-image {
+  width: 80px;
+  height: 50px;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+}
+
+.confirmation-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@media screen and (max-width: 960px) {
+  ::v-deep(.p-toolbar) {
+    flex-wrap: wrap;
+
+    .p-button {
+      margin-bottom: 0.25rem;
+    }
+  }
 }
 </style>
