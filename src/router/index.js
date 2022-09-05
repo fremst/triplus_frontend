@@ -7,6 +7,7 @@ import AddPlaceView from "@/views/admin/place/AddPlaceView";
 import ModifyPlaceView from "@/views/admin/place/ModifyPlaceView";
 import AdminPackageListView from "@/views/admin/item/AdminPackageListView";
 import AdminPackageWriteView from "@/views/admin/item/AdminPackageWriteView";
+import AdminReservationView from "@/views/admin/reservation/AdminReservationView";
 
 import AdminQnACounselView from "../views/admin/service/AdminQnACounselView.vue";
 import QnAView from "../views/member/service/QnAView.vue";
@@ -96,6 +97,11 @@ const routes = [
     path: "/admin/packages",
     name: "admin-packages",
     component: AdminPackageListView
+  },
+  {
+    path: "/admin/reservations",
+    name: "admin-reservations",
+    component: AdminReservationView
   },
   {
     path: "/service/notices",
