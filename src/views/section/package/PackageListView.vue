@@ -1,55 +1,46 @@
 <template>
   <div class="wrapper">
     <div class="inner">
-      <PackageList :packages = "packages"></PackageList>
+      <PackageList :packages="packages"></PackageList>
     </div>
   </div>
-
 </template>
 
 <script>
 import PackageList from "@/components/section/package/list/PackageList";
 import axios from "axios";
+import { defaultOptions } from "@/constant/axios";
 
 export default {
-
-  data(){
-    return{
-      packages: null,
-    }
+  data() {
+    return {
+      packages: null
+    };
   },
 
-  mounted() {
-    axios.get("http://localhost:8082/triplus/api/section/packages", {
+  async mounted() {
+    const getUrl = `${process.env.VUE_APP_API_URL || ""}/section/packages`;
 
-      headers: {
+    const res = await axios.get(getUrl, defaultOptions).catch(err => {
+      alert("서버 연결 실패", err);
+    });
 
-        'Access-Control-Allow-Origin': '*'
-
-      },
-    }).then(function(resp) {
-
-      this.packages=resp.data;
-
-    }.bind(this)).catch(err=> {
-
-      console.log(err)});
-
+    this.packages = res.data;
   },
 
-  components:{
+  components: {
     PackageList
   }
-
-}
-
+};
 </script>
+
 <style scoped>
-.wrapper{
+.wrapper {
   width: 1080px;
   margin: auto;
 }
-.inner{
+
+.inner {
   width: 100%;
   margin: auto;
 }

@@ -1,20 +1,17 @@
 <template>
   <div class="wrapper">
     <div class="inner">
-      <h1>{{packageDetails.title}}</h1>
+      <h1>{{ packageDetails.title }}</h1>
       <div class="galleria">
-        <PackageDetailGalleria :pkgImgs="pkgImgs">
-        </PackageDetailGalleria>
+        <PackageDetailGalleria :pkgImgs="pkgImgs"> </PackageDetailGalleria>
       </div>
-      <br>
+      <br />
       <div class="info">
         <div>
-          <PackageDetailItemInfo :packageDetails="packageDetails">
-          </PackageDetailItemInfo>
+          <PackageDetailItemInfo :packageDetails="packageDetails"> </PackageDetailItemInfo>
         </div>
         <div>
-          <PackageDetailForm :packageDetails="packageDetails">
-          </PackageDetailForm>
+          <PackageDetailForm :packageDetails="packageDetails"> </PackageDetailForm>
         </div>
       </div>
       <div v-html="packageDetails.contents"></div>
@@ -24,78 +21,63 @@
 </template>
 
 <script>
-import PackageDetailGalleria from "@/components/section/package/detail/PackageDetailGalleria"
+import PackageDetailGalleria from "@/components/section/package/detail/PackageDetailGalleria";
 import PackageDetailItemInfo from "@/components/section/package/detail/PackageDetailItemInfo";
 import PackageDetailForm from "@/components/section/package/detail/PackageDetailForm";
-import axios from 'axios';
+import axios from "axios";
+import { defaultOptions } from "@/constant/axios.js";
 
 export default {
-  data(){
+  data() {
     return {
       packageDetails: {},
-      pkgImgs: {},
-    }
+      pkgImgs: {}
+    };
   },
 
-  created(){
+  async created() {
+    const getUrl = `${process.env.VUE_APP_API_URL || ""}/section/packages/${this.$route.params.brdNum}`;
 
-      axios.get(`http://localhost:8082/triplus/api/section/packages/${this.$route.params.brdNum}`, {
+    const res = await axios.get(getUrl, defaultOptions).catch(err => {
+      alert("서버 연결 실패", err);
+    });
 
-        headers: {
-
-          'Access-Control-Allow-Origin': '*'
-
-        },
-
-      }).then(function (resp) {
-
-        this.packageDetails = Object.assign(resp.data.dto, resp.data.map);
-        this.pkgImgs = resp.data.map.pkgImgs;
-
-      }.bind(this)).catch(err => {
-
-            console.log(err)
-
-      })
+    this.packageDetails = Object.assign(res.data.dto, res.data.map);
+    this.pkgImgs = res.data.map.pkgImgDtos.map(e => e.pkgImg);
   },
 
-  components:{
+  components: {
     PackageDetailGalleria,
     PackageDetailItemInfo,
     PackageDetailForm
-
   }
-
-}
-
+};
 </script>
 
 <style scoped>
-
-.wrapper{
+.wrapper {
   width: 100%;
 }
 
-.inner{
+.inner {
   width: 1080px;
   margin: auto;
   text-align: center;
 }
 
-.galleria{
+.galleria {
   width: 925px;
   margin: auto;
 }
 
-.info{
+.info {
   width: 925px;
   margin: auto;
   display: flex;
   justify-content: space-between;
 }
 
-.p-scrolltop{
+.p-scrolltop {
   right: 20vw;
 }
-
 </style>
