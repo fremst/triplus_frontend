@@ -1,10 +1,23 @@
 <template>
   <div class="card">
-    <DataView :value="packages" :layout="layout" :paginator="true" :rows="9" :sortOrder="sortOrder" :sortField="sortField">
+    <DataView
+      :value="packages"
+      :layout="layout"
+      :paginator="true"
+      :rows="9"
+      :sortOrder="sortOrder"
+      :sortField="sortField"
+    >
       <template #header>
         <div class="grid grid-nogutter">
           <div class="col-6" style="text-align: left">
-            <Dropdown v-model="sortKey" :options="sortOptions" optionLabel="label" placeholder="여행 지역명 정렬" @change="onSortChange($event)"/>
+            <Dropdown
+              v-model="sortKey"
+              :options="sortOptions"
+              optionLabel="label"
+              placeholder="여행 지역명 정렬"
+              @change="onSortChange($event)"
+            />
           </div>
           <div class="col-6" style="text-align: right">
             <DataViewLayoutOptions v-model="layout" />
@@ -15,16 +28,26 @@
       <template #list="slotProps">
         <div class="col-12">
           <div class="product-list-item">
-            <img :src="`data:image/jpeg;base64,${slotProps.data.tImg}`" :alt="slotProps.data.title"/>
+            <img :src="`data:image/jpeg;base64,${slotProps.data.tImg}`" :alt="slotProps.data.title" />
             <div class="product-list-detail">
-              <div class="product-name">{{slotProps.data.title}}</div><br>
-              <div class="product-description">성인 {{formatCurrency(slotProps.data.adultPrice)}} / 아동 {{formatCurrency(slotProps.data.adultPrice)}}</div>
-              <i class="pi pi-map-marker"></i><span class="product-category">{{slotProps.data.region}}</span>
+              <div class="product-name">{{ slotProps.data.title }}</div>
+              <br />
+              <div class="product-description">
+                성인 {{ $getFormattedCurrency(slotProps.data.adultPrice) }} / 아동
+                {{ $getFormattedCurrency(slotProps.data.adultPrice) }}
+              </div>
+              <i class="pi pi-map-marker"></i><span class="product-category">{{ slotProps.data.region }}</span>
             </div>
             <div class="product-list-action">
-              <Button icon="pi pi-search" label="상세보기" :disabled="rcrtStaEng(slotProps.data.rcrtSta) === 'completed'"
-                      @click="$router.push(`/section/packages/${slotProps.data.brdNum}`)"></Button>
-              <span :class="'product-badge status-'+rcrtStaEng(slotProps.data.rcrtSta)">{{slotProps.data.rcrtSta}}</span>
+              <Button
+                icon="pi pi-search"
+                label="상세보기"
+                :disabled="rcrtStaEng(slotProps.data.rcrtSta) === 'completed'"
+                @click="$router.push(`/section/packages/${slotProps.data.brdNum}`)"
+              ></Button>
+              <span :class="'product-badge status-' + rcrtStaEng(slotProps.data.rcrtSta)">{{
+                slotProps.data.rcrtSta
+              }}</span>
             </div>
           </div>
         </div>
@@ -36,19 +59,28 @@
             <div class="product-grid-item-top">
               <div>
                 <i class="pi pi-map-marker"></i>
-                <span class="product-category">{{slotProps.data.region}}</span>
+                <span class="product-category">{{ slotProps.data.region }}</span>
               </div>
-              <span :class="'product-badge status-'+rcrtStaEng(slotProps.data.rcrtSta)">{{slotProps.data.rcrtSta}}</span>
+              <span :class="'product-badge status-' + rcrtStaEng(slotProps.data.rcrtSta)">{{
+                slotProps.data.rcrtSta
+              }}</span>
             </div>
             <div class="product-grid-item-content">
-              <img :src="`data:image/jpeg;base64,${slotProps.data.tImg}`" :alt="slotProps.data.title"/>
-              <div class="product-name">{{slotProps.data.title}}</div><br>
-              <div class="product-description">성인 {{formatCurrency(slotProps.data.adultPrice)}} / 아동 {{formatCurrency(slotProps.data.adultPrice)}}</div>
-              <Button icon="pi pi-search" label="상세보기" :disabled="rcrtStaEng(slotProps.data.rcrtSta) === 'completed'"
-              @click="$router.push(`/section/packages/${slotProps.data.brdNum}`)"></Button>
+              <img :src="`data:image/jpeg;base64,${slotProps.data.tImg}`" :alt="slotProps.data.title" />
+              <div class="product-name">{{ slotProps.data.title }}</div>
+              <br />
+              <div class="product-description">
+                성인 {{ $getFormattedCurrency(slotProps.data.adultPrice) }} / 아동
+                {{ $getFormattedCurrency(slotProps.data.adultPrice) }}
+              </div>
+              <Button
+                icon="pi pi-search"
+                label="상세보기"
+                :disabled="rcrtStaEng(slotProps.data.rcrtSta) === 'completed'"
+                @click="$router.push(`/section/packages/${slotProps.data.brdNum}`)"
+              ></Button>
             </div>
-            <div class="product-grid-item-bottom">
-            </div>
+            <div class="product-grid-item-bottom"></div>
           </div>
         </div>
       </template>
@@ -58,65 +90,65 @@
 
 <script>
 import Dropdown from "primevue/dropdown";
-import DataViewLayoutOptions from "primevue/dataviewlayoutoptions"
+import DataViewLayoutOptions from "primevue/dataviewlayoutoptions";
 
 export default {
   data() {
     return {
-      layout: 'grid',
+      layout: "grid",
       sortKey: null,
       sortOrder: null,
       sortField: null,
       sortOptions: [
-        {label: '여행 지역명 오름차순', value: 'region'},
-        {label: '여행 지역명 내림차순', value: '!region'}
+        { label: "여행 지역명 오름차순", value: "region" },
+        { label: "여행 지역명 내림차순", value: "!region" }
       ]
-    }
+    };
   },
-  props:{
-    packages: Object,
+
+  props: {
+    packages: Object
   },
+
   methods: {
-    onSortChange(event){
+    onSortChange(event) {
       const value = event.value.value;
       const sortValue = event.value;
 
-      if (value.indexOf('!') === 0) {
+      if (value.indexOf("!") === 0) {
         this.sortOrder = -1;
         this.sortField = value.substring(1, value.length);
         this.sortKey = sortValue;
-      }
-      else {
+      } else {
         this.sortOrder = 1;
         this.sortField = value;
         this.sortKey = sortValue;
       }
     },
-    rcrtStaEng(rcrtSta){
-      if(rcrtSta==='모집중'){
-        return 'proceeding';
-      }else if(rcrtSta==='마감임박'){
-        return 'ending';
-      }else if(rcrtSta==='모집완료'){
-        return 'completed';
+
+    rcrtStaEng(rcrtSta) {
+      if (rcrtSta === "모집중") {
+        return "proceeding";
+      } else if (rcrtSta === "마감임박") {
+        return "ending";
+      } else if (rcrtSta === "모집완료") {
+        return "completed";
       }
-    },
-    formatCurrency(value) {
-      return parseInt(value).toLocaleString('ko-KR')+' 원';
     }
   },
-  components:{
+
+  components: {
     Dropdown,
     DataViewLayoutOptions
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
 .card {
   background: #ffffff;
   padding: 1rem;
-  box-shadow: 0 2px 1px -1px rgba(0,0,0,.2), 0 1px 1px 0 rgba(0,0,0,.14), 0 1px 3px 0 rgba(0,0,0,.12);
+  box-shadow: 0 2px 1px -1px rgba(0, 0, 0, 0.2), 0 1px 1px 0 rgba(0, 0, 0, 0.14), 0 1px 3px 0 rgba(0, 0, 0, 0.12);
   border-radius: 4px;
   margin-bottom: 2rem;
   min-height: 500px;
@@ -142,11 +174,11 @@ export default {
 
 .pi-map-marker {
   vertical-align: middle;
-  margin-right: .5rem;
+  margin-right: 0.5rem;
 }
 .product-category-icon {
   vertical-align: middle;
-  margin-right: .5rem;
+  margin-right: 0.5rem;
 }
 
 .product-category {
@@ -157,26 +189,26 @@ export default {
 .product-badge {
   text-align: center;
   border-radius: 2px;
-  padding: .25em .5rem;
+  padding: 0.25em 0.5rem;
   text-transform: uppercase;
   font-weight: 700;
   font-size: 12pt;
-  letter-spacing: .3px;
+  letter-spacing: 0.3px;
 }
 
 .product-badge.status-proceeding {
-  background: #C8E6C9;
+  background: #c8e6c9;
   color: #256029;
 }
 
 .product-badge.status-completed {
-  background: #FFCDD2;
-  color: #C63737;
+  background: #ffcdd2;
+  color: #c63737;
 }
 
 .product-badge.status-ending {
-  background: #FEEDAF;
-  color: #8A5340;
+  background: #feedaf;
+  color: #8a5340;
 }
 ::v-deep(.product-list-item) {
   display: flex;
@@ -196,13 +228,13 @@ export default {
   }
 
   .p-rating {
-    margin: 0 0 .5rem 0;
+    margin: 0 0 0.5rem 0;
   }
 
   .product-price {
     font-size: 1.5rem;
     font-weight: 600;
-    margin-bottom: .5rem;
+    margin-bottom: 0.5rem;
     align-self: flex-end;
   }
 
@@ -212,12 +244,12 @@ export default {
   }
 
   .p-button {
-    margin-bottom: .5rem;
+    margin-bottom: 0.5rem;
   }
 }
 
 ::v-deep(.product-grid-item) {
-  margin: .5rem;
+  margin: 0.5rem;
   border: 1px solid var(--surface-border);
 
   .product-grid-item-top,

@@ -1,23 +1,23 @@
 <template>
   <div class="wrap">
-    <AdminPageSidebar/>
+    <AdminPageSidebar />
     <div class="inner">
       <div>
         <div class="card">
-          <br>
+          <br />
           <DataTable
-              ref="dt"
-              v-model:selection="selectedProducts"
-              :filters="filters"
-              :paginator="true"
-              :rows="5"
-              :rowsPerPageOptions="[5, 10, 25]"
-              :value="products"
-              currentPageReportTemplate="Showing {first} to {last} of {totalRecords} products"
-              dataKey="brdNum"
-              paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-              responsiveLayout="scroll"
-              style="text-align: center"
+            ref="dt"
+            v-model:selection="selectedProducts"
+            :filters="filters"
+            :paginator="true"
+            :rows="5"
+            :rowsPerPageOptions="[5, 10, 25]"
+            :value="products"
+            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} products"
+            dataKey="brdNum"
+            paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
+            responsiveLayout="scroll"
+            style="text-align: center"
           >
             <template #header>
               <div class="table-header flex flex-column md:flex-row md:justiify-content-between">
@@ -25,10 +25,13 @@
                 <Button @click="$router.push('/admin/packages/write')">새로 등록</Button>
               </div>
             </template>
-            <Column selectionMode="multiple" style="width: 3rem" :exportable="false"></Column>
             <Column header="썸네일" style="min-width: 8rem; text-align: center">
               <template #body="slotProps">
-                <img :src="`data:image/jpeg;base64,${slotProps.data.tImg}`" :alt="slotProps.data.title" class="product-image" />
+                <img
+                  :src="`data:image/jpeg;base64,${slotProps.data.tImg}`"
+                  :alt="slotProps.data.title"
+                  class="product-image"
+                />
               </template>
             </Column>
             <Column header="여행 지역" field="region" :sortable="true" style="min-width: 9rem; text-align: center">
@@ -39,7 +42,7 @@
             <Column header="패키지 상품명" field="title" :sortable="true" style="min-width: 19rem; text-align: center">
               <template #body="slotProps">
                 <span class="product-category">
-                  <router-link :to="`/section/packages/`+slotProps.data.brdNum">
+                  <router-link :to="`/section/packages/` + slotProps.data.brdNum">
                     {{ slotProps.data.title }}
                   </router-link>
                 </span>
@@ -48,21 +51,31 @@
             <Column header="성인 가격" field="adultPrice" :sortable="true" style="min-width: 9rem; text-align: center">
               <template #body="slotProps">
                 <span class="product-category">
-                    {{ slotProps.data.adultPrice }}
+                  {{ $getFormattedCurrency(slotProps.data.adultPrice) }}
                 </span>
               </template>
             </Column>
             <Column header="아동 가격" field="childPrice" :sortable="true" style="min-width: 9rem; text-align: center">
               <template #body="slotProps">
                 <span class="product-category">
-                    {{ slotProps.data.childPrice }}
+                  {{ $getFormattedCurrency(slotProps.data.childPrice) }}
                 </span>
               </template>
             </Column>
             <Column header="모집 상태" field="rcrtSta" :sortable="true" style="min-width: 9rem; text-align: center">
               <template #body="slotProps">
                 <span class="product-category">
-                    {{ slotProps.data.rcrtSta }}
+                  {{ slotProps.data.rcrtSta }}
+                </span>
+              </template>
+            </Column>
+            <Column header="수정" style="min-width: 9rem; text-align: center">
+              <template #body="slotProps">
+                <span class="product-category">
+                  <Button
+                    @click="this.$router.push({ name: 'package-write', params: { brdNum: slotProps.data.brdNum } })"
+                    >수정</Button
+                  >
                 </span>
               </template>
             </Column>
@@ -74,83 +87,51 @@
 </template>
 
 <script>
-import { FilterMatchMode } from "primevue/api";
+// import { FilterMatchMode } from "primevue/api";
 import axios from "axios";
+import { defaultOptions } from "@/constant/axios";
 import AdminPageSidebar from "@/components/admin/AdminPageSidebar";
 
 export default {
-
   components: { AdminPageSidebar },
 
   data() {
-
     return {
-
       products: null,
-      // productDialog: false,
-      // deleteProductDialog: false,
-      // deleteProductsDialog: false,
       product: {},
       selectedProducts: null,
-      filters: {},
-      // submitted: false
+      filters: {}
     };
-
   },
 
-  created() {
-
-    this.initFilters();
-
-  },
+  // created() {
+  //   this.initFilters();
+  // },
 
   mounted() {
-
     this.getList();
-
   },
+
   methods: {
+    async getList() {
+      const getUrl = `${process.env.VUE_APP_API_URL || ""}/section/packages/`;
 
-    getList() {
+      const res = await axios.get(getUrl, this.data, defaultOptions).catch(err => {
+        alert("서버 연결 실패", err);
+      });
 
-      axios
-          .get("http://localhost:8082/triplus/api/section/packages/", this.data, {
-
-            headers: {
-
-              "Access-Control-Allow-Origin": "*"
-
-            },
-
-          })
-          .then(res => {
-
-            this.products = res.data;
-
-          })
-          .catch(err => {
-
-            console.log(err.response);
-
-          });
-    },
-    initFilters() {
-
-      this.filters = {
-
-        global: { value: null, matchMode: FilterMatchMode.CONTAINS }
-
-      };
-
+      this.products = res.data;
     }
-
+    // initFilters() {
+    //   this.filters = {
+    //     global: { value: null, matchMode: FilterMatchMode.CONTAINS }
+    //   };
+    // }
   }
-
 };
 </script>
 
 <style lang="scss" scoped>
-
 tr {
   align-content: center;
   justify-content: center;
@@ -158,6 +139,7 @@ tr {
 
 .wrap {
   width: 100%;
+  min-height: 750px;
 }
 
 .inner {
@@ -173,7 +155,6 @@ tr {
   @media screen and (max-width: 960px) {
     align-items: start;
   }
-
 }
 
 .p-input-icon-left > .p-inputtext {
@@ -239,5 +220,4 @@ tr {
 .addlist-title {
   margin: 15px 0 10px 0;
 }
-
 </style>

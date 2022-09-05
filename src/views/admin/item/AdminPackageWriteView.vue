@@ -1,9 +1,9 @@
 <template>
   <div class="wrap">
-    <AdminPageSidebar/>
+    <AdminPageSidebar />
     <div class="inner">
       <div>
-        <AdminPackageWrite/>
+        <AdminPackageWrite />
       </div>
     </div>
   </div>
@@ -11,56 +11,35 @@
 
 <script>
 import axios from "axios";
+import { defaultOptions } from "@/constant/axios";
 import AdminPageSidebar from "@/components/admin/AdminPageSidebar";
 import AdminPackageWrite from "@/components/admin/item/PackageWrite.vue";
 
 export default {
-
-  components: { 
-
-    AdminPageSidebar, 
+  components: {
+    AdminPageSidebar,
     AdminPackageWrite
-
   },
 
   mounted() {
-
     this.getList();
-
   },
+
   methods: {
+    async getList() {
+      const getUrl = `${process.env.VUE_APP_API_URL || ""}/section/packages/`;
 
-    getList() {
+      const res = await axios.get(getUrl, defaultOptions).catch(err => {
+        alert("서버 연결 실패", err);
+      });
 
-      axios
-          .get("http://localhost:8082/triplus/api/section/packages/", this.data, {
-
-            headers: {
-
-              "Access-Control-Allow-Origin": "*"
-
-            },
-
-          })
-          .then(res => {
-
-            this.products = res.data;
-
-          })
-          .catch(err => {
-
-            console.log(err.response);
-
-          });
-    },
-
+      this.products = res.data;
+    }
   }
-
 };
 </script>
 
 <style lang="scss" scoped>
-
 tr {
   align-content: center;
   justify-content: center;
@@ -74,5 +53,4 @@ tr {
   width: 1080px;
   margin: 0 auto;
 }
-
 </style>
