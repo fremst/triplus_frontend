@@ -1,15 +1,30 @@
 <template>
   <div class="find">
     <div class="find-form">
-      <div><h5>본인확인 이메일 주소와 입력한 이메일 주소가 같아야, 인증번호를 받을 수 있습니다</h5></div>
-      <div class="find-name"><label>이름</label><input v-model="name" type="text"></div>
-      <div class="find-email"><label>이메일 주소</label><input v-model="email" type="text">
-        <input type="button" value="인증번호 받기" @click.prevent="sendMail"></div>
-      <div class="find-cert"><label></label><input v-model="cert" placeholder="인증번호 6자리 숫자 입력" type="text"><span class="errMsg">{{errMsg}}</span></div>
+      <div class="layout">
+        <div><h2>이메일 인증</h2></div>
+      <div class="ment">
+        <span>회원가입 시 등록한 이메일 주소를 입력해주세요.</span>
+      </div>
 
-      <Button type="submit" label="다음" class="p-button-primary" @click.prevent="changePwd" />
+      <div class="find-name">
+        <label>이름</label><InputText type="text" v-model="name"  class="text1"/>
+      </div>
+
+      <div class="find-email"><label>이메일 주소</label>
+        <InputText type="text" v-model="email"  class="text2"/>
+        <Button type="button" label="인증번호 받기" class="p-button-outlined" id="btn1" @click.prevent="sendMail" />
+      </div>
+
+      <div class="find-cert"><label>인증번호 </label>
+        <InputText type="text" v-model="cert"  class="text1"/>
+      </div>
+
+      <Toast/>
+
+      <Button type="button" label="확인" class="p-button-primary" id="btn2" @click.prevent="changePwd" />
       {{rnd}}
-
+      </div>
     </div>
   </div>
 </template>
@@ -44,9 +59,10 @@
           }
         }).then(function (resp) {
 
-          if (resp.data.result == 'success') {   //이름,이메일 user테이블과 일치하면 메일(인증번호 보내기)
-            alert('인증번호가 발송되었습니다.');
-            this.errMsg = "";
+          if (resp.data.result === 'success') {   //이름,이메일 user테이블과 일치하면 메일(인증번호 보내기)
+
+            this.$toast.add({severity:'success', summary: '', detail:'인증번호를 발송했습니다.', life: 3000});
+
             const joinparam = new URLSearchParams();
             joinparam.append('email', this.email);
 
@@ -59,18 +75,18 @@
             }.bind(this));
 
           } else { //일치하지 않은경우 이메일 전송X
-            this.errMsg = '입력한 정보가 올바르지 않습니다.'
+            this.$toast.add({severity:'error', summary: '', detail:'입력한 정보가 올바르지 않습니다', life: 3000});
           }
         }.bind(this));
 
       },
       changePwd(){
 
-        if(parseInt(this.rnd)==parseInt(this.cert)){
+        if(parseInt(this.rnd)===parseInt(this.cert)){
           this.$router.push({name:'changePwd',params:{'id1':this.id}})
 
         }else{
-          this.errMsg = "인증번호가 일치하지 않습니다";
+          this.$toast.add({severity:'error', summary: '', detail:'인증번호가 일치하지 않습니다.', life: 3000});
         }
       }
 
@@ -81,13 +97,29 @@
 <style lang="scss" scoped>
 
 .find{
- width: 900px;
+ width: 1080px;
  margin: 0 auto;
-margin-top: 50px;
+  margin-top: 50px;
+  margin-bottom: 200px;
  }
 
 .find-form{
   margin-top: 20px;
+}
+
+.layout{
+  margin-left: 230px;
+  margin-top: 15px;
+
+}
+.ment{
+  margin: 15px 0;
+}
+
+.ment span{
+  font-weight: bold;
+  color: cornflowerblue;
+
 }
 
 .find-layout{
@@ -99,44 +131,49 @@ margin-top: 50px;
 }
 
 .find-name, .find-email, .find-id{
-  margin-bottom: 5px;
+  margin-bottom: 15px;
 }
+
+
+.text1{
+  width: 450px;
+  height: 50px;
+}
+.text2{
+  width: 300px;
+  height: 50px;
+}
+
+#btn1{
+  width: 140px;
+  height: 50px;
+  padding: 0px;
+  margin-left: 10px;
+}
+#btn2{
+  width: 570px;
+  height: 50px;
+  margin-top: 20px;
+
+}
+
 
 .find-id{
   margin: 0 auto;
 }
 
-.find-id input[type='text']{
-  width: 350px;
-  height: 37px;
-  padding: 3px;
-}
-
-input[type='text']{
-  width: 250px;
-  height: 30px;
-  border-radius: 5px;
-}
-
-input[type='button']{
-  margin-left: 5px;
-  font-weight: bold;
-  border-radius: 5px;
-}
 
 label{
   display: inline-block;
   width: 120px;
   text-align: left;
   font-weight: bold;
+  padding-top: 10px;
 }
 
 .errMsg{
   color: red;
 }
 
-button{
-  margin-top: 20px;;
-}
 
 </style>

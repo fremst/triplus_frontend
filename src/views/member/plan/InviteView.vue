@@ -69,7 +69,6 @@ export default {
 
     searchId(){ // User IdentifyController
 
-      //검색(inviteId)가 배열에 존재하면 중복처리X..?
 
       axios.get(`http://localhost:8082/triplus/api/member/plan/invite/findid`,{
         headers:{
@@ -97,7 +96,8 @@ export default {
         'Access-Control-Allow-Origin': '*'
       },
       params:{
-        'id':addId
+        'id':addId,
+        'skdNum':1  //일정번호 넘겨줘야함
       }
     }).then(function (resp){
       if(resp.data.result==='success'){ //존재하면

@@ -14,24 +14,16 @@
 
       <div class="errMsg">{{errMsg}}</div><br>
       <div><Button type="submit" label="로그인" class="p-button-primary" @click.prevent="login" /></div>
-
-
+      <div class="kakao" >
+         <img :src="require('@/assets/kakao_login_large_narrow.png')" @click="kakao" class="kimg"/><br>
+      </div>
     </form>
 
     <div class="login_insert">아직 회원이 아닙니까?  <a href="#" @click.prevent="goJoin">회원 가입하기</a></div>
     <div class="login_findpwd">아이디 또는 비밀번호를 잊었습니까? <a href="#" @click.prevent="goFind">아이디 비밀번호 찾기</a></div>
 
-    <div class="login_sns">
-      <div class="kakao" >
-        <img :src="require('@/assets/kakao_login_medium_narrow.png')" @click="kakao" class="kimg"/><br>
-
-      </div>
-
     </div>
     </div>
-    </div>
-
-
 
   </div>
 </template>
@@ -95,22 +87,15 @@ export default {
 
               }).then(function(resp){
                 if(resp.data.result==='success'){ //아이디 존재
-                  alert('아이디 존재');
                   localStorage.setItem('id',resp.data.dto.id);
-                  localStorage.setItem('auth',resp.data.dto.auth);
-
 
                   a.$store.commit('keepId',1);
                   a.$router.push({name:'main'});
 
                 }else{ //아이디 없음 -> 가입
-                  alert('아이디 없음');
+
                   const joinparam = new URLSearchParams();
-                  /*
-                   alert('k'+id);
-                   alert(nick);
-                   alert(gender);
-                   alert(email);*/
+
                   joinparam.append('id','kakao'+id);
                   joinparam.append('nick',nick);
                   joinparam.append('gen',gender);
@@ -122,9 +107,7 @@ export default {
                     }
                   }).then(function(resp){
                     if(resp.data.result==='success'){ //회원가입 성공
-                      alert('회원가입 성공');
                       localStorage.setItem('id',resp.data.dto.id);
-                      localStorage.setItem('auth',resp.data.dto.auth); //아이디,권한 localstorage
                       a.$store.commit('keepId',1);
                       a.$router.push({name:'main'});
 
@@ -223,7 +206,8 @@ export default {
 }
 .inner{
   width:1080px;
-  margin:40px auto;
+  margin:50px auto;
+  margin-bottom: 150px;
 }
 .layout{
   text-align: center;
@@ -234,9 +218,6 @@ export default {
 }
 
 
-.login_sns{
-  height: 400px;
-}
 .login_sns span{
   color: red;
 }
@@ -273,10 +254,12 @@ export default {
   width: 350px;
   height: 40px;
 
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 }
+
 .login_insert{
   margin-bottom: 7px;
+  margin-top: 7px;
 }
 
 
@@ -287,6 +270,9 @@ a{
 }
 
 .kimg{
+  width: 350px;
+  height: 40px;
+  padding: 0px;
 
 
 }
