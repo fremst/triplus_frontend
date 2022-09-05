@@ -1,52 +1,56 @@
 <template>
   <div class="wrap">
     <div class="header">
-        <div class="loginLink">
+      <div class="loginLink">
+        <div class="status" v-if="user != null">{{ user }} 님 환영합니다.</div>
 
-      <div class="status"  v-if="user!=null">
-        {{user}} 님 환영합니다.
-      </div>
+        <div class="status" v-if="user === null">
+          <a href="/member/login">로그인 | 회원가입</a>
+        </div>
 
-      <div class="status" v-if="user===null">
-         <a  href="/member/login">로그인  |  회원가입</a>
-      </div>
-
-          <Sidebar v-model:visible="visibleRight" position="right" >
-            <div class="user" v-if="user===null">
-              <a  href="/member/login"><h2>로그인  |  회원가입</h2><br></a>
-
-              <div class="mypage">
-
-                <ol class="ol-first">
-                  <li><h1>-</h1></li>
-                  <li><h1>-</h1></li>
-                  <li><h1>-</h1></li>
-                </ol>
-
-                <ol class="ol-second">
-                  <li><h3>내 일정</h3></li>
-                  <li><h3>&nbsp;내 글</h3></li>
-                  <li><h3>&nbsp;내 예약</h3></li>
-                </ol>
-              </div>
-            </div>
-
-            <div class="user"  v-if="user!=null">
-              <h1>{{user}} 님 환영합니다.</h1>
+        <Sidebar v-model:visible="visibleRight" position="right">
+          <div class="user" v-if="user === null">
+            <a href="/member/login"
+              ><h2>로그인 | 회원가입</h2>
+              <br
+            /></a>
 
             <div class="mypage">
-
               <ol class="ol-first">
-                <li><h1>{{myScheduleCnt}}</h1></li>
-                <li><h1>{{b}}</h1></li>
-                <li><h1>{{myReservationCnt}}</h1></li>
+                <li><h1>-</h1></li>
+                <li><h1>-</h1></li>
+                <li><h1>-</h1></li>
+              </ol>
+
+              <ol class="ol-second">
+                <li><h3>내 일정</h3></li>
+                <li><h3>&nbsp;내 글</h3></li>
+                <li><h3>&nbsp;내 예약</h3></li>
+              </ol>
+            </div>
+          </div>
+
+          <div class="user" v-if="user != null">
+            <h1>{{ user }} 님 환영합니다.</h1>
+
+            <div class="mypage">
+              <ol class="ol-first">
+                <li>
+                  <h1>{{ myScheduleCnt }}</h1>
+                </li>
+                <li>
+                  <h1>{{ b }}</h1>
+                </li>
+                <li>
+                  <h1>{{ myReservationCnt }}</h1>
+                </li>
               </ol>
 
               <ol class="ol-second">
                 <li>
-                 <router-link to="/member/mypage/myschedule">
-                  <h3>&nbsp;내 일정</h3>
-                </router-link>
+                  <router-link to="/member/mypage/myschedule">
+                    <h3>&nbsp;내 일정</h3>
+                  </router-link>
                 </li>
 
                 <li><h3>&nbsp;내 글</h3></li>
@@ -57,110 +61,106 @@
                 </li>
               </ol>
             </div>
-            </div>
-
-        <div class="content">
-            Content<br><br>
-            <router-link to="/service/notices">공지사항</router-link><br>
-            <a href="/service/qna/">Q & A</a><br>
-            <router-link to="/service/faq">FAQ</router-link><br><br>
-            <a href="#" @click.prevent="logout">로그아웃</a>
-        </div>
-          </Sidebar>
-          <div class="H-button" >
-          <Button icon="pi pi-bars" @click="showSidebar" />
           </div>
+
+          <div class="content">
+            Content<br /><br />
+            <router-link to="/service/notices">공지사항</router-link><br />
+            <a href="/service/qna/">Q & A</a><br />
+            <router-link to="/service/faq">FAQ</router-link><br /><br />
+            <a href="#" @click.prevent="logout">로그아웃</a>
+          </div>
+        </Sidebar>
+        <div class="H-button">
+          <Button icon="pi pi-bars" @click="showSidebar" />
         </div>
+      </div>
       <a href="/" class="logo">
-        <img :src="require('@/assets/textLogo.png')"/>
+        <img :src="require('@/assets/textLogo.png')" />
       </a>
     </div>
   </div>
-
 </template>
 
 <script>
-import Sidebar from 'primevue/sidebar';
+import Sidebar from "primevue/sidebar";
 import axios from "axios";
 
 export default {
-  name: 'MainHeader',
+  name: "MainHeader",
   components: {
     Sidebar
   },
 
-  computed:{
-    user(){
+  computed: {
+    user() {
       return this.$store.state.userId;
-    },
-
+    }
   },
   data() {
     return {
       visibleRight: false,
-      myScheduleCnt:0,
-      b:0,
-      myReservationCnt:0,
-      id:null
-    }
-
+      myScheduleCnt: 0,
+      b: 0,
+      myReservationCnt: 0,
+      id: null
+    };
   },
-  methods:{
-    logout(){
+  methods: {
+    logout() {
       localStorage.removeItem("id");
       localStorage.removeItem("token");
       window.Kakao.API.request({
-        url: '/v1/user/unlink',
+        url: "/v1/user/unlink",
         success: function (response) {
           console.log(response);
-
         },
         fail: function (error) {
           console.log(error);
-        },
+        }
       });
 
-      this.$store.commit('keepId',2);
+      this.$store.commit("keepId", 2);
     },
-    showSidebar(){
-        this.id=localStorage.getItem("id");
-      this.visibleRight = true
-        if(this.id!==null){
-
-          //내일정
-          axios.get('http://localhost:8082/triplus/api/member/mypage/myscheduleCnt', {
+    showSidebar() {
+      this.id = localStorage.getItem("id");
+      this.visibleRight = true;
+      if (this.id !== null) {
+        //내일정
+        axios
+          .get("http://localhost:8082/triplus/api/member/mypage/myscheduleCnt", {
             headers: {
-              'Access-Control-Allow-Origin': '*',
+              "Access-Control-Allow-Origin": "*"
             },
-            params:{
-              "id":this.id
+            params: {
+              id: this.id
             }
-          }).then(function (resp) {
-            this.myScheduleCnt = resp.data.myscheduleCnt;
-          }.bind(this));
+          })
+          .then(
+            function (resp) {
+              this.myScheduleCnt = resp.data.myscheduleCnt;
+            }.bind(this)
+          );
 
-          //내 에약
-          axios.get('http://localhost:8082/triplus/api/member/mypage/reservationCnt', {
+        //내 에약
+        axios
+          .get("http://localhost:8082/triplus/api/member/mypage/reservationCnt", {
             headers: {
-              'Access-Control-Allow-Origin': '*',
+              "Access-Control-Allow-Origin": "*"
             },
-            params:{
-              "id":this.id
+            params: {
+              id: this.id
             }
-          }).then(function (resp) {
-            this.myReservationCnt = resp.data.reservationCnt;
-
-          }.bind(this));
-        }
-
-
-
-
-     }
-
+          })
+          .then(
+            function (resp) {
+              this.myReservationCnt = resp.data.reservationCnt;
+            }.bind(this)
+          );
+      }
+    }
   }
- 
-}
+};
 </script>
 
 <style scoped>
@@ -182,7 +182,6 @@ a {
   /* text-align: center; */
   text-align: left;
   padding-left: 15%;
-
 }
 
 .header {
@@ -198,34 +197,32 @@ a {
   margin-right: 10px;
 }
 
-.status{
+.status {
   display: inline-block;
   margin: 15px;
 }
 
-.user{
+.user {
   margin-bottom: 10px;
   text-align: center;
 }
 
-.mypage{
+.mypage {
   width: 100%;
   margin-bottom: 50px;
-
 }
-.mypage ol li{
+.mypage ol li {
   width: 33%;
   display: inline-block;
 }
 
-.ol-first, .ol-second{
+.ol-first,
+.ol-second {
   text-align: center;
 }
 
-.content{
-  border-top: 0.5px solid  #CCC;;
+.content {
+  border-top: 0.5px solid #ccc;
   padding-top: 10px;
 }
-
-
 </style>

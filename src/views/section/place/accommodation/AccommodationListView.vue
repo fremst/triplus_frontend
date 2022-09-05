@@ -29,7 +29,11 @@
           <Column selectionMode="multiple" style="width: 3rem" :exportable="false"></Column>
           <Column header="숙소이미지" style="min-width: 8rem">
             <template #body="slotProps">
-              <img :alt="slotProps.data.title" :src="`data:image/jpeg;base64,${slotProps.data.firstimage}`" class="product-image" />
+              <img
+                :alt="slotProps.data.title"
+                :src="`data:image/jpeg;base64,${slotProps.data.firstimage}`"
+                class="product-image"
+              />
             </template>
           </Column>
           <Column :sortable="true" field="scatName" header="카테고리" style="min-width: 8rem; text-align: center">
@@ -40,7 +44,7 @@
           <Column :sortable="true" field="title" header="숙소명" style="min-width: 16rem; text-align: center">
             <template #body="slotProps">
               <span class="product-category">
-                <router-link :to="`/section/place/accommodation/`+slotProps.data.brdNum">
+                <router-link :to="`/section/place/accommodation/` + slotProps.data.brdNum">
                   {{ slotProps.data.title }}
                 </router-link>
               </span>
@@ -49,7 +53,7 @@
           <Column :sortable="true" field="tel" header="전화번호" style="min-width: 16rem; text-align: center">
             <template #body="slotProps">
               <span class="product-category">
-                  {{ slotProps.data.tel }}
+                {{ slotProps.data.tel }}
               </span>
             </template>
           </Column>
@@ -94,7 +98,7 @@ export default {
         .get("http://localhost:8082/triplus/api/section/places/accommodation/", this.data, {
           headers: {
             "Access-Control-Allow-Origin": "*"
-          },
+          }
         })
         .then(res => {
           this.products = res.data;

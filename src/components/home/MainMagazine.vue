@@ -6,70 +6,70 @@
         <ul :style="`left: -${value * 11.16}px`">
           <li>
             <a href="#" @click.prevent="showDetail(372)">
-              <img :src="require('@/assets/magazine/제주.png')"  class="magazine" />
+              <img :src="require('@/assets/magazine/제주.png')" class="magazine" />
             </a>
           </li>
           <li>
             <a href="#" @click.prevent="showDetail(373)">
-              <img :src="require('@/assets/magazine/전주.png')" class="magazine"/>
+              <img :src="require('@/assets/magazine/전주.png')" class="magazine" />
             </a>
           </li>
           <li>
             <a href="#" @click.prevent="showDetail(374)">
-              <img :src="require('@/assets/magazine/서울.png')" class="magazine"/>
+              <img :src="require('@/assets/magazine/서울.png')" class="magazine" />
             </a>
           </li>
           <li>
             <a href="#" @click.prevent="showDetail(375)">
-              <img :src="require('@/assets/magazine/부산.png')" class="magazine"/>
+              <img :src="require('@/assets/magazine/부산.png')" class="magazine" />
             </a>
           </li>
           <li>
             <a href="#" @click.prevent="showDetail(376)">
-              <img :src="require('@/assets/magazine/매거진5.png')" class="magazine"/>
+              <img :src="require('@/assets/magazine/매거진5.png')" class="magazine" />
             </a>
           </li>
           <li>
             <a href="#" @click.prevent="showDetail(377)">
-              <img :src="require('@/assets/magazine/매거진6.png')" class="magazine"/>
+              <img :src="require('@/assets/magazine/매거진6.png')" class="magazine" />
             </a>
           </li>
           <li class="lastImg">
             <a href="#" @click.prevent="showDetail(378)">
-              <img :src="require('@/assets/magazine/매거진7.png')" class="magazine"/>
+              <img :src="require('@/assets/magazine/매거진7.png')" class="magazine" />
             </a>
           </li>
         </ul>
       </div>
     </div>
     <div class="content-section implementation">
-      <Slider v-model="value" class="magaSlider" @change="changeMaga()"/>
+      <Slider v-model="value" class="magaSlider" @change="changeMaga()" />
     </div>
   </div>
 </template>
 <script>
-import Slider from 'primevue/slider';
+import Slider from "primevue/slider";
 
 export default {
-  name: 'MainMagazine',
+  name: "MainMagazine",
   components: {
     Slider
   },
   data() {
     return {
-      value: 50,
-    }
+      value: 50
+    };
   },
   methods: {
     changeMaga() {
-      this.value
+      this.value;
     },
-    showDetail(n){
+    showDetail(n) {
       // this.$router.push({name:"magazine-detail",params:{brdNum:n}})
-      this.$router.push({name:"magazine-detail",params:{brdNum:n}})
+      this.$router.push({ name: "magazine-detail", params: { brdNum: n } });
     }
   }
-}
+};
 </script>
 <style scoped>
 .wrap {
@@ -92,7 +92,6 @@ ul {
   display: flex;
   justify-content: center;
   position: absolute;
-
 }
 
 .magazineBox {

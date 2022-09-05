@@ -214,11 +214,15 @@ export default {
       addPlaceParam.append("overview", this.overview);
 
       axios
-        .post(`http://localhost:8082/triplus/api/section/places/${this.mcatNameToEng(addPlaceParam.get("mcatName"))}/`, addPlaceParam, {
-          headers: {
-            "Access-Control-Allow-Origin": "*"
+        .post(
+          `http://localhost:8082/triplus/api/section/places/${this.mcatNameToEng(addPlaceParam.get("mcatName"))}/`,
+          addPlaceParam,
+          {
+            headers: {
+              "Access-Control-Allow-Origin": "*"
+            }
           }
-        })
+        )
         .then(
           function (resp) {
             if (resp.data.result === "success") {
@@ -245,13 +249,13 @@ export default {
     checkCategory() {
       return this.category != "";
     },
-    mcatNameToEng(mcatName){
+    mcatNameToEng(mcatName) {
       console.log(mcatName);
-      if(mcatName == "명소"){
+      if (mcatName == "명소") {
         return "attration";
-      }else if(mcatName == "맛집") {
-          return "restaurant";
-      }else {
+      } else if (mcatName == "맛집") {
+        return "restaurant";
+      } else {
         return "accommodation";
       }
     }

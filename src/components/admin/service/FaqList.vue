@@ -2,19 +2,24 @@
   <div class="main">
     <div class="board">
       <div class="board-header">
-        <h1>{{title}}</h1>
+        <h1>{{ title }}</h1>
       </div>
       <div class="board-main">
-        <DataTable class="board-table" :paginator="true"
-                   paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown"
-                   :value="list" responsiveLayout="scroll" :rows="10"
-                   :filters="filters">
-          <Column field="faqNum" header="글번호" style="width: 100px;" ></Column>
-          <Column field="category" header="카테고리" style="width: 100px;" ></Column>
-          <Column field="faqTitle" header="제목" alignHeader="center" ></Column>
-          <Column field="modify" header="수정" alignHeader="center" >
-             <template #body="slotProps">
-                <a href="#" @click="onModify(slotProps.data.faqNum)">수정하기</a>
+        <DataTable
+          class="board-table"
+          :paginator="true"
+          paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown"
+          :value="list"
+          responsiveLayout="scroll"
+          :rows="10"
+          :filters="filters"
+        >
+          <Column field="faqNum" header="글번호" style="width: 100px"></Column>
+          <Column field="category" header="카테고리" style="width: 100px"></Column>
+          <Column field="faqTitle" header="제목" alignHeader="center"></Column>
+          <Column field="modify" header="수정" alignHeader="center">
+            <template #body="slotProps">
+              <a href="#" @click="onModify(slotProps.data.faqNum)">수정하기</a>
             </template>
           </Column>
         </DataTable>
@@ -27,66 +32,69 @@
 </template>
 
 <script>
-import axios from 'axios'
-import DataTable from 'primevue/datatable';
-import Column from 'primevue/column';
-import { FilterMatchMode } from 'primevue/api';
+import axios from "axios";
+import DataTable from "primevue/datatable";
+import Column from "primevue/column";
+import { FilterMatchMode } from "primevue/api";
 
 export default {
   name: "FaqList",
-  components:{
+  components: {
     DataTable,
     Column
   },
-  props:{
+  props: {
     title: String,
     listLink: String,
     writeLink: String
   },
-  data(){
-    return{
-      list:[],
-      pageIndex : 1,
-      filters:{},
-      tempAuth:this.$store.state.loginUser.auth
-    }
+  data() {
+    return {
+      list: [],
+      pageIndex: 1,
+      filters: {},
+      tempAuth: this.$store.state.loginUser.auth
+    };
   },
-  created(){
+  created() {
     this.getList();
     this.initFilters();
   },
-  mounted() {
-
-  },
-  methods:{
-    onWrite(){
-      this.$router.push({name:'faqs-add'})
+  mounted() {},
+  methods: {
+    onWrite() {
+      this.$router.push({ name: "faqs-add" });
     },
-    onPageChange(n){
+    onPageChange(n) {
       this.curPage = n;
     },
     onModify(faqNum) {
-      this.$router.push({name: "faqs-modify", params: {faqNum: faqNum}});
+      this.$router.push({ name: "faqs-modify", params: { faqNum: faqNum } });
     },
-    getList(){
-      axios.get('http://localhost:8082/triplus/api/service/faqs', {
-        headers: {
-          'Access-Control-Allow-Origin': '*'
-        },
-        params:{}
-      }).then(function(resp){
-        this.list=resp.data;
-      }.bind(this)).catch(err =>{
-        console.log(err);
-      });
+    getList() {
+      axios
+        .get("http://localhost:8082/triplus/api/service/faqs", {
+          headers: {
+            "Access-Control-Allow-Origin": "*"
+          },
+          params: {}
+        })
+        .then(
+          function (resp) {
+            this.list = resp.data;
+          }.bind(this)
+        )
+        .catch(err => {
+          console.log(err);
+        });
     },
     initFilters() {
       this.filters = {
-        'global': {value: null, matchMode: FilterMatchMode.CONTAINS},
-      }
+        global: { value: null, matchMode: FilterMatchMode.CONTAINS }
+      };
     }
   }
-}
+};
 </script>
 
 <style scoped>
@@ -142,7 +150,7 @@ a {
   border-collapse: collapse;
 }
 .board-page .currentPage {
-  color: #67AB9F;
+  color: #67ab9f;
 }
 .board-page * {
   margin: 0px 4px;
@@ -158,7 +166,7 @@ a {
 .board-footer * {
   margin: 0 4px;
 }
-#icon{
+#icon {
   margin-left: 735px;
 }
 </style>

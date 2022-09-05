@@ -1,24 +1,24 @@
 <template>
-<MainHeader />
-<MainTab/>
+  <MainHeader />
+  <MainTab />
   <div class="content">
-  <router-view />
+    <router-view />
   </div>
-<MainFooter />
+  <MainFooter />
 </template>
 
 <script>
-import MainHeader from '@/components/common/MainHeader.vue'
-import MainTab from '@/components/common/MainTab.vue'
-import MainFooter from '@/components/common/MainFooter.vue'
-export default ({
-  name: 'App',
+import MainHeader from "@/components/common/MainHeader.vue";
+import MainTab from "@/components/common/MainTab.vue";
+import MainFooter from "@/components/common/MainFooter.vue";
+export default {
+  name: "App",
   components: {
     MainHeader,
     MainTab,
     MainFooter
   }
-})
+};
 </script>
 
 <style lang="scss">
@@ -31,7 +31,7 @@ export default ({
   padding: 0;
 }
 
-a{
+a {
   text-decoration: none;
   color: #333333;
 }

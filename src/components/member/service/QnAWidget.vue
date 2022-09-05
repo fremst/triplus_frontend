@@ -8,25 +8,27 @@
       icon="pi pi-comment"
       label="문의하기"
       class="p-button-rounded"
-      @click="chatWidget = true">
+      @click="chatWidget = true"
+    >
     </Button>
-    <Dialog
-      header="문의 채팅"
-      position="bottomright"
-      :draggable="false"
-      v-model:visible="chatWidget">
+    <Dialog header="문의 채팅" position="bottomright" :draggable="false" v-model:visible="chatWidget">
       <div class="qna-chat-dialog">
         <div style="overflow: auto; height: 100%">
           <div v-for="chat of chatData" :key="chat">
-            <div class="qna-chat-element" :class="{
-                'flex-start': (chat.type == 'admin'),
-                'flex-end': (chat.type == 'user'),
-                }">
-              <div :class="{
-                'qna-chat-admin': (chat.type == 'admin'),
-                'qna-chat-user': (chat.type == 'user'),
-                }">
-                {{chat.content}}
+            <div
+              class="qna-chat-element"
+              :class="{
+                'flex-start': chat.type == 'admin',
+                'flex-end': chat.type == 'user'
+              }"
+            >
+              <div
+                :class="{
+                  'qna-chat-admin': chat.type == 'admin',
+                  'qna-chat-user': chat.type == 'user'
+                }"
+              >
+                {{ chat.content }}
               </div>
             </div>
           </div>
@@ -38,35 +40,32 @@
   </div>
 </template>
 <script>
-  import store from "@/store"
-  import Dialog from 'primevue/dialog';
-  import SockJS from 'sockjs-client';
-  export default
-  {
-    name: 'QnAWidget',
-    components: {
-      Dialog
-    },
-    props: {
-    },
-    data() {
-      return {
-        chatWidget: false,
-        chatBadgeCount: 0,
-        chatData: [
-          { type: "admin", content: "궁금한 점이 있으신가요? 상담사에게 물어보세요." },
-        ],
+import store from "@/store";
+import Dialog from "primevue/dialog";
+import SockJS from "sockjs-client";
+export default {
+  name: "QnAWidget",
+  components: {
+    Dialog
+  },
+  props: {},
+  data() {
+    return {
+      chatWidget: false,
+      chatBadgeCount: 0,
+      chatData: [{ type: "admin", content: "궁금한 점이 있으신가요? 상담사에게 물어보세요." }],
 
-        chatText: "",
+      chatText: "",
 
-        // 소켓 통신 변수
-        sockJS: null,
-      }
-    },
-    methods: {
-      sendMessage() {
-        // console.log(this.stomp);
-        this.sockJS.send(JSON.stringify({
+      // 소켓 통신 변수
+      sockJS: null
+    };
+  },
+  methods: {
+    sendMessage() {
+      // console.log(this.stomp);
+      this.sockJS.send(
+        JSON.stringify({
           type: "CHAT",
           data: JSON.stringify({
             chatNum: 0,
@@ -76,96 +75,95 @@
             date: 0,
             managerChat: false
           })
-        }));
-      },
-      sendAuthData() {
-        this.sockJS.send(JSON.stringify({
+        })
+      );
+    },
+    sendAuthData() {
+      this.sockJS.send(
+        JSON.stringify({
           type: "AUTHORIZE",
           data: JSON.stringify({
             user: store.state.userId == null ? false : true,
             id: store.state.userId == null ? localStorage.getItem("chatToken") : store.state.userId
           })
-        }));
-      },
-      getMessage(jsonData) {
-        // console.log(jsonData);
-        switch(jsonData.type)
-        {
-          case "AUTHORIZE": // 인증 요청
-            // console.log("auth");
-            if (localStorage.getItem("chatToken") == null)
-              localStorage.setItem("chatToken", jsonData.data);
-            this.sendAuthData();
-            break;
-          case "CHAT": // 채팅 수신
-            // console.log("chat receive");
-            this.addMessage(JSON.parse(jsonData.data));
-            break;
-          case "CHATLIST": // 채팅 목록 수신
-            // console.log("chat list receive");
-            for (let ele of JSON.parse(jsonData.data))
-              this.addMessage(ele);
-            break;
-        }
-      },
-      addMessage(chat) {
-        this.chatData.push({
-          type: chat.managerChat ? "admin" : "user",
-          content: chat.content
         })
+      );
+    },
+    getMessage(jsonData) {
+      // console.log(jsonData);
+      switch (jsonData.type) {
+        case "AUTHORIZE": // 인증 요청
+          // console.log("auth");
+          if (localStorage.getItem("chatToken") == null) localStorage.setItem("chatToken", jsonData.data);
+          this.sendAuthData();
+          break;
+        case "CHAT": // 채팅 수신
+          // console.log("chat receive");
+          this.addMessage(JSON.parse(jsonData.data));
+          break;
+        case "CHATLIST": // 채팅 목록 수신
+          // console.log("chat list receive");
+          for (let ele of JSON.parse(jsonData.data)) this.addMessage(ele);
+          break;
       }
     },
-    mounted() {
-    },
-    created() { 
-      // console.log(store.state);
-      this.sockJS = new SockJS(`http://localhost:8082/triplus/chat`);
-      this.sockJS.onmessage = message => {
-        this.getMessage(JSON.parse(message.data));
-      }
+    addMessage(chat) {
+      this.chatData.push({
+        type: chat.managerChat ? "admin" : "user",
+        content: chat.content
+      });
+    }
   },
-}
+  mounted() {},
+  created() {
+    // console.log(store.state);
+    this.sockJS = new SockJS(`http://localhost:8082/triplus/chat`);
+    this.sockJS.onmessage = message => {
+      this.getMessage(JSON.parse(message.data));
+    };
+  }
+};
 </script>
 <style scoped>
-  .qna-chat-widget {
-    position: fixed;
-    right: 50px;
-    bottom: 50px;
-    z-index: 10000;
-  }
-  .qna-chat-dialog {
-    width: 300px;
-    height: 500px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-  }
-  .qna-chat-element {
-    margin: 5px;
-    display: flex;
-  }
-  .flex-start {
-    justify-content: flex-start;
-  }
-  .flex-end {
-    justify-content: flex-end;
-  }
-  .qna-chat-admin {
-    border-radius: 15px 15px 15px 0px;
-    text-align: left;
-    justify-content: flex-start;
-    background-color: #67AB9F;
-    color: white;
-    padding: 7px 13px;
-    width: auto;
-  }
-  .qna-chat-user {
-    border-radius: 15px 15px 0px 15px;
-    text-align: right;
-    justify-content: flex-end;
-    background-color: #9999cc;
-    color: white;
-    padding: 5px 13px;
-    width: auto;
-  }
+.qna-chat-widget {
+  position: fixed;
+  right: 50px;
+  bottom: 50px;
+  z-index: 10000;
+}
+.qna-chat-dialog {
+  width: 300px;
+  height: 500px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.qna-chat-element {
+  margin: 5px;
+  display: flex;
+}
+.flex-start {
+  justify-content: flex-start;
+}
+.flex-end {
+  justify-content: flex-end;
+}
+.qna-chat-admin {
+  border-radius: 15px 15px 15px 0px;
+  text-align: left;
+  justify-content: flex-start;
+  background-color: #67ab9f;
+  color: white;
+  padding: 7px 13px;
+  width: auto;
+}
+.qna-chat-user {
+  border-radius: 15px 15px 0px 15px;
+  text-align: right;
+  justify-content: flex-end;
+  background-color: #9999cc;
+  color: white;
+  padding: 5px 13px;
+  width: auto;
+}
 </style>

@@ -2,34 +2,39 @@
   <div class="main">
     <div class="board">
       <div class="board-header">
-        <h1>{{title}}</h1>
+        <h1>{{ title }}</h1>
       </div>
       <div class="board-main">
         <div class="table-header" id="searchGroup">
-                    <span class="p-input-icon-left" >
-                            <i class="pi pi-search" id="icon" />
-                            <InputText v-model="filters['global'].value" placeholder="검색어를 입력하세요" id="keyword"  />
-                    </span>
+          <span class="p-input-icon-left">
+            <i class="pi pi-search" id="icon" />
+            <InputText v-model="filters['global'].value" placeholder="검색어를 입력하세요" id="keyword" />
+          </span>
         </div>
-        <DataTable class="board-table" :paginator="true"
-                   paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown"
-                   :value="list" responsiveLayout="scroll" :rows="10"
-                   :filters="filters">
-          <Column field="brdNum" header="글번호" style="width: 100px;" ></Column>
-          <Column field="category" header="카테고리" style="width: 100px;" ></Column>
-          <Column field="title" header="제목" class="flex-1 text-center" >
+        <DataTable
+          class="board-table"
+          :paginator="true"
+          paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown"
+          :value="list"
+          responsiveLayout="scroll"
+          :rows="10"
+          :filters="filters"
+        >
+          <Column field="brdNum" header="글번호" style="width: 100px"></Column>
+          <Column field="category" header="카테고리" style="width: 100px"></Column>
+          <Column field="title" header="제목" class="flex-1 text-center">
             <template #body="slotProps">
               <a href="#" @click.prevent="onDetail(slotProps.data.brdNum)" v-text="slotProps.data.title"></a>
             </template>
           </Column>
           <!-- 작성자가 admin으로 다 동일하기 때문에 주석처리...
           <Column field="writerId" header="작성자" style="width: 100px;"></Column>-->
-          <Column field="wdate" header="작성일" style="width: 150px;"></Column>
-          <Column field="hit" header="조회수" style="width: 100px;"></Column>
+          <Column field="wdate" header="작성일" style="width: 150px"></Column>
+          <Column field="hit" header="조회수" style="width: 100px"></Column>
         </DataTable>
       </div>
       <div class="board-footer">
-        <Button v-if="this.tempAuth=='admin'" color="#67AB9F" @click="onWrite">공지등록</Button>
+        <Button v-if="this.tempAuth == 'admin'" color="#67AB9F" @click="onWrite">공지등록</Button>
         <Button color="#67AB9F" @click="onList">전체 글 보기</Button>
       </div>
     </div>
@@ -37,70 +42,72 @@
 </template>
 
 <script>
-import axios from 'axios'
-import DataTable from 'primevue/datatable';
-import Column from 'primevue/column';
-import { FilterMatchMode } from 'primevue/api';
+import axios from "axios";
+import DataTable from "primevue/datatable";
+import Column from "primevue/column";
+import { FilterMatchMode } from "primevue/api";
 
 export default {
   name: "NoticeList",
-  components:{
+  components: {
     DataTable,
     Column
   },
-  props:{
+  props: {
     title: String,
     listLink: String,
     detailLink: String,
     writeLink: String
   },
-  data(){
-    return{
-      searchOpt:["제목","내용","제목/내용"],
-      list:[],
-      pageIndex : 1,
-      filters:{},
-      tempAuth:this.$store.state.loginUser.auth
-    }
+  data() {
+    return {
+      searchOpt: ["제목", "내용", "제목/내용"],
+      list: [],
+      pageIndex: 1,
+      filters: {},
+      tempAuth: this.$store.state.loginUser.auth
+    };
   },
-  created(){
+  created() {
     this.getList();
     this.initFilters();
   },
-  mounted() {
-
-  },
-  methods:{
-    onSearch(){
+  mounted() {},
+  methods: {
+    onSearch() {
       alert("미구현");
     },
-    onWrite(){
-      this.$router.push({name:'notice-write'})
+    onWrite() {
+      this.$router.push({ name: "notice-write" });
     },
-    onPageChange(n){
+    onPageChange(n) {
       this.curPage = n;
     },
-    getList(){
-      axios.get('http://localhost:8082/triplus/api/service/notices',{
-        headers: {
-          'Access-Control-Allow-Origin': '*'
-        },
-        params:{}
-      }).then(function(resp){
-        this.list=resp.data;
-      }.bind(this));
+    getList() {
+      axios
+        .get("http://localhost:8082/triplus/api/service/notices", {
+          headers: {
+            "Access-Control-Allow-Origin": "*"
+          },
+          params: {}
+        })
+        .then(
+          function (resp) {
+            this.list = resp.data;
+          }.bind(this)
+        );
     },
-    onDetail(brdNum){
+    onDetail(brdNum) {
       console.log(brdNum);
-      this.$router.push({name:"notice-detail",params:{brdNum:brdNum}})
+      this.$router.push({ name: "notice-detail", params: { brdNum: brdNum } });
     },
     initFilters() {
       this.filters = {
-        'global': {value: null, matchMode: FilterMatchMode.CONTAINS},
-      }
+        global: { value: null, matchMode: FilterMatchMode.CONTAINS }
+      };
     }
   }
-}
+};
 </script>
 
 <style scoped>
@@ -155,7 +162,7 @@ a {
   border-collapse: collapse;
 }
 .board-page .currentPage {
-  color: #67AB9F;
+  color: #67ab9f;
 }
 .board-page * {
   margin: 0 4px;
@@ -171,15 +178,15 @@ a {
 .board-footer * {
   margin: 0 4px;
 }
-#searchGroup{
+#searchGroup {
   margin-bottom: 10px;
 }
-#keyword{
+#keyword {
   height: 50px;
   width: 300px;
   margin-left: 735px;
 }
-#icon{
+#icon {
   margin-left: 735px;
 }
 </style>

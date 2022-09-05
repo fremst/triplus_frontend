@@ -1,32 +1,30 @@
 <template>
   <div class="wrapper">
     <div class="inner">
-      <AdminPageSidebar/>
+      <AdminPageSidebar />
     </div>
   </div>
 </template>
 
 <script>
-import AdminPageSidebar from "@/components/admin/AdminPageSidebar"
+import AdminPageSidebar from "@/components/admin/AdminPageSidebar";
 export default {
-  components:{
+  components: {
     AdminPageSidebar
   }
-}
+};
 </script>
 
 <style scoped>
-
-.wrapper{
+.wrapper {
   width: 100%;
 }
 
-.inner{
+.inner {
   width: 1080px;
   margin: auto;
   margin-top: 20px;
   text-align: center;
   min-height: 600px;
 }
-
 </style>

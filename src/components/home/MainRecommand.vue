@@ -5,22 +5,22 @@
       <ul>
         <li>
           <a href="/">
-            <img :src="require('@/assets/hotel/1.png')" class="hotels"/>
+            <img :src="require('@/assets/hotel/1.png')" class="hotels" />
           </a>
         </li>
         <li>
           <a href="/">
-            <img :src="require('@/assets/hotel/2.png')" class="hotels"/>
+            <img :src="require('@/assets/hotel/2.png')" class="hotels" />
           </a>
         </li>
         <li>
           <a href="/">
-            <img :src="require('@/assets/hotel/3.png')" class="hotels"/>
+            <img :src="require('@/assets/hotel/3.png')" class="hotels" />
           </a>
         </li>
         <li>
           <a href="/">
-            <img :src="require('@/assets/hotel/4.png')" class="hotels last-img"/>
+            <img :src="require('@/assets/hotel/4.png')" class="hotels last-img" />
           </a>
         </li>
       </ul>
@@ -28,17 +28,17 @@
   </div>
 </template>
 <script>
-export default ({
-  name: 'MainRrecommHotel'
-})
+export default {
+  name: "MainRrecommHotel"
+};
 </script>
 <style scoped>
 .wrap {
   width: 100%;
 }
-.mainRrecommHotel{
+.mainRrecommHotel {
   width: 1080px;
-  margin:0 auto;
+  margin: 0 auto;
 }
 .main-title {
   text-align: left;
@@ -50,7 +50,6 @@ ul {
   list-style: none;
   display: flex;
   justify-content: center;
-
 }
 
 .hotels {
@@ -63,5 +62,4 @@ ul {
 .last-img {
   margin-right: 0;
 }
-
 </style>

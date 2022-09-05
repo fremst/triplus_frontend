@@ -1,64 +1,62 @@
 <template>
-    <div class="main">
-        <div class="faq-main">
-            <div class="faq-header">
-                <h1>{{title}}</h1>
-            </div>
-            <div>
-                <div class="card">
-                    <TabMenu :model="items" class="tabs" v-model:activeIndex="selectedIndex"/>
-                </div>
-            </div>
-            <div class="faq-accordian">
-            <Accordion :activeIndex="0" v-for="(list,index) in faqList" :key="index">
-                <AccordionTab :header="list.faqTitle" v-if="list.category==items[selectedIndex].label">
-                   <p> {{list.faqContent}} </p>
-                </AccordionTab>
-            </Accordion>
-            </div>
+  <div class="main">
+    <div class="faq-main">
+      <div class="faq-header">
+        <h1>{{ title }}</h1>
+      </div>
+      <div>
+        <div class="card">
+          <TabMenu :model="items" class="tabs" v-model:activeIndex="selectedIndex" />
         </div>
+      </div>
+      <div class="faq-accordian">
+        <Accordion :activeIndex="0" v-for="(list, index) in faqList" :key="index">
+          <AccordionTab :header="list.faqTitle" v-if="list.category == items[selectedIndex].label">
+            <p>{{ list.faqContent }}</p>
+          </AccordionTab>
+        </Accordion>
+      </div>
     </div>
+  </div>
 </template>
 
 <script>
-import TabMenu from 'primevue/tabmenu';
-import Accordion from 'primevue/accordion';
-import AccordionTab from 'primevue/accordiontab';
+import TabMenu from "primevue/tabmenu";
+import Accordion from "primevue/accordion";
+import AccordionTab from "primevue/accordiontab";
 
 export default {
-    name: 'FaqListTab',
-    components :{
-        TabMenu,
-        Accordion,
-        AccordionTab
-    },
-    props:{
-        title: String,
-        faqList: Object
-    },
-    data() {
-        return {
-            active: 3,
-            items: [
-                {
-                    label: '여행상품',
-                },
-                {
-                    label: '예약',
-                },
-                {
-                    label: '결제',
-                },
-                {
-                    label: '회원',
-                },
-            
-            ],
-            selectedIndex: 0,
-        };
-    },
-    
-}
+  name: "FaqListTab",
+  components: {
+    TabMenu,
+    Accordion,
+    AccordionTab
+  },
+  props: {
+    title: String,
+    faqList: Object
+  },
+  data() {
+    return {
+      active: 3,
+      items: [
+        {
+          label: "여행상품"
+        },
+        {
+          label: "예약"
+        },
+        {
+          label: "결제"
+        },
+        {
+          label: "회원"
+        }
+      ],
+      selectedIndex: 0
+    };
+  }
+};
 </script>
 
 <style lang="scss" scoped>
@@ -84,8 +82,8 @@ export default {
   justify-content: center;
 }
 .tabmenudemo-content {
-    padding: 2rem 1rem;
-    background-color: #91D9CC;
+  padding: 2rem 1rem;
+  background-color: #91d9cc;
 }
 .faq-header {
   display: flex;
@@ -102,27 +100,28 @@ export default {
   color: #222;
 }
 .accordion-custom {
-    i, span {
-        vertical-align: middle;
-    }
+  i,
+  span {
+    vertical-align: middle;
+  }
 
-    span {
-        margin: 0 .5rem;
-    }
+  span {
+    margin: 0 0.5rem;
+  }
 }
-.faq-accordian{
-    width: 1040px;
-    margin-top: 50px;
-    margin-bottom: 50px;
+.faq-accordian {
+  width: 1040px;
+  margin-top: 50px;
+  margin-bottom: 50px;
 }
 
 .p-accordion p {
-    line-height: 1.5;
-    margin: 0;
-    margin-top: 50px;
-    margin-bottom: 5px;
+  line-height: 1.5;
+  margin: 0;
+  margin-top: 50px;
+  margin-bottom: 5px;
 }
-.card{
-    width: 1040px;
+.card {
+  width: 1040px;
 }
 </style>

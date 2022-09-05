@@ -8,50 +8,50 @@
             <h3>제목</h3>
             <span class="p-label">
               <CascadeSelect
-                  v-model="selectedOptions"
-                  :class="{ 'p-invalid': submitted && !this.selectedOptions }"
-                  :optionGroupChildren="['subCategory']"
-                  :options="options"
-                  optionGroupLabel="name"
-                  optionLabel="scatName"
-                  placeholder="카테고리"
-                  style="min-width: 11rem; margin-right: 10px"
+                v-model="selectedOptions"
+                :class="{ 'p-invalid': submitted && !this.selectedOptions }"
+                :optionGroupChildren="['subCategory']"
+                :options="options"
+                optionGroupLabel="name"
+                optionLabel="scatName"
+                placeholder="카테고리"
+                style="min-width: 11rem; margin-right: 10px"
               />
               <small v-if="submitted && !this.scatName" class="p-error">카테고리를 선택해 주세요.</small>
               <label for="multiselect" />
             </span>
             <InputText
-                v-model="title"
-                :class="{ 'p-invalid': submitted && !this.title }"
-                class="form-control field md:col-4"
-                placeholder="제목을 입력해주세요."
-                style="width: 350px"
+              v-model="title"
+              :class="{ 'p-invalid': submitted && !this.title }"
+              class="form-control field md:col-4"
+              placeholder="제목을 입력해주세요."
+              style="width: 350px"
             />
             <small v-if="submitted && !this.title" class="p-error">제목을 입력해 주세요.</small>
           </div>
           <div>
             <h3>지역번호</h3>
             <InputText
-                v-model="region"
-                :class="{ 'p-invalid': submitted && !this.region }"
-                class="form-control field md:col-4"
+              v-model="region"
+              :class="{ 'p-invalid': submitted && !this.region }"
+              class="form-control field md:col-4"
             />
             <small v-if="submitted && !this.region" class="p-error">지역번호를 입력해 주세요.</small>
 
             <h3>전화번호</h3>
             <InputText
-                v-model="tel"
-                :class="{ 'p-invalid': submitted && !this.tel }"
-                class="form-control field col-4"
+              v-model="tel"
+              :class="{ 'p-invalid': submitted && !this.tel }"
+              class="form-control field col-4"
             />
             <small v-if="submitted && !this.tel" class="p-error">전화번호를 입력해 주세요.</small>
           </div>
           <h3>주소</h3>
           <InputText
-              v-model="addr"
-              :class="{ 'p-invalid': submitted && !this.addr }"
-              class="form-control field col-4"
-              placeholder="주소를 입력해주세요."
+            v-model="addr"
+            :class="{ 'p-invalid': submitted && !this.addr }"
+            class="form-control field col-4"
+            placeholder="주소를 입력해주세요."
           />
           <small v-if="submitted && !this.tel" class="p-error">주소를 입력해 주세요.</small>
 
@@ -63,9 +63,9 @@
           <InputText v-model="homepage" class="form-control field col-4" placeholder="홈페이지를 입력해주세요." />
           <h3>상세 이미지</h3>
           <InputText
-              v-model="firstimage"
-              class="form-control field col-4"
-              placeholder="상세이미지URL을 입력해주세요."
+            v-model="firstimage"
+            class="form-control field col-4"
+            placeholder="상세이미지URL을 입력해주세요."
           />
           <h3>상세설명</h3>
           <Textarea v-model="overview" class="form-control field col-4" cols="50" rows="5" />
@@ -82,7 +82,7 @@
 
 <script>
 import axios from "axios";
-import router from '@/router';
+import router from "@/router";
 
 export default {
   data() {
@@ -197,68 +197,68 @@ export default {
       submitted: false
     };
   },
-  mounted(){
+  mounted() {
     this.getDetail();
   },
   methods: {
     getDetail() {
       axios
-          .get(`http://localhost:8082/triplus/api/section/places/accommodation/${this.$route.params.brdNum}`, this.data, {
-            headers: {
-              "Access-Control-Allow-Origin": "*"
-            }
-          })
-          .then(res => {
-            this.data = res.data;
-            this.scatName = this.data.scatName;
-            this.title = this.data.title;
-            this.region = this.data.region;
-            this.tel = this.data.tel;
-            this.addr = this.data.addr;
-            this.mapx = this.data.mapx;
-            this.mapy = this.data.mapy;
-            this.homepage = this.data.homepage;
-            this.firstimage = this.data.firstimage;
-            this.overview = this.data.overview;
-          })
-          .catch(err => {
-            console.log(err.response);
-          });
+        .get(`http://localhost:8082/triplus/api/section/places/accommodation/${this.$route.params.brdNum}`, this.data, {
+          headers: {
+            "Access-Control-Allow-Origin": "*"
+          }
+        })
+        .then(res => {
+          this.data = res.data;
+          this.scatName = this.data.scatName;
+          this.title = this.data.title;
+          this.region = this.data.region;
+          this.tel = this.data.tel;
+          this.addr = this.data.addr;
+          this.mapx = this.data.mapx;
+          this.mapy = this.data.mapy;
+          this.homepage = this.data.homepage;
+          this.firstimage = this.data.firstimage;
+          this.overview = this.data.overview;
+        })
+        .catch(err => {
+          console.log(err.response);
+        });
     },
     onSave() {
       this.submitted = true;
 
       const updateParam = {
-        "userId":"admin",
-        "mcatName":this.selectedOptions.value,
-        "scatName":this.selectedOptions.scatName,
-        "title":this.title,
-        "region" :this.region,
-        "tel" : this.tel,
-        "addr" : this.addr,
-        "mapx" : this.mapx,
-        "mapy" : this.mapy,
-        "homepage" : this.homepage,
-        "firstimage" : this.firstimage,
-        "overview" : this.overview
+        userId: "admin",
+        mcatName: this.selectedOptions.value,
+        scatName: this.selectedOptions.scatName,
+        title: this.title,
+        region: this.region,
+        tel: this.tel,
+        addr: this.addr,
+        mapx: this.mapx,
+        mapy: this.mapy,
+        homepage: this.homepage,
+        firstimage: this.firstimage,
+        overview: this.overview
       };
 
       axios
-          .put(`http://localhost:8082/triplus/api/section/places/${this.$route.params.brdNum}`, updateParam, {
-            headers: {
-              'Access-Control-Allow-Origin': '*',
-              'Content-Type': 'application/json'
+        .put(`http://localhost:8082/triplus/api/section/places/${this.$route.params.brdNum}`, updateParam, {
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Content-Type": "application/json"
+          }
+        })
+        .then(
+          function (resp) {
+            if (resp.data.result === "success") {
+              alert("장소수정 성공");
+            } else {
+              alert("장소수정 실패");
             }
-          })
-          .then(
-              function (resp) {
-                if (resp.data.result === "success") {
-                  alert("장소수정 성공");
-                } else {
-                  alert("장소수정 실패");
-                }
-              }.bind(this),
-          );
+          }.bind(this)
+        );
     },
     onCancel() {
       this.title = "";
@@ -276,14 +276,14 @@ export default {
     checkCategory() {
       return this.category != "";
     },
-    goDetail(){
+    goDetail() {
       let mcatName = this.selectedOptions.value;
       console.log(mcatName);
-      if(mcatName === "명소"){
+      if (mcatName === "명소") {
         return router.push(`/section/place/attraction/${this.$route.params.brdNum}`);
-      }else if(mcatName === "맛집"){
+      } else if (mcatName === "맛집") {
         return router.push(`/section/place/restaurant/${this.$route.params.brdNum}`);
-      }else {
+      } else {
         return router.push(`/section/place/accommodation/${this.$route.params.brdNum}`);
       }
     }

@@ -4,22 +4,22 @@
       <ul>
         <li>
           <a href="/">
-            <img :src="require('@/assets/event/1.png')" class="events"/>
+            <img :src="require('@/assets/event/1.png')" class="events" />
           </a>
         </li>
         <li>
           <a href="/">
-            <img :src="require('@/assets/event/2.png')" class="events"/>
+            <img :src="require('@/assets/event/2.png')" class="events" />
           </a>
         </li>
         <li>
           <a href="/">
-            <img :src="require('@/assets/event/3.png')" class="events"/>
+            <img :src="require('@/assets/event/3.png')" class="events" />
           </a>
         </li>
         <li>
           <a href="/">
-            <img :src="require('@/assets/event/4.png')" class="events"/>
+            <img :src="require('@/assets/event/4.png')" class="events" />
           </a>
         </li>
       </ul>
@@ -27,9 +27,9 @@
   </div>
 </template>
 <script>
-export default ({
-  name: 'MainEvent'
-})
+export default {
+  name: "MainEvent"
+};
 </script>
 <style scoped>
 .wrap {
