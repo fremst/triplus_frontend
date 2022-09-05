@@ -87,7 +87,7 @@ const routes = [
   //관리자 장소추가
   {
     path: "/admin/place",
-    name: "place-add",
+    name: "admin-place-add",
     component: AddPlaceView
   },
   //관리자 명소 리스트
@@ -345,7 +345,7 @@ const routes = [
   },
   //일정등록 메인페이지
   {
-    path: "/section/member/schedule/main",
+    path: "/section/member/schedule/main/:skdNum",
     name: "add-schedule-main",
     component: MyScheduleMainView
   },

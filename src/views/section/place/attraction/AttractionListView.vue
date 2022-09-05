@@ -1,5 +1,6 @@
 <template>
   <div class="wrap">
+    <AdminPageSidebar />
     <div class="inner">
       <!-- <h2 class="addlist-title">명소 리스트</h2> -->
       <!-- 명소 리스트 -->
@@ -26,10 +27,13 @@
               <h5 class="mb-2 md:m-0 p-as-md-center">&nbsp;</h5>
             </div>
           </template>
-          <Column selectionMode="multiple" style="width: 3rem" :exportable="false"></Column>
           <Column header="명소이미지" style="min-width: 8rem">
             <template #body="slotProps">
-              <img :alt="slotProps.data.title" :src="`data:image/jpeg;base64,${slotProps.data.firstimage}`" class="product-image" />
+              <img
+                :alt="slotProps.data.title"
+                :src="`data:image/jpeg;base64,${slotProps.data.firstimage}`"
+                class="product-image"
+              />
             </template>
           </Column>
           <Column :sortable="true" field="scatName" header="카테고리" style="min-width: 8rem; text-align: center">
@@ -40,7 +44,7 @@
           <Column :sortable="true" field="title" header="명소명" style="min-width: 16rem; text-align: center">
             <template #body="slotProps">
               <span class="product-category">
-                <router-link :to="`/section/place/attraction/`+slotProps.data.brdNum">
+                <router-link :to="`/section/place/attraction/` + slotProps.data.brdNum">
                   {{ slotProps.data.title }}
                 </router-link>
               </span>
@@ -49,7 +53,7 @@
           <Column :sortable="true" field="tel" header="전화번호" style="min-width: 16rem; text-align: center">
             <template #body="slotProps">
               <span class="product-category">
-                  {{ slotProps.data.tel }}
+                {{ slotProps.data.tel }}
               </span>
             </template>
           </Column>
@@ -66,7 +70,9 @@
 
 <script>
 import { FilterMatchMode } from "primevue/api";
+import AdminPageSidebar from "@/components/admin/AdminPageSidebar";
 import axios from "axios";
+import { defaultOptions } from "@/constant/axios";
 
 export default {
   data() {
@@ -81,6 +87,9 @@ export default {
       submitted: false
     };
   },
+  components: {
+    AdminPageSidebar
+  },
   productService: null,
   created() {
     this.initFilters();
@@ -89,19 +98,13 @@ export default {
     this.getList();
   },
   methods: {
-    getList() {
-      axios
-        .get("http://localhost:8082/triplus/api/section/places/attraction/", this.data, {
-          headers: {
-            "Access-Control-Allow-Origin": "*"
-          },
-        })
-        .then(res => {
-          this.products = res.data;
-        })
-        .catch(err => {
-          console.log(err.response);
-        });
+    async getList() {
+      const getUrl = `${process.env.VUE_APP_API_URL || ""}/section/places/attraction/`;
+      const resp = await axios.get(getUrl, defaultOptions).catch(err => {
+        alert("서버 연결 실패", err);
+      });
+
+      this.products = resp.data;
     },
     initFilters() {
       this.filters = {

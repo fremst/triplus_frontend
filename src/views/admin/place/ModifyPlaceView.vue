@@ -83,6 +83,8 @@
 <script>
 import axios from "axios";
 import router from "@/router";
+import { defaultOptions } from "@/constant/axios";
+import { putOptions } from "@/constant/axios";
 
 export default {
   data() {
@@ -201,31 +203,24 @@ export default {
     this.getDetail();
   },
   methods: {
-    getDetail() {
-      axios
-        .get(`http://localhost:8082/triplus/api/section/places/accommodation/${this.$route.params.brdNum}`, this.data, {
-          headers: {
-            "Access-Control-Allow-Origin": "*"
-          }
-        })
-        .then(res => {
-          this.data = res.data;
-          this.scatName = this.data.scatName;
-          this.title = this.data.title;
-          this.region = this.data.region;
-          this.tel = this.data.tel;
-          this.addr = this.data.addr;
-          this.mapx = this.data.mapx;
-          this.mapy = this.data.mapy;
-          this.homepage = this.data.homepage;
-          this.firstimage = this.data.firstimage;
-          this.overview = this.data.overview;
-        })
-        .catch(err => {
-          console.log(err.response);
-        });
+    async getDetail() {
+      const getUrl = `${process.env.VUE_APP_API_URL || ""}/section/places/accommodation/${this.$route.params.brdNum}`;
+      const res = await axios.get(getUrl, defaultOptions).catch(err => {
+        alert("서버 연결 실패", err);
+      });
+      this.data = res.data;
+      this.scatName = this.data.scatName;
+      this.title = this.data.title;
+      this.region = this.data.region;
+      this.tel = this.data.tel;
+      this.addr = this.data.addr;
+      this.mapx = this.data.mapx;
+      this.mapy = this.data.mapy;
+      this.homepage = this.data.homepage;
+      this.firstimage = this.data.firstimage;
+      this.overview = this.data.overview;
     },
-    onSave() {
+    async onSave() {
       this.submitted = true;
 
       const updateParam = {
@@ -243,22 +238,25 @@ export default {
         overview: this.overview
       };
 
-      axios
-        .put(`http://localhost:8082/triplus/api/section/places/${this.$route.params.brdNum}`, updateParam, {
-          headers: {
-            "Access-Control-Allow-Origin": "*",
-            "Content-Type": "application/json"
-          }
-        })
-        .then(
-          function (resp) {
-            if (resp.data.result === "success") {
-              alert("장소수정 성공");
-            } else {
-              alert("장소수정 실패");
-            }
-          }.bind(this)
-        );
+      const putUrl = `${process.env.VUE_APP_API_URL || ""}/section/places/${this.mcatNameToEng(updateParam.mcatName)}/${
+        this.$route.params.brdNum
+      }`;
+
+      const resp = await axios.put(putUrl, updateParam, putOptions).catch(err => {
+        this.serverError();
+        console.log(err);
+      });
+      if (resp.data.result === "success") {
+        this.$router.push(`/admin/place/${this.mcatNameToEng(updateParam.mcatName)}`);
+      } else {
+        this.showError();
+      }
+    },
+    showError() {
+      this.$toast.add({ severity: "error", summary: "Error Message", detail: "장소수정 실패", life: 3000 });
+    },
+    serverError() {
+      this.$toast.add({ severity: "error", summary: "Error Message", detail: "서버에러", life: 3000 });
     },
     onCancel() {
       this.title = "";
@@ -278,13 +276,21 @@ export default {
     },
     goDetail() {
       let mcatName = this.selectedOptions.value;
-      console.log(mcatName);
       if (mcatName === "명소") {
         return router.push(`/section/place/attraction/${this.$route.params.brdNum}`);
       } else if (mcatName === "맛집") {
         return router.push(`/section/place/restaurant/${this.$route.params.brdNum}`);
       } else {
         return router.push(`/section/place/accommodation/${this.$route.params.brdNum}`);
+      }
+    },
+    mcatNameToEng(mcatName) {
+      if (mcatName == "명소") {
+        return "attraction";
+      } else if (mcatName == "맛집") {
+        return "restaurant";
+      } else {
+        return "accommodation";
       }
     }
   }
