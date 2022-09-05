@@ -32,7 +32,7 @@
         </tr>
         <tr class="tr-price">
           <td>
-            <span class="price">{{ (this.packageDetails.adultPrice * this.adultCnt).toLocaleString() }} 원</span>
+            <span class="price">{{ $getFormattedCurrency(this.packageDetails.adultPrice * this.adultCnt) }}</span>
           </td>
         </tr>
         <tr class="tr-price">
@@ -52,7 +52,7 @@
         </tr>
         <tr class="tr-price">
           <td>
-            <span class="price">{{ (this.packageDetails.childPrice * this.childCnt).toLocaleString() }} 원</span>
+            <span class="price">{{ $getFormattedCurrency(this.packageDetails.childPrice * this.childCnt) }}</span>
           </td>
         </tr>
       </table>
@@ -65,7 +65,7 @@
             <h3>총 금액</h3>
           </td>
           <td class="td-content">
-            <span class="totPrice">{{ totPrice }} 원</span>
+            <span class="totPrice">{{ $getFormattedCurrency(totPrice) }}</span>
           </td>
         </tr>
       </table>

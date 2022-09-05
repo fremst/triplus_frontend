@@ -9,14 +9,14 @@ export default {
 export const dateFormatter = {
   getFormattedDate: date => {
     const week = ["일", "월", "화", "수", "목", "금", "토"];
-    if (date) {
+    if (date instanceof Date && !isNaN(date)) {
       return date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate() + " (" + week[date.getDay()] + ")";
     } else {
       return "";
     }
   },
   getFormattedDateOnly: date => {
-    if (date) {
+    if (date instanceof Date && !isNaN(date)) {
       return date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
     } else {
       return "";
@@ -26,6 +26,7 @@ export const dateFormatter = {
 
 export const currencyFormatter = {
   getFormattedCurrency: value => {
+    console.log("val", value);
     if (value) {
       return value.toLocaleString("ko-KR") + " 원";
     } else {
