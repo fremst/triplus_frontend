@@ -17,7 +17,7 @@
                    :filters="filters">
           <Column field="brdNum" header="글번호" style="width: 100px;" ></Column>
           <Column field="category" header="카테고리" style="width: 100px;" ></Column>
-          <Column field="title" header="제목" alignHeader="center" >
+          <Column field="title" header="제목" class="flex-1 text-center" >
             <template #body="slotProps">
               <a href="#" @click.prevent="onDetail(slotProps.data.brdNum)" v-text="slotProps.data.title"></a>
             </template>

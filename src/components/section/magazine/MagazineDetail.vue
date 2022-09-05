@@ -15,7 +15,7 @@
                 <br>
 <!--                <Button @click="onRecommend" id="recommendBtn">추천하기</Button><br>-->
                 <div class="article-main">
-                    <pre v-html="article.contents"></pre>
+                    <div v-html="article.contents"></div>
                 </div>
                 <div class="article-footer">
                 </div>
@@ -36,7 +36,7 @@
 
             </div>
             <div class="board-reply">
-            <Textarea v-model="commContents" :autoResize="true" rows="3" cols="120" />
+            <Textarea v-model="commContents" :autoResize="true" rows="3" cols="110" style="width:900px; margin-left:20px" />
             <Button @click="insertComm" id="replyBtn" class="p-button-lg">등록</Button>
             </div>
         </div>
