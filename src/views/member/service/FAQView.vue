@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import FaqList from '@/components/admin/service/FaqList';
+import FaqList from '@/components/member/service/FaqList';
 import axios from 'axios';
 
 export default {
