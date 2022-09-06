@@ -13,31 +13,27 @@
           </tr>
         </table>
         <br />
-        <!--                <Button @click="onRecommend" id="recommendBtn">추천하기</Button><br>-->
         <div class="article-main">
           <div v-html="article.contents"></div>
         </div>
         <div class="article-footer"></div>
       </div>
       <div class="board-footer">
-        <Button
-          v-if="this.tempAuth == 'admin'"
-          @click="$router.push(`/admin/magazines/${this.$route.params.brdNum}/update`)"
-          >수정</Button
-        >
+        <Button v-if="this.tempAuth == 'admin'" class="p-button" @click="$router.push(`/admin/magazines/${this.$route.params.brdNum}/update`)">수정</Button>
         <Button v-if="this.tempAuth == 'admin'" class="p-button-danger" @click="onDelete">삭제</Button>
-        <Button @click="onList">목록으로</Button>
+        <Button class="p-button" @click="onList">목록</Button>
       </div>
       <div class="comm-list">
         <table class="comm-main">
           <tr v-for="comm in comments" :key="comm.brdCmtNum">
-            <td style="width: 100px; text-align: left">{{ comm.id }}</td>
+            <td style="width: 250px; text-align: start; padding-left: 20px">{{ comm.id }}</td>
             <td style="width: 800px; text-align: left">{{ comm.contents }}</td>
             <Button
               v-if="comm.id == this.tempId"
               @click="deleteComm(comm.brdCmtNum)"
               id="deleteCommBtn"
               class="p-button-danger"
+              style="padding: 0px; margin: 0px;"
               >X</Button
             >
           </tr>
@@ -45,11 +41,12 @@
       </div>
       <div class="board-reply">
         <Textarea
+          @click ="checkId"
           v-model="commContents"
           :autoResize="true"
-          rows="3"
-          cols="110"
-          style="width: 900px; margin-left: 20px"
+          rows="2"
+          cols="100"
+          style="width: 930px; margin-left: 20px"
         />
         <Button @click="insertComm" id="replyBtn" class="p-button-lg">등록</Button>
       </div>
@@ -96,7 +93,7 @@ export default {
   },
   methods: {
     onList() {
-      this.$router.push({ name: "magazines" });
+      this.$router.go(-1);
     },
     onDelete() {
       axios
@@ -108,10 +105,7 @@ export default {
         .then(
           function (resp) {
             if (resp.data == "success") {
-              alert("매거진 삭제 완료!");
               this.$router.push({ name: "magazines" });
-            } else {
-              alert("삭제 실패");
             }
           }.bind(this)
         );
@@ -156,21 +150,21 @@ export default {
             if (resp.data == "success") {
               alert("삭제 완료!");
               this.getCommList();
-            } else {
-              alert("삭제 실패");
             }
           }.bind(this)
         );
+    },
+    checkId(){
+      const id = localStorage.getItem("id");
+      if (id == null) {
+        this.$router.push({ name: "member-login" });
+      }
     },
     insertComm() {
       const id = localStorage.getItem("id");
       const writeParam = new URLSearchParams();
       writeParam.append("id", id);
       writeParam.append("contents", this.commContents);
-      if (id == null) {
-        this.$router.push({ name: "member-login" });
-        alert("회원만 등록 가능합니다.");
-      }
       axios
         .post(`http://localhost:8082/triplus/api/section/magazines/comments/${this.$route.params.brdNum}`, writeParam, {
           headers: {
@@ -180,11 +174,9 @@ export default {
         .then(
           function (resp) {
             if (resp.data.result == "success") {
-              alert("댓글 등록 성공");
               this.commContents = "";
               this.getCommList();
             } else {
-              alert("댓글 등록 실패");
               this.commContents = "";
               this.getCommList();
             }
@@ -196,11 +188,6 @@ export default {
 </script>
 
 <style scoped>
-* {
-  padding: 20px;
-  margin: 0px;
-  padding: 0px;
-}
 a {
   color: #333;
   font-weight: bold;
@@ -265,7 +252,7 @@ a {
 }
 .article-footer {
   width: 100%;
-  margin: 0 0 20px 0;
+  margin: 0 0 5px 0;
   border-top: 1px solid gray;
 }
 .board-footer {
@@ -274,14 +261,11 @@ a {
   justify-content: flex-end;
   width: 100%;
   align-items: center;
-  padding: 20px;
-  margin: 0px 20px;
+  padding: 0px;
+  margin: 0px 0px 0 -20px;
 }
 .board-footer * {
   margin: 0px 4px;
-}
-#recommendBtn {
-  margin-left: 910px;
 }
 .board-reply Textarea {
   margin-top: 30px;

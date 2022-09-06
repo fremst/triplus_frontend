@@ -22,7 +22,7 @@
         >
           <Column field="brdNum" header="글번호" style="width: 100px"></Column>
           <Column field="category" header="카테고리" style="width: 100px"></Column>
-          <Column field="title" header="제목" class="flex-1 text-center">
+          <Column field="title" header="제목">
             <template #body="slotProps">
               <a href="#" @click.prevent="onDetail(slotProps.data.brdNum)" v-text="slotProps.data.title"></a>
             </template>
@@ -30,7 +30,7 @@
           <!-- 작성자가 admin으로 다 동일하기 때문에 주석처리...
           <Column field="writerId" header="작성자" style="width: 100px;"></Column>-->
           <Column field="wdate" header="작성일" style="width: 150px"></Column>
-          <Column field="hit" header="조회수" style="width: 100px"></Column>
+          <Column field="hit" header="조회" style="width: 100px"></Column>
         </DataTable>
       </div>
       <div class="board-footer">
@@ -74,9 +74,6 @@ export default {
   },
   mounted() {},
   methods: {
-    onSearch() {
-      alert("미구현");
-    },
     onWrite() {
       this.$router.push({ name: "notice-write" });
     },
@@ -111,10 +108,6 @@ export default {
 </script>
 
 <style scoped>
-* {
-  margin: 0;
-  padding: 0;
-}
 a {
   text-decoration: none;
 }

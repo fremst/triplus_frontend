@@ -58,7 +58,7 @@ export default {
   },
   methods: {
     onList() {
-      this.$router.push({ name: "notices" });
+      this.$router.go(-1);
     },
     onDelete() {
       axios
@@ -70,10 +70,7 @@ export default {
         .then(
           function (resp) {
             if (resp.data == "success") {
-              alert("공지 삭제 완료!");
               this.$router.push({ name: "notices" });
-            } else {
-              alert("삭제 실패");
             }
           }.bind(this)
         );
@@ -97,11 +94,6 @@ export default {
 </script>
 
 <style scoped>
-* {
-  padding: 20px;
-  margin: 0px;
-  padding: 0px;
-}
 a {
   color: #333;
   font-weight: bold;

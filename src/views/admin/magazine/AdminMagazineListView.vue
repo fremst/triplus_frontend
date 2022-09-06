@@ -20,7 +20,7 @@
           <DataTable
             class="board-table"
             :paginator="true"
-            paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown"
+            paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink"
             :value="list"
             responsiveLayout="scroll"
             :rows="10"
@@ -32,13 +32,13 @@
               </template>
             </Column>
             <Column field="category" header="카테고리" style="width: 100px"></Column>
-            <Column field="title" header="제목">
+            <Column field="title" header="제목" >
               <template #body="slotProps">
                 <a href="#" @click.prevent="onDetail(slotProps.data.brdNum)" v-text="slotProps.data.title"></a>
               </template>
             </Column>
             <Column field="wdate" header="작성일" style="width: 150px"></Column>
-            <Column field="hit" header="조회수" style="width: 100px"></Column>
+            <Column field="hit" header="조회" style="width: 100px"></Column>
           </DataTable>
         </div>
       </div>
@@ -100,8 +100,8 @@ tr {
   justify-content: center;
 }
 img {
-  width: 200px;
-  height: 120px;
+  width: 180px;
+  height: 200px;
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
   margin-right: 2rem;
 }
