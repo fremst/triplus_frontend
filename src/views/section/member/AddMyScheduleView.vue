@@ -96,23 +96,28 @@ export default {
 
       const postUrl = `${process.env.VUE_APP_API_URL || ""}/section/schedules/`;
       const response = await axios.post(postUrl, params, defaultOptions).catch(err => {
-        alert("일정추가 실패", err);
+        this.serverError();
+        console.log(err);
       });
 
       if (response.data.result === "success") {
-        alert("일정추가 성공");
-        router.push("/section/member/schedule/main");
+        router.push({ name: "add-schedule-main", params: { skdNum: response.data.skdNum } });
       } else {
-        alert("일정추가 실패");
+        this.showError();
       }
     },
     getFormattedDate(date) {
       if (date) {
-        console.log(date);
         return date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
       } else {
         return "";
       }
+    },
+    showError() {
+      this.$toast.add({ severity: "error", summary: "Error Message", detail: "일정추가 실패", life: 3000 });
+    },
+    serverError() {
+      this.$toast.add({ severity: "error", summary: "Error Message", detail: "서버에러", life: 3000 });
     }
   }
 };

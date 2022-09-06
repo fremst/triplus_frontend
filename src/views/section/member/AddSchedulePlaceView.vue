@@ -30,7 +30,7 @@
                 />
               </div>
             </template>
-            <Column selectionMode="multiple" style="width: 3rem" :exportable="false"></Column>
+            <Column selectionMode="single" style="width: 3rem" :exportable="false"></Column>
             <Column header="장소이미지" style="min-width: 8rem">
               <template #body="slotProps">
                 <img
@@ -59,8 +59,14 @@
       </div>
     </div>
     <template #footer>
+      <div class="field col-12 md:col-7">
+        <label for="time">일정에 대한 시간을 입력해 주세요.</label>
+        <Calendar id="time" v-model="date" :timeOnly="true" hourFormat="12" />
+        <label for="memo">일정에 대한 메모를 입력해 주세요</label>
+        <Textarea id="memo" v-model="memo" />
+      </div>
       <Button class="p-button-text" icon="pi pi-times" label="취소" @click="closeDialog(false)" />
-      <Button class="p-button-text" icon="pi pi-check" label="추가" @click="addSchedulePlace" />
+      <Button class="p-button-text" icon="pi pi-check" label="추가" @click="addSchedulePlace(selectedProducts)" />
     </template>
   </Dialog>
 </template>
@@ -77,9 +83,10 @@ export default {
       default() {
         return true;
       }
-    }
+    },
+    skdNum: Number
   },
-  emits: ["update:visible", "closeDialog"],
+  emits: ["update:visible", "closeDialog", "addMarker"],
   data() {
     return {
       container: null,
@@ -88,6 +95,7 @@ export default {
       addr: null,
       mapx: null,
       mapy: null,
+      date: null,
       memo: null,
       markers: [],
       infowindow: null,
@@ -118,101 +126,29 @@ export default {
   },
   mounted() {
     this.getList();
-    if (!window.kakao || !window.kakao.maps) {
-      const script = document.createElement("script");
-      script.type = "text/javascript";
-      script.src =
-        "//dapi.kakao.com/v2/maps/sdk.js?autoload=false&appkey=" +
-        `${process.env.VUE_APP_KAKAO_API_KEY || ""}` +
-        "&libraries=clusterer,drawing,services";
-      /* eslint를 사용한다면 kakao 변수가 선언되지 않았다고
-       * 오류를 내기 때문에 아래 줄과 같이 전역변수임을
-       * 알려주어야 한다. */
-      /* global kakao */
-      script.addEventListener("load", () => {
-        kakao.maps.load(() => {
-          // 카카오맵 API가 로딩이 완료된 후 지도의 기본적인 세팅을 시작해야 한다.
-          this.initMap();
-        });
-      });
-      document.head.appendChild(script);
-    }
   },
   methods: {
-    getList() {
-      const getUrl = `${process.env.VUE_APP_API_URL || ""}/section/places/`;
-      axios
-        .get(getUrl, this.data, defaultOptions)
-        .then(res => {
-          this.products = res.data;
-        })
-        .catch(err => {
-          console.log(err.response);
-        });
+    async getList() {
+      const getUrl = `${process.env.VUE_APP_API_URL || ""}/section/places/myplaces/${localStorage.getItem("id")}`;
+      const res = await axios.get(getUrl, defaultOptions).catch(err => {
+        alert("서버 연결 실패", err);
+      });
+      this.products = res.data;
     },
     initFilters() {
       this.filters = {
         global: { value: null, matchMode: FilterMatchMode.CONTAINS }
       };
     },
-    changeSize(size) {
-      const container = document.getElementById("map");
-      container.style.width = `${size}px`;
-      container.style.height = `${size}px`;
-      this.map.relayout();
-    },
-    displayMarker(markerPositions) {
-      if (this.markers.length > 0) {
-        this.markers.forEach(marker => marker.setMap(null));
-      }
-
-      const positions = markerPositions.map(position => new kakao.maps.LatLng(...position));
-
-      if (positions.length > 0) {
-        this.markers = positions.map(
-          position =>
-            new kakao.maps.Marker({
-              map: this.map,
-              position
-            })
-        );
-
-        const bounds = positions.reduce((bounds, latlng) => bounds.extend(latlng), new kakao.maps.LatLngBounds());
-
-        this.map.setBounds(bounds);
-      }
-    },
-    displayInfoWindow() {
-      if (this.infowindow && this.infowindow.getMap()) {
-        //이미 생성한 인포윈도우가 있기 때문에 지도 중심좌표를 인포윈도우 좌표로 이동시킨다.
-        this.map.setCenter(this.infowindow.getPosition());
-        return;
-      }
-
-      var iwContent = '<div style="padding:5px;">Hello World!</div>', // 인포윈도우에 표출될 내용으로 HTML 문자열이나 document element가 가능합니다
-        iwPosition = new kakao.maps.LatLng(37.566815190669736, 126.97864094233952), //인포윈도우 표시 위치입니다
-        iwRemoveable = true; // removeable 속성을 ture 로 설정하면 인포윈도우를 닫을 수 있는 x버튼이 표시됩니다
-
-      this.infowindow = new kakao.maps.InfoWindow({
-        map: this.map, // 인포윈도우가 표시될 지도
-        position: iwPosition,
-        content: iwContent,
-        removable: iwRemoveable
-      });
-
-      this.map.setCenter(iwPosition);
-    },
     goAddMyPlace() {
-      this.$router.push({ name: "add-my-place" });
+      this.$router.push({ name: "add-my-place", params: { skdNum: this.skdNum } });
     },
     closeDialog(returnValue) {
       this.showDialog = false;
       this.$emit("closeDialog", returnValue);
     },
-    addSchedulePlace() {
-      this.addr;
-      console.log(this.addr);
-      this.closeDialog(true);
+    addSchedulePlace(selectedProducts) {
+      this.$emit("addMarker", selectedProducts, this.date, this.memo);
     }
   }
 };

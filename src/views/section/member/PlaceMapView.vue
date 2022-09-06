@@ -1,5 +1,7 @@
 <template>
-  <div id="map1"></div>
+  <div class="map_wrap">
+    <div id="map1"></div>
+  </div>
 </template>
 <script>
 export default {
@@ -10,14 +12,40 @@ export default {
       default() {
         return true;
       }
+    },
+    events: {
+      type: Array,
+      default() {
+        return [];
+      }
     }
   },
   data() {
     return {
       test: true,
-      markers: [],
-      infowindow: null
+      infowindow: null,
+      map: null
     };
+  },
+  computed: {
+    markers() {
+      let result = [];
+      for (let i = 0; i < this.events.length; i++) {
+        result.push({ mapx: this.events[i].mapx, mapy: this.events[i].mapy });
+      }
+      return result;
+    }
+  },
+  watch: {
+    markers: function () {
+      for (let i = 0; i < this.markers.length; i++) {
+        const markerPosition = new kakao.maps.LatLng(this.markers[i].mapy, this.markers[i].mapx);
+        const marker = new kakao.maps.Marker({
+          position: markerPosition
+        });
+        marker.setMap(this.map);
+      }
+    }
   },
   mounted() {
     if (!window.kakao || !window.kakao.maps) {
@@ -49,67 +77,31 @@ export default {
       const options = {
         // 처음 지도의 위치를 lat, lng(위도, 경도) 값으로 설정한다.
         center: new kakao.maps.LatLng(37.566815190669736, 126.97864094233952), //지도 중심좌표
-        level: 5
+        level: 7
       };
 
       this.map = new kakao.maps.Map(container, options);
-    },
-    changeSize(size) {
-      const container = document.getElementById("map1");
-      container.style.width = `${size}px`;
-      container.style.height = `${size}px`;
-      this.map1.relayout();
-    },
-    displayMarker(markerPositions) {
-      if (this.markers.length > 0) {
-        this.markers.forEach(marker => marker.setMap(null));
-      }
-
-      const positions = markerPositions.map(position => new kakao.maps.LatLng(...position));
-
-      if (positions.length > 0) {
-        this.markers = positions.map(
-          position =>
-            new kakao.maps.Marker({
-              map: this.map1,
-              position
-            })
-        );
-
-        const bounds = positions.reduce((bounds, latlng) => bounds.extend(latlng), new kakao.maps.LatLngBounds());
-
-        this.map1.setBounds(bounds);
-      }
-    },
-    displayInfoWindow() {
-      if (this.infowindow && this.infowindow.getMap()) {
-        //이미 생성한 인포윈도우가 있기 때문에 지도 중심좌표를 인포윈도우 좌표로 이동시킨다.
-        this.map1.setCenter(this.infowindow.getPosition());
-        return;
-      }
-
-      var iwContent = '<div style="padding:5px;">Hello World!</div>', // 인포윈도우에 표출될 내용으로 HTML 문자열이나 document element가 가능합니다
-        iwPosition = new kakao.maps.LatLng(37.566815190669736, 126.97864094233952), //인포윈도우 표시 위치입니다
-        iwRemoveable = true; // removeable 속성을 ture 로 설정하면 인포윈도우를 닫을 수 있는 x버튼이 표시됩니다
-
-      this.infowindow = new kakao.maps.InfoWindow({
-        map: this.map1, // 인포윈도우가 표시될 지도
-        position: iwPosition,
-        content: iwContent,
-        removable: iwRemoveable
-      });
-
-      this.map.setCenter(iwPosition);
     }
   }
 };
 </script>
 
 <style lang="scss" scoped>
-.wrap {
-  width: 100%;
+@import "@/scss/main.scss";
+.map_wrap {
+  @include center;
+  position: relative;
+  width: 1080px;
+  margin: 20px auto;
+  height: 350px;
 }
-
+#map1 {
+  @include c-center;
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+}
 .p-dialog .product-image {
   width: 300px;
   height: 200px;
@@ -131,10 +123,6 @@ export default {
       margin-bottom: 0.25rem;
     }
   }
-}
-#map1 {
-  width: 600px;
-  height: 350px;
 }
 
 .button-group {

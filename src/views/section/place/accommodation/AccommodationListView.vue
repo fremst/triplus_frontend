@@ -1,8 +1,7 @@
 <template>
   <div class="wrap">
+    <AdminPageSidebar />
     <div class="inner">
-      <!-- <h2 class="addlist-title">숙소 리스트</h2> -->
-      <!-- 숙소 리스트 -->
       <div class="card">
         <DataTable
           ref="dt"
@@ -26,7 +25,6 @@
               <h5 class="mb-2 md:m-0 p-as-md-center">&nbsp;</h5>
             </div>
           </template>
-          <Column selectionMode="multiple" style="width: 3rem" :exportable="false"></Column>
           <Column header="숙소이미지" style="min-width: 8rem">
             <template #body="slotProps">
               <img
@@ -70,6 +68,8 @@
 
 <script>
 import { FilterMatchMode } from "primevue/api";
+import { defaultOptions } from "@/constant/axios.js";
+import AdminPageSidebar from "@/components/admin/AdminPageSidebar";
 import axios from "axios";
 
 export default {
@@ -85,6 +85,9 @@ export default {
       submitted: false
     };
   },
+  components: {
+    AdminPageSidebar
+  },
   productService: null,
   created() {
     this.initFilters();
@@ -93,19 +96,12 @@ export default {
     this.getList();
   },
   methods: {
-    getList() {
-      axios
-        .get("http://localhost:8082/triplus/api/section/places/accommodation/", this.data, {
-          headers: {
-            "Access-Control-Allow-Origin": "*"
-          }
-        })
-        .then(res => {
-          this.products = res.data;
-        })
-        .catch(err => {
-          console.log(err.response);
-        });
+    async getList() {
+      const getUrl = `${process.env.VUE_APP_API_URL || ""}/section/places/accommodation/`;
+      const resp = await axios.get(getUrl, defaultOptions).catch(err => {
+        alert("서버연결 실패", err);
+      });
+      this.products = resp.data;
     },
     initFilters() {
       this.filters = {

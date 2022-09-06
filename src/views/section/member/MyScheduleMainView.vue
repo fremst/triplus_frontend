@@ -3,20 +3,25 @@
     <div class="inner">
       <div class="main-table">
         <PlanNavigator />
-        <PlaceMapView />
+        <PlaceMapView :events="events" />
         <table class="schedule-table">
-          <tr v-for="(day, i) in list.day" :key="i">
+          <AddScheduleDialog
+            v-model:visible="showConfirmDialog"
+            @addMarker="addMySchedule"
+            @closeDialog="closePlaceDialog"
+            :skdNum="this.$route.params.skdNum"
+          />
+          <Button
+            lable="일정추가"
+            class="p-button-outlined p-button-primary p-button-sm mb-3"
+            @click="openDialog('addPlace', true, i)"
+            >일정추가</Button
+          >
+          <tr v-for="(day, i) in list.days" :key="i">
             <td class="add-schedule">
               day{{ day }} / {{ dateCalc(i) }}<br />
-              <Button
-                lable="일정추가"
-                class="p-button-outlined p-button-primary p-button-sm mb-3"
-                @click="openDialog('addPlace', true)"
-                >일정추가</Button
-              >
-              <AddScheduleDialog v-model:visible="showConfirmDialog" @closeDialog="closePlaceDialog" />
               <div class="card">
-                <Timeline :value="events1">
+                <Timeline :value="events">
                   <template #opposite="slotProps">
                     <small class="p-text-secondary">{{ slotProps.item.date }}</small>
                   </template>
@@ -28,6 +33,9 @@
             </td>
           </tr>
         </table>
+        <Button lable="일정저장" class="p-button p-button-primary p-button-sm mb-3" @click="saveMySchedule"
+          >일정저장</Button
+        >
       </div>
     </div>
   </div>
@@ -39,18 +47,14 @@ import router from "@/router";
 import PlanNavigator from "@/components/member/plan/PlanHeader.vue";
 import PlaceMapView from "@/views/section/member/PlaceMapView.vue";
 import AddScheduleDialog from "@/views/section/member/AddSchedulePlaceView.vue";
+import { defaultOptions } from "@/constant/axios";
 export default {
   data() {
     return {
-      list: [{ sDate: "", eDate: "", day: "", destination: "" }],
+      list: [{ sDate: "", eDate: "", days: "", destination: "" }],
       week: ["일", "월", "화", "수", "목", "금", "토"],
       showConfirmDialog: false,
-      events1: [
-        { status: "Processing", date: "15/10/2020 14:00", icon: "pi pi-cog", color: "#673AB7" },
-        { status: "Processing", date: "15/10/2020 14:00", icon: "pi pi-cog", color: "#673AB7" },
-        { status: "Shipped", date: "2022/10/10 16:15", icon: "pi pi-shopping-cart", color: "#FF9800" },
-        { status: "Delivered", date: "16/10/2020 10:00", icon: "pi pi-check", color: "#607D8B" }
-      ],
+      events: [],
       schduleDialog: false
     };
   },
@@ -64,16 +68,13 @@ export default {
     this.dateCalc();
   },
   methods: {
-    // getDate() {
-    //   const getUrl = `${process.env.VUE_APP_API_URL || ""} api/section/schedules/{skdNum}`;
-    //   axios.get(getUrl, this.data);
-    // },
-    getDate() {
-      axios.get("/demo/data/day.json").then(
-        function (resp) {
-          this.list = resp.data;
-        }.bind(this)
-      );
+    async getDate() {
+      const getUrl = `${process.env.VUE_APP_API_URL || ""}/section/schedules/${this.$route.params.skdNum}`;
+      const resp = await axios.get(getUrl, defaultOptions).catch(err => {
+        this.serverError(err);
+      });
+
+      this.list = resp.data;
     },
     getFormattedDate(date) {
       if (date) {
@@ -92,36 +93,65 @@ export default {
         this.showConfirmDialog = show;
       }
     },
+    serverError() {
+      this.$toast.add({ severity: "error", summary: "Error Message", detail: "서버에러", life: 3000 });
+    },
     closePlaceDialog(value) {
       if (!value) {
         return false;
       } else {
-        this.goList(-1);
+        return true;
       }
     },
     goWeather() {
       router.push("/section/member/schedule/weather");
+    },
+    addMySchedule(selectedProducts, date) {
+      console.log(this.events);
+      this.events.push({
+        status: selectedProducts.title,
+        date: date.getHours() + ":" + date.getMinutes() + " / " + this.memo,
+        icon: "pi pi-cog",
+        color: "#673AB7",
+        mapx: selectedProducts.mapx,
+        mapy: selectedProducts.mapy
+      });
+      this.showConfirmDialog = false;
+    },
+    saveMySchedule() {
+      const params = new URLSearchParams();
+      params.append("skdNum", this.$route.params.skdNum);
+      params.append("day", this.day);
+      params.append("memo", this.memo);
+      params.append("brdNum", this.brdNum);
+
+      console.log(params);
     }
   }
 };
 </script>
-<style scoped>
+<style lang="scss" scoped>
+@import "@/scss/main.scss";
 .wrap {
+  @include center;
   width: 100%;
 }
 .inner {
+  @include c-center;
   width: 1080px;
-  margin: 10px auto;
+  margin: 20px auto;
 }
-.main-table {
-  width: 650px;
-  margin: 0 auto;
-}
+
 .schedule-table {
-  margin-left: 150px;
+  @include center;
   margin-bottom: 20px;
 }
+.p-timeline-event-opposite {
+  @include c-center;
+}
 .add-schedule {
+  width: 300px;
+  height: auto;
   padding-top: 30px;
 }
 Button {
@@ -129,8 +159,10 @@ Button {
   margin-bottom: 10px;
 }
 .p-button-outlined {
-  width: 200px;
+  width: 220px;
+  margin-left: 50px;
   display: inline;
   text-align: center;
+  align-items: center;
 }
 </style>

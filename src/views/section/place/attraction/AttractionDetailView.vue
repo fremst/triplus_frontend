@@ -56,6 +56,7 @@
 import axios from "axios";
 import router from "@/router";
 import ConfirmDialog from "@/views/admin/place/ConfirmDialog.vue";
+import { defaultOptions } from "@/constant/axios";
 
 export default {
   data() {
@@ -73,47 +74,30 @@ export default {
     this.getDetail();
   },
   methods: {
-    getDetail() {
-      axios
-        .get(`http://localhost:8082/triplus/api/section/places/attraction/${this.$route.params.brdNum}`, this.data, {
-          headers: {
-            "Access-Control-Allow-Origin": "*"
-          }
-        })
-        .then(res => {
-          this.data = res.data;
-        })
-        .catch(err => {
-          console.log(err.response);
-        });
+    async getDetail() {
+      const getUrl = `${process.env.VUE_APP_API_URL || ""}/section/places/attraction/${this.$route.params.brdNum}`;
+      const resp = await axios.get(getUrl, defaultOptions).catch(err => {
+        alert("서버 연결 실패", err);
+      });
+
+      this.data = resp.data;
     },
     openDialog(dialogType, show) {
       if (dialogType === "delete") {
         this.showConfirmDialog = show;
       }
     },
-    deleteSelectedProducts(value) {
+    async deleteSelectedProducts(value) {
       //삭제버튼을 누르고 YES클릭시 상태값이 콘솔로그에 찍힘. ex)true
       console.log(value);
       if (!value) {
         return false;
       } else {
-        axios
-          .delete(
-            `http://localhost:8082/triplus/api/section/places/attraction/${this.$route.params.brdNum}`,
-            this.data,
-            {
-              headers: {
-                "Access-Control-Allow-Origin": "*"
-              }
-            }
-          )
-          .then(res => {
-            this.data = res.data;
-          })
-          .catch(err => {
-            console.log(err.response);
-          });
+        const deleteUrl = `${process.env.VUE_APP_API_URL || ""}/section/places/attraction/${this.$route.params.brdNum}`;
+        const resp = await axios.delete(deleteUrl, defaultOptions).catch(err => {
+          alert("서버 연결 실패", err);
+        });
+        this.data = resp.data;
         this.goList(-1);
       }
     },

@@ -56,6 +56,7 @@
 <script>
 import axios from "axios";
 import { defaultOptions } from "@/constant/axios.js";
+import router from "@/router";
 
 export default {
   data() {
@@ -104,9 +105,9 @@ export default {
   methods: {
     async addMyPlace() {
       const params = new URLSearchParams();
-      params.append("id", localStorage.getItem("id"));
+      params.append("writerId", localStorage.getItem("id"));
       params.append("title", this.title);
-      params.append("overview", this.overview);
+      params.append("overview", this.memo);
       params.append("mcatName", "내장소");
       params.append("scatName", "전체");
       params.append("region", this.title);
@@ -116,29 +117,31 @@ export default {
 
       const postUrl = `${process.env.VUE_APP_API_URL || ""}/section/places/myplaces/`;
       const response = await axios.post(postUrl, params, defaultOptions).catch(err => {
-        alert("추가 실패", err);
+        this.serverError(err);
       });
+      console.log(response);
 
       if (response.data.result === "success") {
-        alert("나만의 장소 추가 성공");
-        this.$router.push({ name: "add-schedule-main" });
+        this.$router.push({ name: "add-schedule-main", params: { skdNum: this.$route.params.skdNum } });
       } else {
-        alert("추가 실패");
+        this.showError();
       }
     },
     onCancel() {
-      this.title = "";
-      this.addr = "";
-      this.overview = "";
-
-      return this.submitted;
+      router.back();
+    },
+    showError() {
+      this.$toast.add({ severity: "error", summary: "Error Message", detail: "나만의 장소추가 실패", life: 3000 });
+    },
+    serverError() {
+      this.$toast.add({ severity: "error", summary: "Error Message", detail: "서버에러", life: 3000 });
     },
     initMap() {
       const container = document.getElementById("map"); //지도 표시 영역
       const options = {
         // 처음 지도의 위치를 lat, lng(위도, 경도) 값으로 설정한다.
         center: new kakao.maps.LatLng(37.566815190669736, 126.97864094233952), //지도 중심좌표
-        level: 4
+        level: 5
       };
 
       this.map = new kakao.maps.Map(container, options);

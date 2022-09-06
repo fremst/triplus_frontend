@@ -345,7 +345,7 @@ const routes = [
   },
   //일정등록 메인페이지
   {
-    path: "/section/member/schedule/main",
+    path: "/section/member/schedule/main/:skdNum",
     name: "add-schedule-main",
     component: MyScheduleMainView
   },

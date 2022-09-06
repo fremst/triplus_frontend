@@ -7,7 +7,7 @@
   <div class="navi-header">
     <div>
       <h1><a href="/section/member/schedule/main">국내여행</a></h1>
-      <span>{{ list.destination }}여행, {{ list.sDate }} ~ {{ list.eDate }}</span>
+      <span>{{ list.destination }}여행, {{ $getFormattedDateOnly(new Date(list.sDate)) }} ~ {{ $getFormattedDateOnly(new Date(list.eDate)) }}</span>
       <br />
     </div>
     <div>
@@ -35,9 +35,12 @@ export default {
   props: {},
   data() {
     return {
-      list: [{ sDate: "", eDate: "", day: "", destination: "" }],
+      list: { sDate: "", eDate: "", days: "", destination: "" },
       week: ["일", "월", "화", "수", "목", "금", "토"]
     };
+  },
+  mounted() {
+    this.getDate();
   },
   methods: {
     goInvite() {},
@@ -52,9 +55,14 @@ export default {
     goWeather() {
       router.push("/section/member/schedule/weather");
     },
-    getDate() {
-      axios.get("/demo/data/day.json").then(
+    goChat() {
+      alert("미구현");
+    },
+     getDate() {
+      const getUrl = `${process.env.VUE_APP_API_URL || ""}/section/schedules/${this.$route.params.skdNum}`;
+      axios.get(getUrl).then(
         function (resp) {
+          // console.log(resp.data);
           this.list = resp.data;
         }.bind(this)
       );

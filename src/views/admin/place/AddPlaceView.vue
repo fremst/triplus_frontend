@@ -1,5 +1,6 @@
 <template>
   <div class="wrap">
+    <AdminPageSidebar />
     <div class="inner">
       <h1 class="add-form-title">관리자 장소 등록</h1>
       <div class="form-group">
@@ -72,6 +73,7 @@
         </div>
       </div>
       <div class="button-group">
+        <Toast />
         <Button class="p-button-primary mr-2" label="Save" @click="onSave" />
         <Button class="p-button-secondary mr-2" label="Cancel" @click="onCancel" />
       </div>
@@ -81,6 +83,8 @@
 
 <script>
 import axios from "axios";
+import { defaultOptions } from "@/constant/axios";
+import AdminPageSidebar from "@/components/admin/AdminPageSidebar";
 
 export default {
   name: "AddPlaceForm",
@@ -196,8 +200,11 @@ export default {
       submitted: false
     };
   },
+  components: {
+    AdminPageSidebar
+  },
   methods: {
-    onSave() {
+    async onSave() {
       this.submitted = true;
       const addPlaceParam = new URLSearchParams();
       addPlaceParam.append("userId", "admin");
@@ -213,25 +220,28 @@ export default {
       addPlaceParam.append("firstimage", this.firstimage);
       addPlaceParam.append("overview", this.overview);
 
-      axios
-        .post(
-          `http://localhost:8082/triplus/api/section/places/${this.mcatNameToEng(addPlaceParam.get("mcatName"))}/`,
-          addPlaceParam,
-          {
-            headers: {
-              "Access-Control-Allow-Origin": "*"
-            }
-          }
-        )
-        .then(
-          function (resp) {
-            if (resp.data.result === "success") {
-              alert("장소추가 성공");
-            } else {
-              alert("장소추가 실패");
-            }
-          }.bind(this)
-        );
+      const postUrl = `${process.env.VUE_APP_API_URL || ""}/section/places/${this.mcatNameToEng(
+        addPlaceParam.get("mcatName")
+      )}/`;
+
+      const resp = await axios.post(postUrl, addPlaceParam, defaultOptions).catch(err => {
+        this.serverError(err);
+      });
+
+      if (resp.data.result === "success") {
+        this.showSuccess();
+      } else {
+        this.showError();
+      }
+    },
+    showSuccess() {
+      this.$toast.add({ severity: "success", summary: "Success Message", detail: "장소추가 성공", life: 3000 });
+    },
+    showError() {
+      this.$toast.add({ severity: "error", summary: "Error Message", detail: "장소추가 실패", life: 3000 });
+    },
+    serverError() {
+      this.$toast.add({ severity: "error", summary: "Error Message", detail: "서버에러", life: 3000 });
     },
     onCancel() {
       this.title = "";
@@ -252,7 +262,7 @@ export default {
     mcatNameToEng(mcatName) {
       console.log(mcatName);
       if (mcatName == "명소") {
-        return "attration";
+        return "attraction";
       } else if (mcatName == "맛집") {
         return "restaurant";
       } else {
