@@ -20,7 +20,7 @@ export default {
 
    data(){
         return{
-            title: "자주하는 질문",
+            title: "FAQ",
             faqList: {},
         }
    },
@@ -35,9 +35,7 @@ export default {
 
     }).then(function(resp){
 
-        console.log(resp);
         this.faqList = resp.data;
-        console.log("faqList:",this.faqList);
 
     }.bind(this)).catch(err => {
         console.log(err)

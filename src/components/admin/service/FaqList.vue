@@ -25,7 +25,7 @@
         </DataTable>
       </div>
       <div class="board-footer">
-        <Button color="#67AB9F" @click="onWrite">FAQ 글 등록</Button>
+        <Button class="p-button-primary mr-2" label="글 등록" @click="onWrite"/>
       </div>
     </div>
   </div>
@@ -83,10 +83,7 @@ export default {
           function (resp) {
             this.list = resp.data;
           }.bind(this)
-        )
-        .catch(err => {
-          console.log(err);
-        });
+        );
     },
     initFilters() {
       this.filters = {
@@ -99,9 +96,7 @@ export default {
 
 <style scoped>
 * {
-  padding: 20px;
   margin: 0px;
-  padding: 0px;
 }
 a {
   text-decoration: none;
@@ -114,6 +109,8 @@ a {
   background-color: white;
 }
 .board {
+  margin-top: 20px;
+  margin-bottom: 20px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -165,8 +162,5 @@ a {
 }
 .board-footer * {
   margin: 0 4px;
-}
-#icon {
-  margin-left: 735px;
 }
 </style>
