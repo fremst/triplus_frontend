@@ -44,6 +44,7 @@
           <div class="button-group">
             <Button class="p-button-primary mr-2" label="Save" @click="onSave" />
             <Button class="p-button-secondary mr-2" label="Cancel" @click="onCancel" />
+            <Button class="p-button-secondary mr-2" label="목록으로" @click="goList()" />
           </div>
         </div>
       </div>
@@ -117,7 +118,11 @@ export default {
     confirm() {
       this.faqAdd = false;
       return router.push(`/admin/service/faq`);
-    }
+    },
+    goList(){
+
+    return router.push(`/admin/service/faq`);
+    },
   }
 };
 </script>

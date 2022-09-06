@@ -1,4 +1,5 @@
 <template>
+<AdminPageSidebar />
   <div class="main">
     <div class="board">
       <div class="board-header">
@@ -36,12 +37,14 @@ import axios from "axios";
 import DataTable from "primevue/datatable";
 import Column from "primevue/column";
 import { FilterMatchMode } from "primevue/api";
+import AdminPageSidebar from "@/components/admin/AdminPageSidebar";
 
 export default {
   name: "FaqList",
   components: {
     DataTable,
-    Column
+    Column,
+    AdminPageSidebar
   },
   props: {
     title: String,
