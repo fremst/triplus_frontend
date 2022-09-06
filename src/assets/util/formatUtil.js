@@ -26,7 +26,6 @@ export const dateFormatter = {
 
 export const currencyFormatter = {
   getFormattedCurrency: value => {
-    console.log("val", value);
     if (value) {
       return value.toLocaleString("ko-KR") + " 원";
     } else {
