@@ -21,13 +21,13 @@
         <Accordion style="width: 100%">
           <AccordionTab v-for="reply of replyList" :key="reply" :header="reply.title">
             <div style="text-align: end">{{ reply.writerId }}님이 {{ reply.wdate }}에 작성한 글입니다.</div>
-            <Divider style="border: 1px solid #ccc" />
+            <Divider style="border-top: 1px solid #ccc" />
             <div v-html="reply.contents"></div>
-            <Divider style="border: 1px solid #ccc" />
-            <div>
+            <!-- <Divider style="border: 1px solid #ccc" /> -->
+            <!-- <div>
               답변이 도움이 되었다면 평가해주세요!
               <rating v-model="rate" :cancel="false"></rating>
-            </div>
+            </div> -->
           </AccordionTab>
         </Accordion>
       </div>
@@ -54,27 +54,29 @@
       <div
         class="board-footer"
         v-show="article.published"
-        style="flex-direction: column; justify-content: flex-end; align-items: flex-end"
-      >
-        <!-- 답글 -->
-        <div v-if="isLogin">
-          <Button @click="onReply">질문에 답변하기</Button>
-        </div>
-        <br />
-        <div>
+        style="flex-direction: column; justify-content: flex-end; align-items: flex-end">
+          <!-- 답글 -->
+          <div v-if="isLogin">
+            <Button @click="onReply">질문에 답변하기</Button>
+          </div>
+          <br />
+          <div>
           <!-- 수정 -->
           <Dialog header="비밀번호 입력" v-model:visible="displayUpdate">
             <Password id="pwd" v-model="pwd" :feedback="false" />
             <Button @click="onUpdate">수정</Button>
           </Dialog>
-          <Button @click="viewUpdate">수정</Button>
+          <Button v-if="isUpdatable()" @click="viewUpdate">수정</Button>
 
           <!-- 삭제 -->
           <Dialog header="비밀번호 입력" v-model:visible="displayDelete">
             <Password id="pwd" v-model="pwd" :feedback="false" />
-            <Button class="p-button-danger" @click="onDelete">삭제</Button>
+            <Button class="p-button-danger" @click="displayDeleteConfirm = true">삭제</Button>
           </Dialog>
-          <Button class="p-button-danger" @click="viewDelete">삭제</Button>
+          <ConfirmDialog v-model:visible="displayDeleteConfirm"
+            :msg="'해당 문의글을 삭제하시겠습니까?'"
+            @closeDialog="onDelete"/>
+          <Button v-if="isUpdatable()" class="p-button-danger" @click="viewDelete">삭제</Button>
 
           <!-- 목록 -->
           <Button @click="onList">목록으로</Button>
@@ -93,7 +95,7 @@ import axios from "axios";
 import Accordion from "primevue/accordion";
 import AccordionTab from "primevue/accordiontab";
 import Divider from "primevue/divider";
-import Rating from "primevue/rating";
+import ConfirmDialog from '@/views/admin/place/ConfirmDialog.vue';
 
 export default {
   name: "QnADetail",
@@ -103,7 +105,7 @@ export default {
     Accordion,
     AccordionTab,
     Divider,
-    Rating
+    ConfirmDialog
   },
   props: {
     title: String, // 타이틀
@@ -122,6 +124,7 @@ export default {
       replyList: [],
       displayUpdate: false,
       displayDelete: false,
+      displayDeleteConfirm: false,
       pwd: "",
       rate: 0,
       isLogin: false
@@ -142,27 +145,28 @@ export default {
         })
         .then(
           function (resp) {
-            console.log(resp);
             if (resp.data.result == false) {
               alert("비밀번호가 틀렸습니다.");
             } else {
-              localStorage.setItem("qnaNum", tempBrdNum);
-              localStorage.setItem("qnaPwd", this.pwd);
-              this.$router.push(`${this.URL}/write`);
+              this.$router.push(`${this.URL}/write?qnaNum=${tempBrdNum}&qnaPwd=${this.pwd}`);
             }
           }.bind(this)
         );
     },
     onReply() {
-      if (localStorage.getItem("id") == null) return alert("로그인이 필요한 서비스입니다.");
+      if (localStorage.getItem("id") == null)
+        return alert("로그인이 필요한 서비스입니다.");
 
-      localStorage.setItem("qnaReplyNum", this.$route.params.brdNum);
-      this.$router.push(`${this.URL}/write`);
+      // localStorage.setItem("qnaReplyNum", this.$route.params.brdNum);
+      this.$router.push(`${this.URL}/write?qnaReplyNum=${this.$route.params.brdNum}`);
     },
     viewUpdate() {
       this.displayUpdate = !this.displayUpdate;
     },
-    onDelete() {
+    onDelete(isOk) {
+      this.displayDeleteConfirm = false;
+      if (!isOk)
+        return;
       const writeParam = new URLSearchParams();
       writeParam.append("pwd", this.pwd);
 
@@ -174,7 +178,6 @@ export default {
         })
         .then(
           function (resp) {
-            console.log(resp);
             if (resp.data.result == true) {
               alert("문의글이 제거되었습니다.");
               this.$router.push(this.URL);
@@ -204,7 +207,6 @@ export default {
         })
         .then(
           function (resp) {
-            console.log(resp);
             this.article = resp.data;
           }.bind(this)
         );
@@ -221,7 +223,6 @@ export default {
         })
         .then(
           function (resp) {
-            console.log(resp);
             this.replyList = resp.data;
           }.bind(this)
         );
@@ -239,7 +240,6 @@ export default {
         })
         .then(
           function (resp) {
-            console.log(resp);
             if (resp.data.result == false) {
               alert("비밀번호가 틀렸습니다.");
             } else {
@@ -249,6 +249,10 @@ export default {
             }
           }.bind(this)
         );
+    },
+    isUpdatable() {
+      return this.article.writerId == "guest" ||
+        this.article.writerId == localStorage.getItem("id");
     }
   },
   created() {

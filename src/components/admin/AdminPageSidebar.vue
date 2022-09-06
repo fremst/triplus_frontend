@@ -106,7 +106,6 @@ export default {
 
 <style scoped>
 .admin-page-sidebar {
-  margin-top: 20px;
   position: absolute;
   left: 200px;
   z-index: 99;

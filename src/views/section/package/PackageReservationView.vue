@@ -1,8 +1,14 @@
 <template>
   <div class="wrapper">
     <div class="inner">
+      <div class="title">
+        <h2 style="color: #009688">결제하기</h2>
+      </div>
+      <hr />
+
       <div>
-        <h1>상품 정보</h1>
+        <br />
+        <h3>상품 정보</h3>
         <br />
         <table>
           <tr>
@@ -34,7 +40,7 @@
           </tr>
         </table>
         <br />
-        <h1>예약자 정보</h1>
+        <h3>예약자 정보</h3>
         <br />
         <table>
           <tr>
@@ -85,7 +91,7 @@
           </tr>
         </table>
         <br />
-        <h1 v-if="list.length > 0">동행자 정보</h1>
+        <h3 v-if="list.length > 0">동행자 정보</h3>
         <br />
         <table v-for="(pkgCom, i) in list" :key="i">
           <tr>
@@ -130,7 +136,7 @@
           </tr>
         </table>
         <br />
-        <h1>할인 쿠폰 선택</h1>
+        <h3>할인 쿠폰 선택</h3>
         <br />
         <table>
           <tr>
@@ -228,14 +234,17 @@
         </form>
         <br />
         <div class="btns">
-          <Button @click="$router.back()">뒤로가기</Button>&emsp;
-          <Button @click="pay()" form="payForm">결제하기</Button>
+          <Button @click="$router.back()" class="p-button-secondary p-component p-button-label mt-3 mb-5 mr-3">
+            뒤로가기
+          </Button>
+          <Button @click="pay()" class="p-button p-component p-button-label mt-3 mb-5"> 결제하기 </Button>
         </div>
         <br />
         <iframe
           name="payFormFrame"
           :style="{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', display: iframeDisplay }"
         ></iframe>
+        <Toast></Toast>
       </div>
     </div>
   </div>
@@ -336,7 +345,12 @@ export default {
     const getPkgUrl = `${process.env.VUE_APP_API_URL || ""}/section/packages/${this.$route.params.brdNum}`;
 
     const pkgRes = await axios.get(getPkgUrl, defaultOptions).catch(err => {
-      alert("서버 연결 실패", err);
+      this.$toast.add({
+        severity: "error",
+        summary: "",
+        detail: err,
+        life: 3000
+      });
     });
 
     this.packageDetails = Object.assign(pkgRes.data.dto, pkgRes.data.map);
@@ -344,7 +358,12 @@ export default {
     const getMbrUrl = `${process.env.VUE_APP_API_URL || ""}/member/mypage/find/${localStorage.getItem("id")}`;
 
     const mbrRes = await axios.get(getMbrUrl, defaultOptions).catch(err => {
-      alert("서버 연결 실패", err);
+      this.$toast.add({
+        severity: "error",
+        summary: "",
+        detail: err,
+        life: 3000
+      });
     });
 
     this.bookerInfo = mbrRes.data.dto;
@@ -356,6 +375,18 @@ export default {
 </script>
 
 <style scoped>
+.title {
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+
+hr {
+  border: 0;
+  height: 1px;
+  margin-bottom: 15px;
+  background: #dee2e6;
+}
+
 .box {
   border: 1px solid #dee2e6;
   padding: 30px 20px;

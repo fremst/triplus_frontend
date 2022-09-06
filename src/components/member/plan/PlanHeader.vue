@@ -22,7 +22,6 @@
         />
         <Button label="가계부" class="p-button-secondary p-button-rounded p-button-sm mr-4" @click="goExpenses()" />
         <Button label="날씨보기" class="p-button-secondary p-button-rounded p-button-sm mr-4" @click="goWeather()" />
-        <Button label="채팅" class="p-button-secondary p-button-rounded p-button-sm mr-4" @click="goChat()" />
       </div>
     </div>
   </div>

@@ -1,42 +1,41 @@
 <template>
   <div>
-    <h1 v-if="!this.$route.params.brdNum">패키지 상품 등록</h1>
-    <h1 v-else>패키지 상품 수정</h1>
-    <table>
+    <div class="title">
+      <h2 style="color: #009688" v-if="!this.$route.params.brdNum">패키지 등록</h2>
+      <h2 style="color: #009688" v-else>패키지 상품 수정</h2>
+    </div>
+    <hr />
+    <table class="form">
       <tr>
-        <td>
-          <h3>상품명</h3>
-        </td>
+        <td>상품명</td>
         <td>
           <InputText
             type="text"
             v-model="title"
             :class="{ 'p-invalid': submitted && !this.title }"
+            class="mb-2"
             placeholder="상품명을 입력해주세요."
-            style="width: 350px"
+            style="width: 600px"
           />
           <small v-if="submitted && !this.title" class="p-error">상품명을 입력해 주세요.</small>
         </td>
       </tr>
       <tr>
-        <td>
-          <h3>성인 요금</h3>
-        </td>
+        <td>성인 요금</td>
         <td>
           <InputNumber
             v-model="adultPrice"
             :min="0"
             :class="{ 'p-invalid': submitted && !this.adultPrice }"
+            class="mb-2"
             placeholder="성인 요금을 입력해주세요."
-            style="width: 350px"
+            style="width: 600px"
           />
           <small v-if="submitted && !this.adultPrice" class="p-error">성인 요금을 입력해 주세요.</small>
         </td>
       </tr>
       <tr>
-        <td>
-          <h3>아동 요금</h3>
-        </td>
+        <td>아동 요금</td>
         <td>
           <InputNumber
             v-model="childPrice"
@@ -44,108 +43,102 @@
             currency="KRW"
             locale="ko-KR"
             :class="{ 'p-invalid': submitted && !this.childPrice }"
+            class="mb-2"
             placeholder="아동 요금을 입력해주세요."
-            style="width: 350px"
+            style="width: 600px"
           />
           <small v-if="submitted && !this.childPrice" class="p-error">아동 요금을 입력해 주세요.</small>
         </td>
       </tr>
       <tr>
-        <td>
-          <h3>여행 시작일</h3>
-        </td>
+        <td>여행 시작일</td>
         <td>
           <InputText
             type="date"
             v-model="sDate"
             :class="{ 'p-invalid': submitted && !this.sDate }"
-            style="width: 350px"
+            class="mb-2"
+            style="width: 600px"
           />
           <small v-if="submitted && !this.sDate" class="p-error">여행 시작일을 입력해 주세요.</small>
         </td>
       </tr>
       <tr>
-        <td>
-          <h3>여행 종료일</h3>
-        </td>
+        <td>여행 종료일</td>
         <td>
           <InputText
             type="date"
             v-model="eDate"
+            :min="sDate"
             :class="{ 'p-invalid': submitted && !this.eDate }"
-            style="width: 350px"
+            class="mb-2"
+            style="width: 600px"
           />
           <small v-if="submitted && !this.eDate" class="p-error">여행 시작일을 입력해 주세요.</small>
         </td>
       </tr>
       <tr>
-        <td>
-          <h3>집합 장소</h3>
-        </td>
+        <td>집합 장소</td>
         <td>
           <InputText
             type="text"
             v-model="mtgPlace"
             :class="{ 'p-invalid': submitted && !this.mtgPlace }"
+            class="mb-2"
             placeholder="집합 장소를 입력해주세요."
-            style="width: 350px"
+            style="width: 600px"
           />
           <small v-if="submitted && !this.mtgPlace" class="p-error">집합 장소를 입력해 주세요.</small>
         </td>
       </tr>
       <tr>
-        <td>
-          <h3>여행 지역</h3>
-        </td>
+        <td>여행 지역</td>
         <td>
           <InputText
             type="text"
             v-model="region"
             :class="{ 'p-invalid': submitted && !this.region }"
+            class="mb-2"
             placeholder="여행 지역을 입력해주세요."
-            style="width: 350px"
+            style="width: 600px"
           />
           <small v-if="submitted && !this.region" class="p-error">여행 지역을 입력해 주세요.</small>
         </td>
       </tr>
       <tr>
-        <td>
-          <h3>모집 인원</h3>
-        </td>
+        <td>모집 인원</td>
         <td>
           <InputNumber
             v-model="rcrtCnt"
             :min="1"
             :class="{ 'p-invalid': submitted && !this.rcrtCnt }"
+            class="mb-2"
             placeholder="모집 인원을 입력해주세요."
-            style="width: 350px"
+            style="width: 600px"
           />
           <small v-if="submitted && !this.rcrtCnt" class="p-error">모집 인원을 입력해 주세요.</small>
         </td>
       </tr>
       <tr>
-        <td>
-          <h3>교통 수단</h3>
-        </td>
+        <td>교통 수단</td>
         <td>
           <InputText
             type="text"
             v-model="trans"
             :class="{ 'p-invalid': submitted && !this.trans }"
+            class="mb-2"
             placeholder="교통 수단을 입력해주세요."
-            style="width: 350px"
+            style="width: 600px"
           />
           <small v-if="submitted && !this.trans" class="p-error">교통 수단을 입력해 주세요.</small>
         </td>
       </tr>
       <tr>
-        <td>
-          <h3>썸네일 이미지</h3>
-        </td>
+        <td>썸네일 이미지</td>
         <td>
           <div class="file-box">
             <input type="file" id="tImgFile" accept="image/*" @change="changeTImg" />
-            <label for="tImgFile" class="p-button p-component p-button-label">파일 찾기</label>
+            <label for="tImgFile" class="p-button p-button-outlined p-button-label mb-2">파일 찾기</label>
             <small v-if="submitted && !this.tImgFile" class="p-error">썸네일 이미지를 등록해 주세요.</small>
           </div>
           <table v-if="tImgFile">
@@ -153,22 +146,21 @@
               <td>
                 <img class="file-preview" :src="tImgPreview" />
               </td>
-              <td>
+              <td class="fileName">
                 {{ tImgFile.name }}
               </td>
-              <td>{{ tImgFile.size / 1000 }} KB</td>
+              <td class="fileSize">{{ tImgFile.size / 1000 }} KB</td>
+              <td></td>
             </tr>
           </table>
         </td>
       </tr>
       <tr>
-        <td>
-          <h3>상세 이미지</h3>
-        </td>
+        <td>상세 이미지</td>
         <td>
           <div class="file-box">
             <input type="file" id="pkgImgFile" accept="image/*" @change="changePkgImgs" multiple />
-            <label for="pkgImgFile" class="p-button p-component p-button-label">파일 찾기</label>
+            <label for="pkgImgFile" class="p-button p-button-outlined p-component p-button-label mb-2">파일 찾기</label>
             <small v-if="submitted && !this.pkgImgFiles[0]" class="p-error">상세 이미지를 등록해 주세요.</small>
           </div>
           <table v-if="pkgImgFiles">
@@ -176,10 +168,10 @@
               <td>
                 <img class="file-preview" :src="pkgImgPreview[i]" />
               </td>
-              <td>
+              <td class="fileName">
                 {{ img.name }}
               </td>
-              <td>{{ img.size / 1000 }} KB</td>
+              <td class="fileSize">{{ img.size / 1000 }} KB</td>
               <td>
                 <Button icon="pi pi-times" @click="deleteImg(i)"></Button>
               </td>
@@ -188,26 +180,27 @@
         </td>
       </tr>
       <tr>
-        <td>
-          <h3>상품 상세 설명</h3>
-        </td>
+        <td>상품 상세 설명</td>
         <td><small v-if="submitted && !this.contents" class="p-error">상품 상세 설명을 입력해 주세요.</small></td>
       </tr>
       <tr>
         <td colspan="2">
-          <Editor v-model="contents" editorStyle="height: 320px"></Editor>
+          <Editor v-model="contents" class="mt-2" editorStyle="width:1080px; height: 600px"></Editor>
         </td>
       </tr>
     </table>
-    <Button
-      v-if="!$route.params.brdNum"
-      @click="write()"
-      class="p-button p-component p-button-label"
-      icon="pi pi-upload"
-    >
-      등록
-    </Button>
-    <Button v-else @click="update()" class="p-button p-component p-button-label" icon="pi pi-upload"> 수정 </Button>
+    <div class="button-area">
+      <div>
+        <Button @click="$router.back()" class="p-button-secondary p-component p-button-label mt-3 mb-5 mr-3">
+          이전으로
+        </Button>
+        <Button v-if="!$route.params.brdNum" @click="write()" class="p-button p-component p-button-label mt-3 mb-5">
+          등록하기
+        </Button>
+        <Button v-else @click="update()" class="p-button p-component p-button-label mt-3 mb-5"> 수정하기 </Button>
+      </div>
+    </div>
+    <Toast></Toast>
   </div>
 </template>
 
@@ -321,16 +314,25 @@ export default {
       const postUrl = `${process.env.VUE_APP_API_URL || ""}/section/packages/`;
 
       const res = await axios.post(postUrl, formData, multipartOptions).catch(err => {
-        alert("서버 연결 실패", err);
+        this.$toast.add({
+          severity: "error",
+          summary: "",
+          detail: err,
+          life: 3000
+        });
       });
 
       const brdNum = res.data.brdNum;
 
       if (res.data.result === "success") {
-        alert("패키지 상품 등록 성공");
         this.$router.push({ name: "package-detail", params: { brdNum: brdNum } });
       } else {
-        alert("패키지 상품 등록 실패");
+        this.$toast.add({
+          severity: "error",
+          summary: "",
+          detail: "패키지 상품 등록 실패",
+          life: 3000
+        });
       }
     },
 
@@ -345,16 +347,25 @@ export default {
       const putUrl = `${process.env.VUE_APP_API_URL || ""}/section/packages/${this.$route.params.brdNum}`;
 
       const res = await axios.post(putUrl, formData, multipartOptions).catch(err => {
-        alert("서버 연결 실패", err);
+        this.$toast.add({
+          severity: "error",
+          summary: "",
+          detail: err,
+          life: 3000
+        });
       });
 
       const brdNum = res.data.brdNum;
 
       if (res.data.result === "success") {
-        alert("패키지 상품 수정 성공");
         this.$router.push({ name: "package-detail", params: { brdNum: brdNum } });
       } else {
-        alert("패키지 상품 수정 실패");
+        this.$toast.add({
+          severity: "error",
+          summary: "",
+          detail: "패키지 상품 수정 실패",
+          life: 3000
+        });
       }
     },
 
@@ -362,7 +373,12 @@ export default {
       const getUrl = `${process.env.VUE_APP_API_URL || ""}/section/packages/${this.$route.params.brdNum}`;
 
       const res = await axios.get(getUrl, defaultOptions).catch(err => {
-        alert("서버 연결 실패", err);
+        this.$toast.add({
+          severity: "error",
+          summary: "",
+          detail: err,
+          life: 3000
+        });
       });
 
       this.title = res.data.dto.title;
@@ -429,12 +445,48 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+@import "@/scss/main.scss";
+
+.title {
+  margin-bottom: 10px;
+}
+
+hr {
+  border: 0;
+  height: 1px;
+  margin-bottom: 15px;
+  background: #aaa;
+}
+
+.form {
+  padding-left: 20px;
+}
+
+td {
+  width: 90px;
+}
+
+.fileName {
+  padding-left: 20px;
+  width: 550px;
+}
+
+.fileSize {
+  padding-right: 50px;
+  width: 200px;
+  text-align: right;
+}
+
 .file-box input[type="file"] {
   display: none;
 }
 
 .file-preview {
   width: 200px;
+}
+
+.button-area {
+  @include c-center;
 }
 </style>

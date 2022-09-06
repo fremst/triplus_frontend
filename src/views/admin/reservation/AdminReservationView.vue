@@ -2,15 +2,22 @@
   <div class="wrap">
     <AdminPageSidebar />
     <div class="inner">
+      <div class="title">
+        <h2 style="color: #009688">예약 관리</h2>
+      </div>
+      <hr />
       <div>
-        <h1>마감임박</h1>
+        <h3 v-if="endingPackages" class="product-badge status-ending">마감임박</h3>
         <ReservationAccordion :filteredPackages="endingPackages" />
-        <h1>모집중</h1>
+        <br />
+        <h3 v-if="proceedingPackages" class="product-badge status-proceeding">모집중</h3>
         <ReservationAccordion :filteredPackages="proceedingPackages" />
-        <h1>모집완료</h1>
+        <br />
+        <h3 v-if="completedPackages" class="product-badge status-completed">모집완료</h3>
         <ReservationAccordion :filteredPackages="completedPackages" />
       </div>
     </div>
+    <Toast></Toast>
   </div>
 </template>
 
@@ -42,7 +49,12 @@ export default {
       const getUrl = `${process.env.VUE_APP_API_URL || ""}/section/packages/cond/${cond}`;
 
       const res = await axios.get(getUrl, this.data, defaultOptions).catch(err => {
-        alert("서버 연결 실패", err);
+        this.$toast.add({
+          severity: "error",
+          summary: "",
+          detail: err,
+          life: 3000
+        });
       });
 
       return res.data;
@@ -65,6 +77,30 @@ tr {
 .inner {
   width: 1080px;
   margin: 0 auto;
+  margin-top: 20px;
+}
+
+.title {
+  margin-bottom: 10px;
+}
+
+hr {
+  border: 0;
+  height: 1px;
+  margin-bottom: 15px;
+  background: #aaa;
+}
+
+// ::v-deep(.p-accordion .p-accordion-header .p-accordion-header-link) {
+//   background-color: rgb(184, 215, 252);
+// }
+
+::v-deep(.p-accordion .p-accordion-content) {
+  padding: 0;
+}
+
+::v-deep(.p-datatable .p-column-header-content) {
+  justify-content: center;
 }
 
 .table-header {
@@ -139,5 +175,31 @@ tr {
 
 .addlist-title {
   margin: 15px 0 10px 0;
+}
+
+.product-badge {
+  text-align: center;
+  border-radius: 2px;
+  padding: 0.25em 0.5rem;
+  text-transform: uppercase;
+  font-weight: 700;
+  font-size: 12pt;
+  letter-spacing: 0.3px;
+  border-radius: 7px;
+}
+
+.product-badge.status-proceeding {
+  background: #c8e6c9;
+  color: #256029;
+}
+
+.product-badge.status-completed {
+  background: #ffcdd2;
+  color: #c63737;
+}
+
+.product-badge.status-ending {
+  background: #feedaf;
+  color: #8a5340;
 }
 </style>

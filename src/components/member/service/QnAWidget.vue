@@ -20,21 +20,28 @@
               :class="{
                 'flex-start': chat.type == 'admin',
                 'flex-end': chat.type == 'user'
-              }"
-            >
+              }">
               <div
                 :class="{
                   'qna-chat-admin': chat.type == 'admin',
                   'qna-chat-user': chat.type == 'user'
-                }"
-              >
+                }">
                 {{ chat.content }}
               </div>
             </div>
+            <div class="qna-chat-date"
+              :class="{
+                'flex-start': chat.type == 'admin',
+                'flex-end': chat.type == 'user'
+              }">
+              {{ chat.date }}
+            </div>
           </div>
         </div>
-        <InputText style="width: 100%" v-model="chatText"></InputText>
-        <Button @click="sendMessage()">보내기 테스트</Button>
+        <div style="display: flex; flex-direction: row; justify-content: space-between;">
+          <InputText style="width: 100%" v-model="chatText" v-on:keyup.enter="sendMessage()"></InputText>
+          <Button icon="pi pi-send" @click="sendMessage()"></Button>
+        </div>
       </div>
     </Dialog>
   </div>
@@ -77,6 +84,7 @@ export default {
           })
         })
       );
+      this.chatText = "";
     },
     sendAuthData() {
       this.sockJS.send(
@@ -110,8 +118,13 @@ export default {
     addMessage(chat) {
       this.chatData.push({
         type: chat.managerChat ? "admin" : "user",
-        content: chat.content
+        content: chat.content,
+        date: this.parseDate(chat.date)
       });
+    },
+    parseDate(time) {
+      let result = new Date(time + 1000 * 60 * 60 * 9);
+      return `${result.getMonth() + 1}월 ${result.getUTCDate() + 1}일 ${result.getHours()}시 ${result.getUTCMinutes()}분`
     }
   },
   mounted() {},
@@ -142,6 +155,11 @@ export default {
   margin: 5px;
   display: flex;
 }
+.qna-chat-date {
+  display: flex;
+  font-size: 12px;
+  margin: 0px 5px;
+}
 .flex-start {
   justify-content: flex-start;
 }
@@ -163,7 +181,7 @@ export default {
   justify-content: flex-end;
   background-color: #9999cc;
   color: white;
-  padding: 5px 13px;
+  padding: 7px 13px;
   width: auto;
 }
 </style>
