@@ -2,7 +2,7 @@
   <div class="main">
     <div class="board">
       <div class="board-header">
-        <h1>{{ title }}</h1>
+        <h1>공지 등록 </h1>
       </div>
       <div class="board-main">
         <div class="board-input">
@@ -75,17 +75,15 @@ export default {
         .then(
           function (resp) {
             if (resp.data.result == true) {
-              alert("공지사항 작성 성공");
               this.$router.push({ name: "notices" });
             } else {
-              alert(resp.data.reason);
               this.$router.push({ name: "notices" });
             }
           }.bind(this)
         );
     },
     onCancel() {
-      this.$router.push({ name: "notices" });
+      this.$router.go(-1);
     }
   }
 };
@@ -93,10 +91,7 @@ export default {
 
 <style scoped>
 * {
-  padding: 20px;
   font-family: "Helvetica";
-  margin: 0px;
-  padding: 0px;
 }
 a {
   color: #333;

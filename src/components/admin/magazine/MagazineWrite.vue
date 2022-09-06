@@ -25,19 +25,21 @@
         <Editor v-model="contents" editorStyle="height: 320px"> </Editor>
         <div class="file-box">
           <input type="file" id="tImgFile" accept="image/*" @change="changeTImg" />
-          <label for="tImgFile" class="p-button p-component p-button-label" style="width: 90px; margin-top: 5px"
+          <label for="tImgFile" class="p-button p-component p-button-label " style="width: 130px; margin-top: 5px"
             >썸네일 선택</label
           >
         </div>
         <table v-if="tImgFile">
           <tr>
-            <td>
-              <img class="file-preview" :src="tImgPreview" style="width: 300px" />
+            <td style="width: 70%;">
+              <img class="file-preview" :src="tImgPreview" style="margin-top:10px; width: 300px;" />
             </td>
-            <td>
-              {{ tImgFile.name }}
-            </td>
-            <td>{{ tImgFile.size / 1000 }} KB</td>
+            <th style="width: 10%; height: 100px;">
+             {{ tImgFile.name }}
+            </th>
+            <th style="width: 10%; height: 100px;">
+             {{ tImgFile.size / 1000 }} KB
+            </th>
           </tr>
         </table>
       </div>
@@ -87,7 +89,7 @@ export default {
   },
   methods: {
     onCancel() {
-      this.$router.push({ name: "magazines" });
+      this.$router.go(-1);
     },
     changeTImg(e) {
       let uploadFile = e.target.files[0];
@@ -115,7 +117,6 @@ export default {
       });
 
       if (resp.data.result === "success") {
-        alert("매거진 등록 성공");
         this.$router.push({ name: "magazines" });
       } else {
         alert("매거진 등록 실패");
@@ -132,7 +133,6 @@ export default {
       });
 
       if (resp.data.result === "success") {
-        alert("매거진 수정 성공");
         this.$router.push({ name: "magazines" });
       } else {
         alert("매거진 수정 실패");
@@ -186,10 +186,7 @@ export default {
 
 <style scoped>
 * {
-  padding: 20px;
   font-family: "Helvetica";
-  margin: 0px;
-  padding: 0px;
 }
 a {
   color: #333;

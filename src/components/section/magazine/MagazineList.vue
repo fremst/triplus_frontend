@@ -13,9 +13,8 @@
             />
           </div>
           <div class="col-6" style="text-align: right">
-            <Button v-if="this.tempAuth == 'admin'" color="#67AB9F" @click="onWrite" style="margin-top: 10px"
-              >매거진등록</Button
-            >
+            <Button v-if="this.tempAuth === 'admin'" color="#67AB9F" @click="onWrite" style="margin-top: 10px"
+            >매거진등록</Button>
           </div>
         </div>
       </template>
@@ -24,13 +23,14 @@
           <div class="product-list-item">
             <img :src="`data:image/jpeg;base64,${slotProps.data.timg}`" :alt="slotProps.data.tImg" class="tImg" />
             <div class="product-list-detail">
-              <div class="product-name">{{ slotProps.data.title }}</div>
+              <div style="margin-bottom:10px">
               <i class="pi pi-tag product-category-icon"></i
-              ><span class="product-category">{{ slotProps.data.category }}</span>
+              ><span class="product-category">{{ slotProps.data.category }}</span></div>
+              <div class="product-name">{{ slotProps.data.title }}</div>
             </div>
             <div class="product-list-action">
               <Button class="p-button" @click="onDetail(slotProps.data.brdNum)">상세내용</Button>
-              <i class="pi pi-eye" style="font-size: 1.2rem; margin-bottom: 5px">{{ slotProps.data.hit }}</i>
+              <i class="pi pi-eye" style="font-size: 1.2rem; margin-bottom: 5px; "><span style="margin-left:5px">{{ slotProps.data.hit }}</span></i>
               <p>{{ slotProps.data.wdate }}</p>
             </div>
           </div>
@@ -69,7 +69,6 @@ export default {
     this.getList();
   },
   methods: {
-    getLike() {},
     onWrite() {
       this.$router.push({ name: "magazine-write" });
     },
@@ -90,7 +89,6 @@ export default {
         );
     },
     onDetail(brdNum) {
-      console.log(brdNum);
       this.$router.push({ name: "magazine-detail", params: { brdNum: brdNum } });
     },
     onSortChange(event) {
@@ -186,8 +184,8 @@ export default {
   width: 100%;
 
   img {
-    width: 200px;
-    height: 120px;
+    width: 180px;
+    height: 200px;
     box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
     margin-right: 2rem;
   }

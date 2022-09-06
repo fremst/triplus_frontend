@@ -91,17 +91,15 @@ export default {
         .then(
           function (resp) {
             if (resp.data.result == "true") {
-              alert("공지사항 수정 성공");
               this.$router.push({ name: "notices" });
             } else {
-              alert("공지사항 수정 실패");
               this.$router.push({ name: "notices" });
             }
           }.bind(this)
         );
     },
     onCancel() {
-      this.$router.push({ name: "notices" });
+      this.$router.go(-1);
     }
   }
 };
@@ -109,10 +107,7 @@ export default {
 
 <style scoped>
 * {
-  padding: 20px;
   font-family: "Helvetica";
-  margin: 0px;
-  padding: 0px;
 }
 a {
   color: #333;
