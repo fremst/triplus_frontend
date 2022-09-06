@@ -6,6 +6,7 @@
         <AdminPackageWrite />
       </div>
     </div>
+    <Toast></Toast>
   </div>
 </template>
 
@@ -30,7 +31,12 @@ export default {
       const getUrl = `${process.env.VUE_APP_API_URL || ""}/section/packages/`;
 
       const res = await axios.get(getUrl, defaultOptions).catch(err => {
-        alert("서버 연결 실패", err);
+        this.$toast.add({
+          severity: "error",
+          summary: "",
+          detail: err,
+          life: 3000
+        });
       });
 
       this.products = res.data;
@@ -52,5 +58,6 @@ tr {
 .inner {
   width: 1080px;
   margin: 0 auto;
+  margin-top: 20px;
 }
 </style>

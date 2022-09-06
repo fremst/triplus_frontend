@@ -2,7 +2,14 @@
   <div class="wrapper">
     <div class="inner">
       <div>
-        <h1>예약 상세 정보</h1>
+        <div class="title">
+          <h2 style="color: #009688">내 예약</h2>
+        </div>
+        <hr />
+
+        <br />
+        <h3>예약 정보</h3>
+
         <table>
           <tr>
             <td class="td-title">결제 상품</td>
@@ -31,7 +38,7 @@
         </table>
       </div>
       <div>
-        <h1 v-if="pkgComList.length > 0">동행자 정보</h1>
+        <h3 v-if="pkgComList.length > 0">동행자 정보</h3>
         <table v-for="(pkgCom, index) in pkgComList" :key="index">
           <tr>
             <td class="td-title">구&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;분</td>
@@ -61,8 +68,16 @@
     </div>
   </div>
   <div class="btns">
-    <Button @click="$router.back()">뒤로가기</Button>&emsp;
-    <Button @click="refund()" v-if="myResInfo.resSta !== '취소'">예약취소/환불</Button>
+    <Button @click="$router.back()" class="p-button-secondary p-component p-button-label mt-3 mb-5 mr-3">
+      뒤로가기
+    </Button>
+    <Button
+      @click="refund()"
+      v-if="myResInfo.resSta !== '취소'"
+      class="p-button-danger p-component p-button-label mt-3 mb-5"
+    >
+      취소 / 환불하기
+    </Button>
   </div>
 </template>
 
@@ -116,6 +131,18 @@ export default {
 </script>
 
 <style scoped>
+.title {
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+
+hr {
+  border: 0;
+  height: 1px;
+  margin-bottom: 15px;
+  background: #dee2e6;
+}
+
 table {
   width: 100%;
   border-collapse: collapse;

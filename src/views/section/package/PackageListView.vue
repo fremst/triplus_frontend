@@ -2,6 +2,7 @@
   <div class="wrapper">
     <div class="inner">
       <PackageList :packages="packages"></PackageList>
+      <Toast></Toast>
     </div>
   </div>
 </template>
@@ -22,7 +23,12 @@ export default {
     const getUrl = `${process.env.VUE_APP_API_URL || ""}/section/packages`;
 
     const res = await axios.get(getUrl, defaultOptions).catch(err => {
-      alert("서버 연결 실패", err);
+      this.$toast.add({
+        severity: "error",
+        summary: "",
+        detail: err,
+        life: 3000
+      });
     });
 
     this.packages = res.data;

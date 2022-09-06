@@ -1,12 +1,11 @@
 <template>
   <Accordion>
-    <AccordionTab
-      v-for="(pkg, i) in filteredPackages"
-      :key="i"
-      :header="`${pkg.title}&emsp;(${$getFormattedDate(new Date(pkg.sDate))} - ${$getFormattedDate(
-        new Date(pkg.sDate)
-      )})&emsp;[${pkg.rcrtCnt - pkg.vacancy}/${pkg.rcrtCnt}]`"
-    >
+    <AccordionTab v-for="(pkg, i) in filteredPackages" :key="i">
+      <template #header>
+        <span style="color: black">{{ pkg.title }}</span>
+        &emsp;{{ $getFormattedDate(new Date(pkg.sDate)) }}
+        <span v-if="pkg.sDate != pkg.eDate">~{{ $getFormattedDate(new Date(pkg.sDate)) }})</span>
+      </template>
       <div class="card">
         <DataTable
           ref="dt"
@@ -23,7 +22,7 @@
             <template #body="slotProps">
               <span class="product-category">
                 <router-link :to="`/member/myreservation/` + slotProps.data.oid">
-                  {{ slotProps.data.oid }}
+                  {{ slotProps.data.oid.substring(11) }}
                 </router-link>
               </span>
             </template>
@@ -49,7 +48,7 @@
               </span>
             </template>
           </Column>
-          <Column header="예약일" field="resSta" :sortable="true" style="min-width: 9rem; text-align: center">
+          <Column header="예약일" field="bookDate" :sortable="true" style="min-width: 9rem; text-align: center">
             <template #body="slotProps">
               <span class="product-category">
                 {{ $getFormattedDateOnly(new Date(slotProps.data.bookDate)) }}
@@ -83,6 +82,7 @@
       </div>
     </AccordionTab>
   </Accordion>
+  <Toast></Toast>
 </template>
 
 <script>
@@ -99,14 +99,29 @@ export default {
       const putUrl = `${process.env.VUE_APP_API_URL || ""}/reservations/${oid}`;
       const params = { resSta: `${resSta}` };
       const res = await axios.put(putUrl, params, putOptions).catch(err => {
-        alert("서버 연결 실패", err);
+        this.$toast.add({
+          severity: "error",
+          summary: "",
+          detail: err,
+          life: 3000
+        });
       });
 
       if (res.data.result === "success") {
         slotProps.data.resSta = resSta;
-        alert("처리 완료");
+        this.$toast.add({
+          severity: "success",
+          summary: "",
+          detail: "요청 처리 성공!",
+          life: 3000
+        });
       } else {
-        alert("처리 실패");
+        this.$toast.add({
+          severity: "error",
+          summary: "",
+          detail: "요청 처리 실패!",
+          life: 3000
+        });
       }
     }
   }

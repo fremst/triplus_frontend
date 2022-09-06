@@ -6,7 +6,7 @@
           <img :src="require('@/assets/section/package/images/reservation/checkBox.png')" class="checkImg" />
           <h1>결제가 완료되었습니다 :)</h1>
         </div>
-        <h1>결제 정보</h1>
+        <h2>결제 정보</h2>
         <table>
           <tr>
             <td class="td-title">결제 상품</td>
@@ -25,7 +25,7 @@
             <td>{{ pkgResInfo.applDateTime }}</td>
           </tr>
         </table>
-        <h1>예약 정보</h1>
+        <h2>예약 정보</h2>
         <table>
           <tr>
             <td class="td-title">예약자 이름</td>
@@ -49,6 +49,7 @@
             >예약 상세</Button
           >&emsp;
         </div>
+        <Toast></Toast>
       </div>
     </div>
   </div>
@@ -71,8 +72,12 @@ export default {
     }`;
 
     const res = await axios.get(getUrl, defaultOptions).catch(err => {
-      alert("서버 연결 실패", err);
-      console.log(err);
+      this.$toast.add({
+        severity: "error",
+        summary: "",
+        detail: err,
+        life: 3000
+      });
     });
 
     this.pkgResInfo = res.data;

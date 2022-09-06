@@ -1,11 +1,17 @@
 <template>
   <div class="wrapper">
     <div class="inner">
-      <h1>{{ packageDetails.title }}</h1>
+      <div class="title">
+        <h1 style="color: #495057">{{ packageDetails.title }}</h1>
+      </div>
+      <hr />
+
       <div class="galleria">
         <PackageDetailGalleria :pkgImgs="pkgImgs"> </PackageDetailGalleria>
       </div>
-      <br />
+
+      <hr />
+
       <div class="info">
         <div>
           <PackageDetailItemInfo :packageDetails="packageDetails"> </PackageDetailItemInfo>
@@ -14,7 +20,12 @@
           <PackageDetailForm :packageDetails="packageDetails"> </PackageDetailForm>
         </div>
       </div>
-      <div v-html="packageDetails.contents"></div>
+
+      <br />
+      <hr />
+
+      <div v-html="packageDetails.contents" class="contents"></div>
+      <Toast></Toast>
       <ScrollTop />
     </div>
   </div>
@@ -39,7 +50,12 @@ export default {
     const getUrl = `${process.env.VUE_APP_API_URL || ""}/section/packages/${this.$route.params.brdNum}`;
 
     const res = await axios.get(getUrl, defaultOptions).catch(err => {
-      alert("서버 연결 실패", err);
+      this.$toast.add({
+        severity: "error",
+        summary: "",
+        detail: err,
+        life: 3000
+      });
     });
 
     this.packageDetails = Object.assign(res.data.dto, res.data.map);
@@ -65,9 +81,34 @@ export default {
   text-align: center;
 }
 
+.title {
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+
+hr {
+  border: 0;
+  height: 1px;
+  margin-bottom: 15px;
+  background: #dee2e6;
+}
+
 .galleria {
   width: 925px;
   margin: auto;
+}
+
+.contents {
+  display: table;
+  border: 1px solid #dee2e6;
+  width: 925px;
+  height: 250px;
+  margin: auto;
+  margin-bottom: 20px;
+}
+
+.contents ::v-deep(img) {
+  max-width: 925px;
 }
 
 .info {
