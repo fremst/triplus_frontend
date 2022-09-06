@@ -667,8 +667,8 @@ export default {
         datasets: [
           {
             data: [0, 0, 0, 0, 0, 0],
-            backgroundColor: ["gray", "green", "yellow", "red", "blue", "purple"],
-            hoverBackgroundColor: ["gray", "green", "yellow", "red", "blue", "purple"]
+            backgroundColor: ["lightgray", "greenyellow", "dodgerblue", "tomato", "slateblue", "khaki"],
+            hoverBackgroundColor: ["lightgray", "greenyellow", "dodgerblue", "tomato", "slateblue", "khaki"]
           }
         ]
       };

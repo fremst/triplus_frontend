@@ -88,7 +88,6 @@ export default {
     },
     onPageChange(n) {
       this.curPage = n;
-      console.log(`${this.detailLink}?page=${this.curPage}`);
     },
     getList() {
       this.list = axios
