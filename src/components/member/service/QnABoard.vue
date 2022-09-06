@@ -13,18 +13,36 @@
         <h1>{{ title }}</h1>
       </div>
       <div class="board-main">
-        <div class="board-search">
-          <!-- TODO 검색 기능(axios...) -->
+        <div class="board-search" id="searchGroup">
+          <Dropdown
+            id="category"
+            v-model="category"
+            ref="category"
+            area-describedby="category-help"
+            :options="categories"
+            optionLabel="name"
+            placeholder="카테고리 선택"
+            @change="filteredList = getFilteredListData(category)"
+          />
+          <span class="p-input-icon-left">
+            <i class="pi pi-search" />
+            <InputText v-model="filters['global'].value" placeholder="검색어를 입력하세요" id="keyword" />
+          </span>
         </div>
         <DataTable
           class="board-table"
           :paginator="true"
           paginatorTemplate=" FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown"
-          :value="list"
+          :value="filteredList"
           responsiveLayout="scroll"
           :rows="10"
+          :filters="filters"
         >
-          <Column field="brdNum" header="글번호" style="width: 100px"></Column>
+          <Column field="title" header="카테고리" alignHeader="center" style="width: 130px">
+            <template #body="slotProps">
+              {{getCategory(slotProps.data.category)}}
+            </template>
+          </Column>
           <Column field="title" header="제목" alignHeader="center">
             <template #body="slotProps">
               <div v-if="slotProps.data.published == true">
@@ -53,6 +71,7 @@ import "primeicons/primeicons.css";
 import axios from "axios";
 import DataTable from "primevue/datatable";
 import Column from "primevue/column";
+import { FilterMatchMode } from "primevue/api";
 
 export default {
   name: "QnABoard",
@@ -68,15 +87,38 @@ export default {
   data() {
     return {
       searchOpt: ["제목", "내용", "제목/내용"],
+      categories: [
+        { name: "전체보기", code: "ALL" },
+        { name: "일정 기능", code: "SCHEDULER" },
+        { name: "패키지", code: "PACKAGE" },
+        { name: "매거진", code: "MAGAZINE" },
+        { name: "명소, 맛집, 숙소", code: "SPOT" },
+        { name: "커뮤니티", code: "COMMUNITY" },
+        { name: "고객 지원", code: "SERVICE" },
+        { name: "기타", code: "ETC" }
+      ],
+      category: { name: "전체보기", code: "ALL" },
       list: [],
+      filteredList: [],
+      filters: {},
       pageIndex: 1 // 현재 페이지 인덱스
     };
   },
   created() {
     this.list = this.getList();
+    this.filters = {
+      global: { value: null, matchMode: FilterMatchMode.CONTAINS }
+    };
   },
   mounted() {},
   methods: {
+    getCategory(categoryCode) {
+      let index = this.categories.findIndex(e => e.code == categoryCode);
+      if (index >= 0)
+        return this.categories[index].name;
+      else
+        return "기타";
+    },
     onSearch() {
       alert("미구현");
     },
@@ -104,13 +146,22 @@ export default {
             for (let el of this.list) {
               el.wdate = this.getDate(el.wdate);
             }
+            this.filteredList = this.list;
           }.bind(this)
         );
     },
     getDate(ms) {
       let date = new Date(ms);
       return `${date.getUTCMonth() + 1}월 ${date.getUTCDate() + 1}일`;
-    }
+    },
+    getFilteredListData(category) {
+      if (category.code == "ALL") return this.list;
+      let result = JSON.parse(JSON.stringify(this.list));
+      for (let i = 0; i < result.length; i++) {
+        result = result.filter(element => element.category == category.code);
+      }
+      return result;
+    },
   }
 };
 </script>
@@ -162,10 +213,7 @@ a {
 .board-search {
   display: flex;
   width: 100%;
-  justify-content: flex-end;
-}
-.board-search * {
-  margin: 0;
+  justify-content: space-between;
 }
 .board-search input[type="submit"] {
   width: 100px;
@@ -193,5 +241,12 @@ a {
 }
 .board-footer * {
   margin: 0px 4px;
+}
+#searchGroup {
+  margin-bottom: 10px;
+}
+#keyword {
+  height: 50px;
+  width: 300px;
 }
 </style>
