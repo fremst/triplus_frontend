@@ -1,18 +1,20 @@
 <template>
   <div class="main">
-    <div class="board">
-      <div class="board-header">
-        <h1 v-if="!this.$route.params.brdNum">매거진 등록</h1>
-        <h1 v-else>매거진 수정</h1>
+    <div class="magazine-main">
+      <div class="title">
+        <h2 style="color: #009688" v-if="!this.$route.params.brdNum">매거진 등록</h2>
+        <h2 style="color: #009688" v-else>매거진 수정</h2>
       </div>
+      <hr />
+      <div class="board">
       <div class="board-main">
         <div class="board-input">
-          <label for="aTitle"><h2>제목</h2></label>
+          <label for="aTitle"><h4>제목</h4></label>
           <InputText id="aTitle" type="username" v-model="title" placeholder="제목을 입력하세요" />
         </div>
 
         <div class="board-input">
-          <label for="category"><h2>매거진 유형</h2></label>
+          <label for="category"><h4>매거진 유형</h4></label>
           <Dropdown
             id="category"
             v-model="category"
@@ -21,11 +23,11 @@
             placeholder="카테고리 선택"
           />
         </div>
-        <h2>내용</h2>
+        <h4>내용</h4>
         <Editor v-model="contents" editorStyle="height: 320px"> </Editor>
         <div class="file-box">
           <input type="file" id="tImgFile" accept="image/*" @change="changeTImg" />
-          <label for="tImgFile" class="p-button p-component p-button-label " style="width: 130px; margin-top: 5px"
+          <label for="tImgFile" class="p-button p-component p-button-label" style="width: 130px; margin-top: 5px"
             >썸네일 선택</label
           >
         </div>
@@ -49,6 +51,7 @@
         <Button v-else @click="update">수정</Button>
       </div>
     </div>
+    </div>
   </div>
 </template>
 
@@ -60,12 +63,13 @@ import InputText from "primevue/inputtext";
 import { defaultOptions } from "@/constant/axios.js";
 import { multipartOptions } from "@/constant/axios.js";
 
+
 export default {
   name: "MagazineWrite.vue",
   components: {
     Dropdown,
     Editor,
-    InputText
+    InputText,
   },
   data() {
     return {
@@ -184,9 +188,12 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 * {
   font-family: "Helvetica";
+}
+h4{
+  margin-bottom: 5px;
 }
 a {
   color: #333;
@@ -200,22 +207,34 @@ a {
   align-items: center;
   background-color: white;
 }
+.magazine-main {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 1080px;
+}
 .board {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   width: 1080px;
-  border: 1px solid lightgray;
+
 }
-.board-header {
+.title {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  width: 100%;
-  height: 100px;
-  align-items: flex-start;
-  padding: 20px;
+  background-color: white;
+  margin-bottom: 10px;
+}
+hr {
+  border: 0;
+  height: 1px;
+  margin-bottom: 15px;
+  background: #aaa;
 }
 .board-header h1 {
   font-size: 50px;

@@ -320,12 +320,12 @@ const routes = [
   {
     path: "/admin/magazines/write",
     name: "magazine-write",
-    component: () => import("@/views/admin/magazine/MagazineWriteView.vue")
+    component: () => import("@/views/admin/magazine/AdminMagazineWriteView.vue")
   },
   {
     path: "/admin/magazines/:brdNum/update",
     name: "magazine-update",
-    component: () => import("@/views/admin/magazine/MagazineWriteView.vue")
+    component: () => import("@/views/admin/magazine/AdminMagazineWriteView.vue")
   },
   {
     path: "/section/magazines",
