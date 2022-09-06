@@ -10,7 +10,7 @@
         </div>
       </div>
       <div class="faq-accordian">
-        <Accordion :activeIndex="0" v-for="(list, index) in faqList" :key="index">
+        <Accordion :activeIndex="list" v-for="(list, index) in faqList" :key="index">
           <AccordionTab :header="list.faqTitle" v-if="list.category == items[selectedIndex].label">
             <p>{{ list.faqContent }}</p>
           </AccordionTab>
@@ -119,9 +119,10 @@ export default {
   line-height: 1.5;
   margin: 0;
   margin-top: 50px;
-  margin-bottom: 5px;
+  margin-bottom: 30px;
 }
 .card {
   width: 1040px;
 }
+
 </style>
