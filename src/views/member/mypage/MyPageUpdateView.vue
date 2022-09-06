@@ -1,10 +1,11 @@
 <template>
 <div class="wrapper">
-  <div class="inner">
+
     <div class="side">
       <MyPageSidebar/>
     </div>
 
+  <div class="inner">
     <div class="content">
       <div class="title"><h3>개인 정보 수정</h3></div>
 
@@ -306,16 +307,22 @@ export default {
 </script>
 
 <style scoped>
+.wrapper{
+  display: flex;
+  margin: 40px auto;
+  margin-bottom: 100px;
+}
 .inner{
-  width: 1080px;
-  margin: 0 auto;
-  height: 1000px;
+  width: 830px;
+  display: inline-block;
+
 }
 
 .side{
-  width: 300px;
-  border: 1px;
+  width: 250px;
   display: inline-block;
+
+  margin-left: 300px;
 }
 .content{
   width:780px;
@@ -325,7 +332,7 @@ export default {
 }
 
 .title{
-  margin-top: 20px;
+
   margin-bottom: 15px;
 }
 
@@ -354,12 +361,13 @@ export default {
   width: 190px;
   height: 40px;
   margin-left: 5px;
+
 }
 
 #btn2, #btn3{
   width: 570px;
   height: 40px;
-
+  margin-bottom: 15px;
 }
 
 

@@ -19,6 +19,7 @@ export default createStore({
         state.token = localStorage.getItem("token");
       }else{ //로그아웃
         state.userId =null;
+        state.loginUser=null;
         state.token =null;
        }
 

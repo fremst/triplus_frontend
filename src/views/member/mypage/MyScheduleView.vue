@@ -1,9 +1,13 @@
 <template>
   <div class="wrapper">
+    <div class="side">
+      <MyPageSidebar />
+    </div>
+
     <div class="inner">
-      <div>
+
         <div class="card">
-          <br>
+
           <DataTable
               ref="dt"
               v-model:selection="selectedProducts"
@@ -19,7 +23,7 @@
           >
             <template #header>
               <div class="table-header flex flex-column md:flex-row md:justiify-content-between">
-                <h2>내 일정</h2>
+                <h3 style="color: #009688" >내 일정</h3>
               </div>
             </template>
 
@@ -27,7 +31,7 @@
             <Column header="이름" field="destination" :sortable="true" style="min-width: 19rem;">
               <template #body="slotProps">
                 <span class="product-category">
-                  <router-link :to="`/member/myreservation/`+slotProps.data.OID">
+                  <router-link :to="`/section/member/schedule/main/`+slotProps.data.skdNum">
                     {{ slotProps.data.destination }}
                   </router-link>
                 </span>
@@ -37,7 +41,9 @@
             <Column header="시작일" field="sDate" :sortable="true" style="min-width: 9rem; ">
               <template #body="slotProps">
                 <span class="product-category">
-                  {{ new Date(slotProps.data.sdate).toISOString().substring(0,10)}}
+                {{$getFormattedDate(new Date(slotProps.data.sdate))}}
+
+<!--                  {{ new Date(slotProps.data.sdate).toISOString().substring(0,10)}}-->
                 </span>
               </template>
             </Column>
@@ -45,7 +51,8 @@
             <Column header="종료일" field="eDate" :sortable="true" style="min-width: 9rem; ">
               <template #body="slotProps">
                 <span class="product-category">
-                    {{ new Date(slotProps.data.edate).toISOString().substring(0,10)}}
+                   {{$getFormattedDate(new Date(slotProps.data.edate))}}
+
                 </span>
               </template>
             </Column>
@@ -53,7 +60,7 @@
           </DataTable>
         </div>
       </div>
-    </div>
+
   </div>
 </template>
 
@@ -61,14 +68,15 @@
 
 
 import axios from "axios";
+import MyPageSidebar from "@/components/member/mypage/MyPageSidebar";
 
 export default {
   name: "MyScheduleView",
+  components:{MyPageSidebar},
   data(){
     return{
       id:localStorage.getItem("id"),
       list:[],
-
 
     }
   },
@@ -90,9 +98,24 @@ export default {
 </script>
 
 <style scoped>
+.wrapper{
+  display: flex;
+  margin: 40px auto;
+  margin-bottom: 100px;
+}
+
 .inner{
-  width:1080px;
-  margin: 0 auto;
+  width: 830px;
+  display: inline-block;
+  margin-left: 40px;
+
+}
+
+.side{
+  width: 250px;
+  display: inline-block;
+
+  margin-left: 300px;
 }
 
 </style>
