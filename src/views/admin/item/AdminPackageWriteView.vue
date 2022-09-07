@@ -1,6 +1,8 @@
 <template>
   <div class="wrap">
-    <AdminPageSidebar />
+    <div class="sidebar">
+      <AdminPageSidebar />
+    </div>
     <div class="inner">
       <div>
         <AdminPackageWrite />
@@ -53,11 +55,18 @@ tr {
 
 .wrap {
   width: 100%;
+  min-height: 750px;
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
 }
 
 .inner {
   width: 1080px;
-  margin: 0 auto;
-  margin-top: 20px;
+}
+
+.sidebar {
+  margin-left: -220px;
+  margin-right: 20px;
 }
 </style>
