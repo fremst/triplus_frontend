@@ -183,10 +183,8 @@ export default {
         .then(
           function (resp) {
             if (resp.data.result == true) {
-              if (this.$route.query.qnaReplyNum == undefined)
-                this.onDetail(resp.data.brdNum);
-              else
-                this.onDetail(this.$route.query.qnaReplyNum);
+              if (this.$route.query.qnaReplyNum == undefined) this.onDetail(resp.data.brdNum);
+              else this.onDetail(this.$route.query.qnaReplyNum);
             } else {
               alert(resp.data.reason);
               this.$router.push(this.URL);

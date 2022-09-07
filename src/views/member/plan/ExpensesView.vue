@@ -5,10 +5,10 @@
 </template>
 
 <script>
-import Expenses from '@/components/member/plan/Expenses.vue'
+import Expenses from "@/components/member/plan/Expenses.vue";
 
 export default {
-  name: 'ExpensesView',
+  name: "ExpensesView",
   components: {
     Expenses
   },
@@ -17,5 +17,5 @@ export default {
       apiURL: `${process.env.VUE_APP_API_URL || ""}/member/plan`
     };
   }
-}
+};
 </script>

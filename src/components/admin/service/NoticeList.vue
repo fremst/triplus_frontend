@@ -1,42 +1,42 @@
 <template>
   <div class="main">
     <div class="notice-main">
-    <div class="board">
-      <div class="board-header">
-        <h1>{{ title }}</h1>
-      </div>
-      <div class="board-main">
-        <div class="table-header" id="searchGroup">
-          <span class="p-input-icon-left">
-            <i class="pi pi-search" id="icon" />
-            <InputText v-model="filters['global'].value" placeholder="검색어를 입력하세요" id="keyword" />
-          </span>
+      <div class="board">
+        <div class="board-header">
+          <h1>{{ title }}</h1>
         </div>
-        <DataTable
-          class="board-table"
-          :paginator="true"
-          paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown"
-          :value="list"
-          responsiveLayout="scroll"
-          :rows="10"
-          :filters="filters"
-        >
-          <Column field="brdNum" header="글번호" style="min-width: 3rem; text-align: center"></Column>
-          <Column field="category" header="카테고리" style="min-width: 3rem; text-align: center"></Column>
-          <Column field="title" header="제목" style="min-width: 19rem; text-align: center">
-            <template #body="slotProps">
-              <a href="#" @click.prevent="onDetail(slotProps.data.brdNum)" v-text="slotProps.data.title"></a>
-            </template>
-          </Column>
-          <Column field="wdate" header="작성일" style="min-width: 9rem; text-align: center"></Column>
-          <Column field="hit" header="조회" style="min-width: 9rem; text-align: center"></Column>
-        </DataTable>
+        <div class="board-main">
+          <div class="table-header" id="searchGroup">
+            <span class="p-input-icon-left">
+              <i class="pi pi-search" id="icon" />
+              <InputText v-model="filters['global'].value" placeholder="검색어를 입력하세요" id="keyword" />
+            </span>
+          </div>
+          <DataTable
+            class="board-table"
+            :paginator="true"
+            paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown"
+            :value="list"
+            responsiveLayout="scroll"
+            :rows="10"
+            :filters="filters"
+          >
+            <Column field="brdNum" header="글번호" style="min-width: 3rem; text-align: center"></Column>
+            <Column field="category" header="카테고리" style="min-width: 3rem; text-align: center"></Column>
+            <Column field="title" header="제목" style="min-width: 19rem; text-align: center">
+              <template #body="slotProps">
+                <a href="#" @click.prevent="onDetail(slotProps.data.brdNum)" v-text="slotProps.data.title"></a>
+              </template>
+            </Column>
+            <Column field="wdate" header="작성일" style="min-width: 9rem; text-align: center"></Column>
+            <Column field="hit" header="조회" style="min-width: 9rem; text-align: center"></Column>
+          </DataTable>
+        </div>
+        <div class="board-footer">
+          <Button v-if="this.tempAuth == 'admin'" color="#67AB9F" @click="onWrite">공지등록</Button>
+          <Button color="#67AB9F" @click="onList">전체 글 보기</Button>
+        </div>
       </div>
-      <div class="board-footer">
-        <Button v-if="this.tempAuth == 'admin'" color="#67AB9F" @click="onWrite">공지등록</Button>
-        <Button color="#67AB9F" @click="onList">전체 글 보기</Button>
-      </div>
-    </div>
     </div>
   </div>
 </template>

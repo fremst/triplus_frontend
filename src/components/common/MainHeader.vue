@@ -65,7 +65,7 @@
 
           <div class="content">
             Content<br /><br />
-            <router-link to="/member/mypage/chkpwd">마이페이지</router-link><br>
+            <router-link to="/member/mypage/chkpwd">마이페이지</router-link><br />
             <router-link to="/service/notices">공지사항</router-link><br />
             <a href="/service/qna/">Q & A</a><br />
             <a href="/service/faq">FAQ</a><br /><br />

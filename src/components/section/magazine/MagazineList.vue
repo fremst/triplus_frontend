@@ -14,7 +14,8 @@
           </div>
           <div class="col-6" style="text-align: right">
             <Button v-if="this.tempAuth === 'admin'" color="#67AB9F" @click="onWrite" style="margin-top: 10px"
-            >매거진등록</Button>
+              >매거진등록</Button
+            >
           </div>
         </div>
       </template>
@@ -23,14 +24,17 @@
           <div class="product-list-item">
             <img :src="`data:image/jpeg;base64,${slotProps.data.timg}`" :alt="slotProps.data.tImg" class="tImg" />
             <div class="product-list-detail">
-              <div style="margin-bottom:10px">
-              <i class="pi pi-tag product-category-icon"></i
-              ><span class="product-category">{{ slotProps.data.category }}</span></div>
+              <div style="margin-bottom: 10px">
+                <i class="pi pi-tag product-category-icon"></i
+                ><span class="product-category">{{ slotProps.data.category }}</span>
+              </div>
               <div class="product-name">{{ slotProps.data.title }}</div>
             </div>
             <div class="product-list-action">
               <Button class="p-button" @click="onDetail(slotProps.data.brdNum)">상세내용</Button>
-              <i class="pi pi-eye" style="font-size: 1.2rem; margin-bottom: 5px; "><span style="margin-left:5px">{{ slotProps.data.hit }}</span></i>
+              <i class="pi pi-eye" style="font-size: 1.2rem; margin-bottom: 5px"
+                ><span style="margin-left: 5px">{{ slotProps.data.hit }}</span></i
+              >
               <p>{{ slotProps.data.wdate }}</p>
             </div>
           </div>

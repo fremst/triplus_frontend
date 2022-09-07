@@ -124,5 +124,4 @@ export default {
 .card {
   width: 1040px;
 }
-
 </style>

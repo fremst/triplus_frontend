@@ -1,56 +1,60 @@
 <template>
   <div class="main">
     <div class="magazine-main">
-    <div class="board">
-      <div class="board-header">
-      </div>
-      <div class="board-main">
-        <table class="article-header">
-          <tr>
-            <th width="150px">[ {{ article.category }} ]</th>
-            <th style="text-align: start; padding-left: 20px">{{ article.title }}</th>
-            <th width="200px">{{ article.wdate }}</th>
-          </tr>
-        </table>
-        <br />
-        <div class="article-main">
-          <div v-html="article.contents"></div>
+      <div class="board">
+        <div class="board-header"></div>
+        <div class="board-main">
+          <table class="article-header">
+            <tr>
+              <th width="150px">[ {{ article.category }} ]</th>
+              <th style="text-align: start; padding-left: 20px">{{ article.title }}</th>
+              <th width="200px">{{ article.wdate }}</th>
+            </tr>
+          </table>
+          <br />
+          <div class="article-main">
+            <div v-html="article.contents"></div>
+          </div>
+          <div class="article-footer"></div>
         </div>
-        <div class="article-footer"></div>
+        <div class="board-footer">
+          <Button
+            v-if="this.tempAuth == 'admin'"
+            class="p-button"
+            @click="$router.push(`/admin/magazines/${this.$route.params.brdNum}/update`)"
+            >수정</Button
+          >
+          <Button v-if="this.tempAuth == 'admin'" class="p-button-danger" @click="onDelete">삭제</Button>
+          <Button class="p-button" @click="onList">목록</Button>
+        </div>
+        <div class="comm-list">
+          <table class="comm-main">
+            <tr v-for="comm in comments" :key="comm.brdCmtNum">
+              <td style="width: 250px; text-align: start; padding-left: 20px">{{ comm.id }}</td>
+              <td style="width: 800px; text-align: left">{{ comm.contents }}</td>
+              <Button
+                v-if="comm.id == this.tempId"
+                @click="deleteComm(comm.brdCmtNum)"
+                id="deleteCommBtn"
+                class="p-button-danger"
+                style="padding: 0px; margin: 0px"
+                >X</Button
+              >
+            </tr>
+          </table>
+        </div>
+        <div class="board-reply">
+          <Textarea
+            @click="checkId"
+            v-model="commContents"
+            :autoResize="true"
+            rows="2"
+            cols="100"
+            style="width: 930px; margin-left: 20px"
+          />
+          <Button @click="insertComm" id="replyBtn" class="p-button-lg">등록</Button>
+        </div>
       </div>
-      <div class="board-footer">
-        <Button v-if="this.tempAuth == 'admin'" class="p-button" @click="$router.push(`/admin/magazines/${this.$route.params.brdNum}/update`)">수정</Button>
-        <Button v-if="this.tempAuth == 'admin'" class="p-button-danger" @click="onDelete">삭제</Button>
-        <Button class="p-button" @click="onList">목록</Button>
-      </div>
-      <div class="comm-list">
-        <table class="comm-main">
-          <tr v-for="comm in comments" :key="comm.brdCmtNum">
-            <td style="width: 250px; text-align: start; padding-left: 20px">{{ comm.id }}</td>
-            <td style="width: 800px; text-align: left">{{ comm.contents }}</td>
-            <Button
-              v-if="comm.id == this.tempId"
-              @click="deleteComm(comm.brdCmtNum)"
-              id="deleteCommBtn"
-              class="p-button-danger"
-              style="padding: 0px; margin: 0px;"
-              >X</Button
-            >
-          </tr>
-        </table>
-      </div>
-      <div class="board-reply">
-        <Textarea
-          @click ="checkId"
-          v-model="commContents"
-          :autoResize="true"
-          rows="2"
-          cols="100"
-          style="width: 930px; margin-left: 20px"
-        />
-        <Button @click="insertComm" id="replyBtn" class="p-button-lg">등록</Button>
-      </div>
-    </div>
     </div>
   </div>
 </template>
@@ -154,7 +158,7 @@ export default {
           }.bind(this)
         );
     },
-    checkId(){
+    checkId() {
       const id = localStorage.getItem("id");
       if (id == null) {
         this.$router.push({ name: "member-login" });

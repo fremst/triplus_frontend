@@ -47,7 +47,10 @@
             <Column field="hit" header="조회" style="min-width: 6rem; text-align: center"></Column>
             <Column header="수정" style="min-width: 9rem; text-align: center">
               <template #body="slotProps">
-                  <Button @click="this.$router.push({ name: 'magazine-update', params: { brdNum: slotProps.data.brdNum } })">수정</Button>
+                <Button
+                  @click="this.$router.push({ name: 'magazine-update', params: { brdNum: slotProps.data.brdNum } })"
+                  >수정</Button
+                >
               </template>
             </Column>
           </DataTable>

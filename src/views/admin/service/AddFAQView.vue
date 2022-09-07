@@ -22,25 +22,25 @@
               class="form-control field md:col-4"
               placeholder="제목을 입력해 주세요."
               style="witdh: 350px"
-            /><br>
+            /><br />
             <small v-if="submitted && !this.faqTitle" class="p-error">제목을 입력해 주세요.</small>
-          
+
             <div class="content">
               <h3>답변 등록</h3>
               <Textarea v-model="faqContent" class="form-control field md:col-4" cols="50" rows="5" />
-              <br>
+              <br />
               <small v-if="submitted && !this.faqContent" class="p-error">내용을 입력해 주세요.</small>
             </div>
           </div>
           <!-- modal -->
-            <Dialog v-model:visible="faqAdd">
-              <h3> 글이 정상적으로 등록되었습니다.</h3>
-              <Button class="confirm" @click="confirm">확인</Button>
-            </Dialog>
-            <Dialog v-model:visible="faqAddFail">
-              <h3> 글을 등록하는데 오류가 발생하였습니다.</h3>
-              <Button class="confirm" @click="confirm">확인</Button>
-            </Dialog>
+          <Dialog v-model:visible="faqAdd">
+            <h3>글이 정상적으로 등록되었습니다.</h3>
+            <Button class="confirm" @click="confirm">확인</Button>
+          </Dialog>
+          <Dialog v-model:visible="faqAddFail">
+            <h3>글을 등록하는데 오류가 발생하였습니다.</h3>
+            <Button class="confirm" @click="confirm">확인</Button>
+          </Dialog>
           <div class="button-group">
             <Button class="p-button-primary mr-2" label="Save" @click="onSave" />
             <Button class="p-button-secondary mr-2" label="Cancel" @click="onCancel" />
@@ -54,7 +54,7 @@
 
 <script>
 import axios from "axios";
-import router from '@/router';
+import router from "@/router";
 import { defaultOptions } from "@/constant/axios.js";
 
 export default {
@@ -73,7 +73,7 @@ export default {
       submitted: false,
 
       faqAdd: false,
-      faqAddFail: false,
+      faqAddFail: false
     };
   },
   methods: {
@@ -90,12 +90,12 @@ export default {
         addFaqParam.get("category")
       )}/`;
       const response = await axios.post(postUrl, addFaqParam, defaultOptions).catch(err => {
-         this.faqAddFail =!this.faqAddFail, err;
+        (this.faqAddFail = !this.faqAddFail), err;
       });
       if (response.data.result === "success") {
         this.faqAdd = !this.faqAdd;
       } else {
-        this.faqAddFail =!this.faqAddFail;
+        this.faqAddFail = !this.faqAddFail;
       }
     },
     onCancel() {
@@ -119,10 +119,9 @@ export default {
       this.faqAdd = false;
       return router.push(`/admin/service/faq`);
     },
-    goList(){
-
-    return router.push(`/admin/service/faq`);
-    },
+    goList() {
+      return router.push(`/admin/service/faq`);
+    }
   }
 };
 </script>
@@ -179,5 +178,4 @@ textarea {
 .confirm {
   display: inline-block;
 }
-
 </style>

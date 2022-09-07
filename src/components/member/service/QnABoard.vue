@@ -40,7 +40,7 @@
         >
           <Column field="title" header="카테고리" alignHeader="center" style="width: 130px">
             <template #body="slotProps">
-              {{getCategory(slotProps.data.category)}}
+              {{ getCategory(slotProps.data.category) }}
             </template>
           </Column>
           <Column field="title" header="제목" alignHeader="center">
@@ -114,10 +114,8 @@ export default {
   methods: {
     getCategory(categoryCode) {
       let index = this.categories.findIndex(e => e.code == categoryCode);
-      if (index >= 0)
-        return this.categories[index].name;
-      else
-        return "기타";
+      if (index >= 0) return this.categories[index].name;
+      else return "기타";
     },
     onSearch() {
       alert("미구현");
@@ -161,7 +159,7 @@ export default {
         result = result.filter(element => element.category == category.code);
       }
       return result;
-    },
+    }
   }
 };
 </script>

@@ -54,13 +54,14 @@
       <div
         class="board-footer"
         v-show="article.published"
-        style="flex-direction: column; justify-content: flex-end; align-items: flex-end">
-          <!-- 답글 -->
-          <div v-if="isLogin">
-            <Button @click="onReply">질문에 답변하기</Button>
-          </div>
-          <br />
-          <div>
+        style="flex-direction: column; justify-content: flex-end; align-items: flex-end"
+      >
+        <!-- 답글 -->
+        <div v-if="isLogin">
+          <Button @click="onReply">질문에 답변하기</Button>
+        </div>
+        <br />
+        <div>
           <!-- 수정 -->
           <Dialog header="비밀번호 입력" v-model:visible="displayUpdate">
             <Password id="pwd" v-model="pwd" :feedback="false" />
@@ -73,9 +74,11 @@
             <Password id="pwd" v-model="pwd" :feedback="false" />
             <Button class="p-button-danger" @click="displayDeleteConfirm = true">삭제</Button>
           </Dialog>
-          <ConfirmDialog v-model:visible="displayDeleteConfirm"
+          <ConfirmDialog
+            v-model:visible="displayDeleteConfirm"
             :msg="'해당 문의글을 삭제하시겠습니까?'"
-            @closeDialog="onDelete"/>
+            @closeDialog="onDelete"
+          />
           <Button v-if="isUpdatable()" class="p-button-danger" @click="viewDelete">삭제</Button>
 
           <!-- 목록 -->
@@ -95,7 +98,7 @@ import axios from "axios";
 import Accordion from "primevue/accordion";
 import AccordionTab from "primevue/accordiontab";
 import Divider from "primevue/divider";
-import ConfirmDialog from '@/views/admin/place/ConfirmDialog.vue';
+import ConfirmDialog from "@/views/admin/place/ConfirmDialog.vue";
 
 export default {
   name: "QnADetail",
@@ -154,8 +157,7 @@ export default {
         );
     },
     onReply() {
-      if (localStorage.getItem("id") == null)
-        return alert("로그인이 필요한 서비스입니다.");
+      if (localStorage.getItem("id") == null) return alert("로그인이 필요한 서비스입니다.");
 
       // localStorage.setItem("qnaReplyNum", this.$route.params.brdNum);
       this.$router.push(`${this.URL}/write?qnaReplyNum=${this.$route.params.brdNum}`);
@@ -165,8 +167,7 @@ export default {
     },
     onDelete(isOk) {
       this.displayDeleteConfirm = false;
-      if (!isOk)
-        return;
+      if (!isOk) return;
       const writeParam = new URLSearchParams();
       writeParam.append("pwd", this.pwd);
 
@@ -251,8 +252,7 @@ export default {
         );
     },
     isUpdatable() {
-      return this.article.writerId == "guest" ||
-        this.article.writerId == localStorage.getItem("id");
+      return this.article.writerId == "guest" || this.article.writerId == localStorage.getItem("id");
     }
   },
   created() {

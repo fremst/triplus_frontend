@@ -1,20 +1,16 @@
 <template>
   <div class="home">
-    <QnABoard
-      :title="title"
-      :listLink="listLink"
-      :URL="URL"/>
+    <QnABoard :title="title" :listLink="listLink" :URL="URL" />
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
-import QnABoard from '@/components/member/service/QnABoard.vue'
-import axios from 'axios'
-
+import QnABoard from "@/components/member/service/QnABoard.vue";
+import axios from "axios";
 
 export default {
-  name: 'QnAView',
+  name: "QnAView",
   components: {
     QnABoard
   },
@@ -29,15 +25,19 @@ export default {
   },
   methods: {
     getList() {
-      axios.get(`${process.env.VUE_APP_API_URL || ""}/service/qna/`, {
-        headers: {
-          'Access-Control-Allow-Origin': '*'
-        },
-        params: { }
-      }).then(function(resp) {
-        console.log(resp);
-      }.bind(this));
+      axios
+        .get(`${process.env.VUE_APP_API_URL || ""}/service/qna/`, {
+          headers: {
+            "Access-Control-Allow-Origin": "*"
+          },
+          params: {}
+        })
+        .then(
+          function (resp) {
+            console.log(resp);
+          }.bind(this)
+        );
     }
   }
-}
+};
 </script>

@@ -1,34 +1,34 @@
 <template>
   <div class="main">
     <div class="notice-main">
-    <div class="board">
-      <div class="board-header">
-        <h1>공지 수정</h1>
-      </div>
-      <div class="board-main">
-        <div class="board-input">
-          <label for="aTitle"><h4>제목</h4></label>
-          <InputText id="aTitle" type="username" v-model="data.title" placeholder="제목을 입력하세요" />
+      <div class="board">
+        <div class="board-header">
+          <h1>공지 수정</h1>
         </div>
+        <div class="board-main">
+          <div class="board-input">
+            <label for="aTitle"><h4>제목</h4></label>
+            <InputText id="aTitle" type="username" v-model="data.title" placeholder="제목을 입력하세요" />
+          </div>
 
-        <div class="board-input">
-          <label for="category"><h4>공지 유형</h4></label>
-          <Dropdown
-            id="category"
-            v-model="data.category"
-            :options="categories"
-            optionLabel="name"
-            placeholder="카테고리 선택"
-          />
+          <div class="board-input">
+            <label for="category"><h4>공지 유형</h4></label>
+            <Dropdown
+              id="category"
+              v-model="data.category"
+              :options="categories"
+              optionLabel="name"
+              placeholder="카테고리 선택"
+            />
+          </div>
+          <h4>내용</h4>
+          <Editor v-model="data.contents" editorStyle="height: 320px"> </Editor>
         </div>
-        <h4>내용</h4>
-        <Editor v-model="data.contents" editorStyle="height: 320px"> </Editor>
+        <div class="board-footer">
+          <Button @click="onCancel">취소</Button>
+          <Button v-if="this.tempAuth == 'admin'" @click="onUpdate">수정</Button>
+        </div>
       </div>
-      <div class="board-footer">
-        <Button @click="onCancel">취소</Button>
-        <Button v-if="this.tempAuth == 'admin'" @click="onUpdate">수정</Button>
-      </div>
-    </div>
     </div>
   </div>
 </template>
@@ -111,7 +111,7 @@ export default {
 * {
   font-family: "Helvetica";
 }
-h4{
+h4 {
   margin-bottom: 5px;
 }
 a {

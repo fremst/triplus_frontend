@@ -1,33 +1,33 @@
 <template>
   <div class="main">
     <div class="notice-main">
-    <div class="board">
-      <div class="board-header">
-        <h1>{{ title }}</h1>
-      </div>
-      <div class="board-main">
-        <table class="article-header">
-          <tr>
-            <th width="150px">[ {{ article.category }} ]</th>
-            <th style="text-align: start; padding-left: 20px">{{ article.title }}</th>
-            <th width="200px">{{ article.wdate }}</th>
-          </tr>
-        </table>
-        <div class="article-main">
-          <div v-html="article.contents"></div>
+      <div class="board">
+        <div class="board-header">
+          <h1>{{ title }}</h1>
         </div>
-        <div class="article-footer"></div>
+        <div class="board-main">
+          <table class="article-header">
+            <tr>
+              <th width="150px">[ {{ article.category }} ]</th>
+              <th style="text-align: start; padding-left: 20px">{{ article.title }}</th>
+              <th width="200px">{{ article.wdate }}</th>
+            </tr>
+          </table>
+          <div class="article-main">
+            <div v-html="article.contents"></div>
+          </div>
+          <div class="article-footer"></div>
+        </div>
+        <div class="board-footer">
+          <Button
+            v-if="this.tempAuth == 'admin'"
+            @click="$router.push(`/service/notices/${this.$route.params.brdNum}/update`)"
+            >수정</Button
+          >
+          <Button v-if="this.tempAuth == 'admin'" class="p-button-danger" @click="onDelete">삭제</Button>
+          <Button @click="onList">목록으로</Button>
+        </div>
       </div>
-      <div class="board-footer">
-        <Button
-          v-if="this.tempAuth == 'admin'"
-          @click="$router.push(`/service/notices/${this.$route.params.brdNum}/update`)"
-          >수정</Button
-        >
-        <Button v-if="this.tempAuth == 'admin'" class="p-button-danger" @click="onDelete">삭제</Button>
-        <Button @click="onList">목록으로</Button>
-      </div>
-    </div>
     </div>
   </div>
 </template>

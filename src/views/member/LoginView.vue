@@ -210,8 +210,6 @@ export default {
 </script>
 
 <style scoped>
-.login-title {
-}
 .inner {
   width: 1080px;
   margin: 50px auto;
