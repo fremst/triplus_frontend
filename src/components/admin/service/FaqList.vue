@@ -1,44 +1,50 @@
 <template>
-<AdminPageSidebar />
-  <div class="main">
-    <div class="board">
-      <div class="board-header">
-        <h1>{{ title }}</h1>
+  <div class="wrap">
+    <div class="sidebar">
+      <AdminPageSidebar />
+    </div>
+    <div class="inner">
+      <div class="title">
+        <h2 style="color: #009688">{{ title }}</h2>
       </div>
-      <div class="board-main">
-        <DataTable
-          class="board-table"
-          :paginator="true"
-          paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown"
-          :value="list"
-          responsiveLayout="scroll"
-          :rows="10"
-          :filters="filters"
-        >
-          <Column field="faqNum" header="글번호" style="width: 100px"></Column>
-          <Column field="category" header="카테고리" style="width: 100px"></Column>
-          <Column field="faqTitle" header="제목" alignHeader="center"></Column>
-          <Column field="modify" header="수정" alignHeader="center">
-            <template #body="slotProps">
-              <a href="#" @click="onModify(slotProps.data.faqNum)">수정하기</a>
-            </template>
-          </Column>
-        </DataTable>
-      </div>
-      <div class="board-footer">
-        <Button class="p-button-primary mr-2" label="글 등록" @click="onWrite"/>
+      <hr />
+      <div class="board">
+        <!-- <div class="board-header">
+          <h1>{{ title }}</h1>
+        </div> -->
+        <div class="board-main">
+          <DataTable
+            class="board-table"
+            :paginator="true"
+            paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown"
+            :value="list"
+            responsiveLayout="scroll"
+            :rows="10"
+            :filters="filters"
+          >
+            <Column field="faqNum" header="글번호" style="width: 100px"></Column>
+            <Column field="category" header="카테고리" style="width: 100px"></Column>
+            <Column field="faqTitle" header="제목" alignHeader="center"></Column>
+            <Column field="modify" header="수정" alignHeader="center">
+              <template #body="slotProps">
+                <a href="#" @click="onModify(slotProps.data.faqNum)">수정하기</a>
+              </template>
+            </Column>
+          </DataTable>
+        </div>
+        <div class="board-footer">
+          <Button class="p-button-primary mr-2" label="글 등록" @click="onWrite" />
+        </div>
       </div>
     </div>
   </div>
 </template>
-
 <script>
 import axios from "axios";
 import DataTable from "primevue/datatable";
 import Column from "primevue/column";
 import { FilterMatchMode } from "primevue/api";
 import AdminPageSidebar from "@/components/admin/AdminPageSidebar";
-
 export default {
   name: "FaqList",
   components: {
@@ -96,7 +102,6 @@ export default {
   }
 };
 </script>
-
 <style scoped>
 * {
   margin: 0px;
@@ -104,12 +109,15 @@ export default {
 a {
   text-decoration: none;
 }
-.main {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+.inner {
+  /* display: flex; */
+  /* flex-direction: column; */
+  /* justify-content: center; */
+  /* align-items: center; */
   background-color: white;
+}
+.title {
+  margin-bottom: 10px;
 }
 .board {
   margin-top: 20px;
@@ -119,7 +127,7 @@ a {
   justify-content: center;
   align-items: center;
   width: 1080px;
-  border: 1px solid lightgray;
+  /* border: 1px solid lightgray; */
 }
 .board-header {
   display: flex;
@@ -140,7 +148,7 @@ a {
   flex-direction: column;
   width: 100%;
   align-items: center;
-  padding: 20px;
+  /* padding: 20px; */
 }
 .board-table {
   width: 100%;
@@ -165,5 +173,16 @@ a {
 }
 .board-footer * {
   margin: 0 4px;
+}
+.sidebar {
+  margin-left: -220px;
+  margin-right: 20px;
+}
+.wrap {
+  width: 100%;
+  min-height: 750px;
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
 }
 </style>

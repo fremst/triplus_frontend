@@ -53,16 +53,18 @@
               {{ chat.content }}
             </div>
           </div>
-          <div class="qna-chat-date"
+          <div
+            class="qna-chat-date"
             :class="{
               'flex-end': chat.type == 'admin',
               'flex-start': chat.type == 'user'
-            }">
+            }"
+          >
             {{ chat.date }}
           </div>
         </div>
       </div>
-      <div style="display: flex; flex-direction: row; justify-content: space-between;">
+      <div style="display: flex; flex-direction: row; justify-content: space-between">
         <InputText style="width: 100%" v-model="chatText" v-on:keyup.enter="sendMessage()"></InputText>
         <Button icon="pi pi-send" @click="sendMessage()"></Button>
       </div>
@@ -176,7 +178,9 @@ export default {
     },
     parseDate(time) {
       let result = new Date(time + 1000 * 60 * 60 * 9);
-      return `${result.getMonth() + 1}월 ${result.getUTCDate() + 1}일 ${result.getHours()}시 ${result.getUTCMinutes()}분`
+      return `${result.getMonth() + 1}월 ${
+        result.getUTCDate() + 1
+      }일 ${result.getHours()}시 ${result.getUTCMinutes()}분`;
     },
     changeList(isToken, data) {
       console.log(`${isToken} -- ${data}`);

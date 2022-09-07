@@ -7,50 +7,48 @@
       </div>
       <hr />
       <div class="board">
-      <div class="board-main">
-        <div class="board-input">
-          <label for="aTitle"><h4>제목</h4></label>
-          <InputText id="aTitle" type="username" v-model="title" placeholder="제목을 입력하세요" />
-        </div>
+        <div class="board-main">
+          <div class="board-input">
+            <label for="aTitle"><h4>제목</h4></label>
+            <InputText id="aTitle" type="username" v-model="title" placeholder="제목을 입력하세요" />
+          </div>
 
-        <div class="board-input">
-          <label for="category"><h4>매거진 유형</h4></label>
-          <Dropdown
-            id="category"
-            v-model="category"
-            :options="categories"
-            optionLabel="name"
-            placeholder="카테고리 선택"
-          />
+          <div class="board-input">
+            <label for="category"><h4>매거진 유형</h4></label>
+            <Dropdown
+              id="category"
+              v-model="category"
+              :options="categories"
+              optionLabel="name"
+              placeholder="카테고리 선택"
+            />
+          </div>
+          <h4>내용</h4>
+          <Editor v-model="contents" editorStyle="height: 320px"> </Editor>
+          <div class="file-box">
+            <input type="file" id="tImgFile" accept="image/*" @change="changeTImg" />
+            <label for="tImgFile" class="p-button p-component p-button-label" style="width: 130px; margin-top: 5px"
+              >썸네일 선택</label
+            >
+          </div>
+          <table v-if="tImgFile">
+            <tr>
+              <td style="width: 70%">
+                <img class="file-preview" :src="tImgPreview" style="margin-top: 10px; width: 300px" />
+              </td>
+              <th style="width: 10%; height: 100px">
+                {{ tImgFile.name }}
+              </th>
+              <th style="width: 10%; height: 100px">{{ tImgFile.size / 1000 }} KB</th>
+            </tr>
+          </table>
         </div>
-        <h4>내용</h4>
-        <Editor v-model="contents" editorStyle="height: 320px"> </Editor>
-        <div class="file-box">
-          <input type="file" id="tImgFile" accept="image/*" @change="changeTImg" />
-          <label for="tImgFile" class="p-button p-component p-button-label" style="width: 130px; margin-top: 5px"
-            >썸네일 선택</label
-          >
+        <div class="board-footer">
+          <Button @click="onCancel">취소</Button>
+          <Button v-if="!$route.params.brdNum" @click="write">등록</Button>
+          <Button v-else @click="update">수정</Button>
         </div>
-        <table v-if="tImgFile">
-          <tr>
-            <td style="width: 70%;">
-              <img class="file-preview" :src="tImgPreview" style="margin-top:10px; width: 300px;" />
-            </td>
-            <th style="width: 10%; height: 100px;">
-             {{ tImgFile.name }}
-            </th>
-            <th style="width: 10%; height: 100px;">
-             {{ tImgFile.size / 1000 }} KB
-            </th>
-          </tr>
-        </table>
       </div>
-      <div class="board-footer">
-        <Button @click="onCancel">취소</Button>
-        <Button v-if="!$route.params.brdNum" @click="write">등록</Button>
-        <Button v-else @click="update">수정</Button>
-      </div>
-    </div>
     </div>
   </div>
 </template>
@@ -63,13 +61,12 @@ import InputText from "primevue/inputtext";
 import { defaultOptions } from "@/constant/axios.js";
 import { multipartOptions } from "@/constant/axios.js";
 
-
 export default {
   name: "MagazineWrite.vue",
   components: {
     Dropdown,
     Editor,
-    InputText,
+    InputText
   },
   data() {
     return {
@@ -192,7 +189,7 @@ export default {
 * {
   font-family: "Helvetica";
 }
-h4{
+h4 {
   margin-bottom: 5px;
 }
 a {
@@ -208,7 +205,7 @@ a {
   background-color: white;
 }
 .magazine-main {
-  margin-top: 20px;
+  // margin-top: 20px;
   margin-bottom: 20px;
   flex-direction: column;
   justify-content: center;
@@ -221,7 +218,6 @@ a {
   justify-content: center;
   align-items: center;
   width: 1080px;
-
 }
 .title {
   display: flex;

@@ -1,10 +1,11 @@
 <template>
   <div class="wrap">
-    <div class="magazine-main">
-    <AdminPageSidebar />
+    <div class="sidebar">
+      <AdminPageSidebar />
+    </div>
     <div class="inner">
       <div class="title">
-        <h2 style="color: #009688; margin-top:20px">매거진 목록</h2>
+        <h2 style="color: #009688">매거진 목록</h2>
       </div>
       <hr />
       <div>
@@ -52,7 +53,6 @@
           </DataTable>
         </div>
       </div>
-    </div>
     </div>
   </div>
 </template>
@@ -113,11 +113,16 @@ tr {
 .wrap {
   width: 100%;
   min-height: 750px;
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
 }
 .inner {
   width: 1080px;
-  margin: 0 auto;
-  margin-top: 20px;
+}
+.sidebar {
+  margin-left: -220px;
+  margin-right: 20px;
 }
 .title {
   margin-bottom: 10px;
@@ -159,13 +164,7 @@ img {
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
   margin-right: 2rem;
 }
-.wrap {
-  width: 100%;
-}
-.inner {
-  width: 1080px;
-  margin: 0 auto;
-}
+
 .table-header {
   display: flex;
   align-items: center;
