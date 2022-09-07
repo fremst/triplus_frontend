@@ -169,6 +169,13 @@ export default {
   height: 40px;
 }
 
+hr {
+  border: 0;
+  height: 1px;
+  margin-bottom: 15px;
+  background: #dee2e6;
+}
+
 .totPriceBox {
   margin-top: 20px;
   margin-bottom: 20px;

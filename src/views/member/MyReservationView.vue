@@ -64,6 +64,8 @@
             <td v-else>여성</td>
           </tr>
         </table>
+        <ConfirmDialog v-model:visible="displayConfirmation" :msg="'정말로 취소하시겠습니까?'" @closeDialog="refund" />
+        <Toast></Toast>
       </div>
     </div>
   </div>
@@ -72,7 +74,7 @@
       뒤로가기
     </Button>
     <Button
-      @click="refund()"
+      @click="openDialog('delete', true)"
       v-if="myResInfo.resSta !== '취소'"
       class="p-button-danger p-component p-button-label mt-3 mb-5"
     >
@@ -84,20 +86,31 @@
 <script>
 import axios from "axios";
 import { defaultOptions } from "@/constant/axios";
+import ConfirmDialog from "@/views/admin/place/ConfirmDialog.vue";
 
 export default {
   data() {
     return {
       myResInfo: {},
-      pkgComList: []
+      pkgComList: [],
+      displayConfirmation: false
     };
+  },
+
+  components: {
+    ConfirmDialog
   },
 
   async created() {
     const getUrl = `${process.env.VUE_APP_API_URL || ""}/myreservations/${this.$route.params.oid}`;
 
     const res = await axios.get(getUrl, defaultOptions).catch(err => {
-      alert("서버 연결 실패", err);
+      this.$toast.add({
+        severity: "error",
+        summary: "",
+        detail: err,
+        life: 3000
+      });
     });
 
     this.myResInfo = res.data;
@@ -105,25 +118,47 @@ export default {
   },
 
   methods: {
-    async refund() {
-      if (confirm("정말로 취소하시겠습니까?")) {
-        let refundMsg = prompt("취소 사유를 입력해주세요.");
-        const refundParam = new URLSearchParams();
-        refundParam.append("oid", this.$route.params.oid);
-        refundParam.append("tid", this.myResInfo.tid);
-        refundParam.append("refundMsg", refundMsg);
+    openDialog(dialogType, show) {
+      if (dialogType === "delete") {
+        this.displayConfirmation = show;
+      }
+    },
+    async refund(confirm) {
+      if (!confirm) {
+        return false;
+      }
+      const refundParam = new URLSearchParams();
+      refundParam.append("oid", this.$route.params.oid);
+      refundParam.append("tid", this.myResInfo.tid);
+      refundParam.append("refundMsg", "사용자 취소");
 
-        const postUrl = `${process.env.VUE_APP_API_URL || ""}/v1/pay/refund/`;
+      const postUrl = `${process.env.VUE_APP_API_URL || ""}/v1/pay/refund/`;
 
-        const res = await axios.post(postUrl, refundParam, defaultOptions).catch(err => {
-          alert("서버 연결 실패", err);
+      const res = await axios.post(postUrl, refundParam, defaultOptions).catch(err => {
+        this.$toast.add({
+          severity: "error",
+          summary: "",
+          detail: err,
+          life: 3000
         });
-        if (res.data.result === "success") {
-          alert("예약이 취소되었습니다.");
-          this.$router.go();
-        } else {
-          alert("실패하였습니다. 재시도 하세요.");
-        }
+      });
+
+      if (res.data.result === "success") {
+        await this.$toast.add({
+          severity: "success",
+          summary: "",
+          detail: "예약이 취소되었습니다.",
+          life: 3000
+        });
+        this.$router.go();
+      } else {
+        await this.$toast.add({
+          severity: "error",
+          summary: "",
+          detail: "실패하였습니다. 다시 시도하세요.",
+          life: 3000
+        });
+        this.$router.go();
       }
     }
   }
