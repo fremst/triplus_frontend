@@ -2,7 +2,7 @@
 -->
 
 <template>
-  <div class="qna-chat-widget">
+  <div class="qna-chat-widget" v-if="showWidget">
     <Button
       v-show="!chatWidget"
       icon="pi pi-comment"
@@ -62,6 +62,7 @@ export default {
   props: {},
   data() {
     return {
+      showWidget: true,
       chatWidget: false,
       chatBadgeCount: 0,
       chatData: [{ type: "admin", content: "궁금한 점이 있으신가요? 상담사에게 물어보세요." }],
@@ -133,9 +134,26 @@ export default {
       }일 ${result.getHours()}시 ${result.getUTCMinutes()}분`;
     }
   },
-  mounted() {},
+  watch: {
+    $route(to, from) {
+      if (to != from)
+      {
+        if (store.state.loginUser != null)
+          this.showWidget = (store.state.loginUser.auth != 'admin');
+        else
+          this.showWidget = true;
+      }
+    }
+  },
   created() {
-    // console.log(store.state);
+    if (store.state.loginUser != null)
+    {
+      if (store.state.loginUser.auth == 'admin')
+      {
+        this.showWidget = false;
+        return;
+      }
+    }
     this.sockJS = new SockJS(`http://localhost:8082/triplus/chat`);
     this.sockJS.onmessage = message => {
       this.getMessage(JSON.parse(message.data));
