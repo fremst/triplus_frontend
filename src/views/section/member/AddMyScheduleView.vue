@@ -1,30 +1,35 @@
 <template>
   <div class="wrap">
     <div class="inner">
-      <Fieldset legend="여행일정 등록" class="fieldset-area">
-        <div>
-          <InputText style="width: 350px" readonly :value="formattedDate" />
-          <h3>일정에 따른 날씨예보, 여행 정보를 알려드립니다.</h3>
-        </div>
-        <Calendar
-          id="range"
-          v-model="dates"
-          dateFormat="dd-mm-yy"
-          selectionMode="range"
-          format="yy-mm-dd"
-          :inline="true"
-          style="width: 450px"
+      <div class="title-area">
+        <h3>일정에 따른 날씨예보, 여행 정보를 알려드립니다.</h3>
+        <InputText
+          style="width: 700px; text-align: center"
+          class="mt-2 mb-3"
+          readonly
+          :value="formattedDate"
+          placeholder="선택하신 날짜가 나타납니다."
         />
-        <div>
-          <span class="p-input-icon-left">
-            <i class="pi pi-map-marker" />
-            <InputText type="text" v-model="destination" placeholder="목적지를 입력하세요" />
-          </span>
-        </div>
-      </Fieldset>
+      </div>
+      <Calendar
+        id="range"
+        v-model="dates"
+        dateFormat="dd-mm-yy"
+        selectionMode="range"
+        format="yy-mm-dd"
+        :inline="true"
+        style="width: 700px"
+        class="mb-3"
+      />
+      <div>
+        <span class="p-input-icon-left mt-2 mb-3">
+          <i class="pi pi-map-marker" />
+          <InputText type="text" style="width: 350px" v-model="destination" placeholder="목적지를 입력하세요" />
+        </span>
+      </div>
       <div class="button-area">
-        <Button label="이전" class="p-button-secondary mr-2" />
-        <Button label="등록" @click="goNext" />
+        <Button label="이전" class="p-button-secondary mr-4 p-button-sm" style="width: 100px" />
+        <Button label="등록" class="p-button-sm" style="width: 100px" @click="goNext" />
       </div>
     </div>
   </div>
@@ -123,20 +128,21 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+@import "@/scss/main.scss";
 .wrap {
   width: 100%;
+  height: auto;
 }
 .inner {
-  width: 750px;
+  @include c-center;
+  position: relative;
+  width: 1080px;
+  height: auto;
   margin: 0 auto;
 }
-
-.fieldset-area {
-  margin-bottom: 20px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+.title-area {
+  margin-top: 40px;
 }
 
 .calendar-field {
@@ -151,6 +157,8 @@ export default {
   background: cornflowerblue;
 }
 .button-area {
-  margin-bottom: 30px;
+  margin-top: 20px;
+  margin-bottom: 40px;
+  position: relative;
 }
 </style>

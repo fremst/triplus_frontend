@@ -31,8 +31,13 @@ export default {
     markers() {
       let result = [];
       for (let i = 0; i < this.events.length; i++) {
-        result.push({ mapx: this.events[i].mapx, mapy: this.events[i].mapy });
+        for (let j = 0; j < this.events[i].length; j++) {
+          if (this.events[i][j]) {
+            result.push({ mapx: this.events[i][j].mapx, mapy: this.events[i][j].mapy });
+          }
+        }
       }
+      console.log(result);
       return result;
     }
   },
@@ -93,7 +98,7 @@ export default {
   position: relative;
   width: 1080px;
   margin: 20px auto;
-  height: 350px;
+  height: 500px;
 }
 #map1 {
   @include c-center;
