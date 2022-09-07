@@ -1,9 +1,13 @@
 <template>
   <div class="wrapper">
+    <div class="side">
+      <MyPageSidebar />
+    </div>
+
     <div class="inner">
-      <div>
+
         <div class="card">
-          <br />
+
           <DataTable
             ref="dt"
             v-model:selection="selectedProducts"
@@ -19,7 +23,7 @@
           >
             <template #header>
               <div class="table-header flex flex-column md:flex-row md:justiify-content-between">
-                <h2>내 예약</h2>
+                <h3 style="color: #009688" >내 예약</h3>
               </div>
             </template>
 
@@ -50,13 +54,14 @@
             </Column>
           </DataTable>
         </div>
-      </div>
+
     </div>
   </div>
 </template>
 
 <script>
 import axios from "axios";
+import MyPageSidebar from "@/components/member/mypage/MyPageSidebar";
 
 export default {
   name: "MyReservationView",
@@ -83,13 +88,39 @@ export default {
           this.list = resp.data.list;
         }.bind(this)
       );
+  },
+  components:{
+    MyPageSidebar
   }
 };
 </script>
 
 <style scoped>
-.inner {
-  width: 1080px;
-  margin: 0 auto;
+
+
+.wrapper{
+  display: flex;
+  margin: 40px auto;
+  margin-bottom: 100px;
 }
+
+.inner{
+  width: 830px;
+  display: inline-block;
+  margin-left: 40px;
+
+}
+
+.side{
+  width: 250px;
+  display: inline-block;
+
+  margin-left: 300px;
+}
+
+
+
+
+
+
 </style>
