@@ -1,5 +1,6 @@
 <template>
   <div class="main">
+    <div class="notice-main">
     <div class="board">
       <div class="board-header">
         <h1>{{ title }}</h1>
@@ -26,6 +27,7 @@
         <Button v-if="this.tempAuth == 'admin'" class="p-button-danger" @click="onDelete">삭제</Button>
         <Button @click="onList">목록으로</Button>
       </div>
+    </div>
     </div>
   </div>
 </template>
@@ -105,6 +107,16 @@ a {
   justify-content: center;
   align-items: center;
   background-color: white;
+}
+.notice-main {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 1080px;
+  border: 1px solid lightgray;
 }
 .board {
   display: flex;

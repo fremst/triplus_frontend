@@ -18,7 +18,7 @@ export default {
   },
   data() {
     return {
-      title: "공지사항 상세",
+      title: "공지사항",
       article: {
         number: 1,
         title: "aaaabbbbcccc",

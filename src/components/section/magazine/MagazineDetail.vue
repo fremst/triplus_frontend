@@ -1,8 +1,8 @@
 <template>
   <div class="main">
+    <div class="magazine-main">
     <div class="board">
       <div class="board-header">
-        <h1>{{ pageTitle }}</h1>
       </div>
       <div class="board-main">
         <table class="article-header">
@@ -50,6 +50,7 @@
         />
         <Button @click="insertComm" id="replyBtn" class="p-button-lg">등록</Button>
       </div>
+    </div>
     </div>
   </div>
 </template>
@@ -148,7 +149,6 @@ export default {
         .then(
           function (resp) {
             if (resp.data == "success") {
-              alert("삭제 완료!");
               this.getCommList();
             }
           }.bind(this)
@@ -200,20 +200,30 @@ a {
   align-items: center;
   background-color: white;
 }
+.magazine-main {
+  margin-top: 0px;
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 1080px;
+  border: 0px solid lightgray;
+}
 .board {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   width: 1080px;
-  border: 1px solid lightgray;
+  border: 0px solid lightgray;
 }
 .board-header {
   display: flex;
   flex-direction: column;
   justify-content: center;
   width: 100%;
-  height: 100px;
+  height: 70px;
   align-items: flex-start;
   padding: 20px;
 }
@@ -233,7 +243,7 @@ a {
   width: 100%;
   margin: 0;
   text-align: center;
-  border-top: 1px solid gray;
+  border-top: 0px solid gray;
   border-collapse: collapse;
 }
 .article-header tr {
@@ -252,7 +262,7 @@ a {
 }
 .article-footer {
   width: 100%;
-  margin: 0 0 5px 0;
+  margin: 0 0 10px 0;
   border-top: 1px solid gray;
 }
 .board-footer {

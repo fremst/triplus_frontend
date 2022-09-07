@@ -1,5 +1,6 @@
 <template>
   <div class="main">
+    <div class="notice-main">
     <div class="board">
       <div class="board-header">
         <h1>{{ title }}</h1>
@@ -20,23 +21,22 @@
           :rows="10"
           :filters="filters"
         >
-          <Column field="brdNum" header="글번호" style="width: 100px"></Column>
-          <Column field="category" header="카테고리" style="width: 100px"></Column>
-          <Column field="title" header="제목">
+          <Column field="brdNum" header="글번호" style="min-width: 3rem; text-align: center"></Column>
+          <Column field="category" header="카테고리" style="min-width: 3rem; text-align: center"></Column>
+          <Column field="title" header="제목" style="min-width: 19rem; text-align: center">
             <template #body="slotProps">
               <a href="#" @click.prevent="onDetail(slotProps.data.brdNum)" v-text="slotProps.data.title"></a>
             </template>
           </Column>
-          <!-- 작성자가 admin으로 다 동일하기 때문에 주석처리...
-          <Column field="writerId" header="작성자" style="width: 100px;"></Column>-->
-          <Column field="wdate" header="작성일" style="width: 150px"></Column>
-          <Column field="hit" header="조회" style="width: 100px"></Column>
+          <Column field="wdate" header="작성일" style="min-width: 9rem; text-align: center"></Column>
+          <Column field="hit" header="조회" style="min-width: 9rem; text-align: center"></Column>
         </DataTable>
       </div>
       <div class="board-footer">
         <Button v-if="this.tempAuth == 'admin'" color="#67AB9F" @click="onWrite">공지등록</Button>
         <Button color="#67AB9F" @click="onList">전체 글 보기</Button>
       </div>
+    </div>
     </div>
   </div>
 </template>
@@ -118,6 +118,16 @@ a {
   align-items: center;
   background-color: white;
 }
+.notice-main {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 1080px;
+  border: 1px solid lightgray;
+}
 .board {
   display: flex;
   flex-direction: column;
@@ -181,5 +191,30 @@ a {
 }
 #icon {
   margin-left: 735px;
+}
+.p-datatable .p-datatable-thead > tr > th {
+  text-align: center;
+  align-content: center;
+  justify-content: center;
+  padding: 15px 15px;
+  border-width: 0 0 1px 0;
+  font-weight: 700;
+  font-size: 16px;
+  color: #343a40;
+  background: #f8f9fa;
+  transition: box-shadow 0.2s;
+}
+
+.p-datatable .p-datatable-tbody > tr > td {
+  text-align: center;
+  justify-content: center;
+  vertical-align: middle;
+  font-size: 14px;
+  border-width: 0 0 1px 0;
+  padding: 15px 15px;
+}
+
+::v-deep(.p-datatable .p-column-header-content) {
+  justify-content: center;
 }
 </style>
