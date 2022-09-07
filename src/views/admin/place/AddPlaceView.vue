@@ -227,23 +227,19 @@ export default {
       )}/`;
 
       const resp = await axios.post(postUrl, addPlaceParam, defaultOptions).catch(err => {
-        this.serverError(err);
+        this.$toast.add({
+          severity: "error",
+          summary: "",
+          detail: err,
+          life: 3000
+        });
       });
 
       if (resp.data.result === "success") {
-        this.showSuccess();
+        this.$toast.add({ severity: "success", summary: "Success Message", detail: "장소추가 성공", life: 3000 });
       } else {
-        this.showError();
+        this.$toast.add({ severity: "error", summary: "Error Message", detail: "장소추가 실패", life: 3000 });
       }
-    },
-    showSuccess() {
-      this.$toast.add({ severity: "success", summary: "Success Message", detail: "장소추가 성공", life: 3000 });
-    },
-    showError() {
-      this.$toast.add({ severity: "error", summary: "Error Message", detail: "장소추가 실패", life: 3000 });
-    },
-    serverError() {
-      this.$toast.add({ severity: "error", summary: "Error Message", detail: "서버에러", life: 3000 });
     },
     onCancel() {
       this.title = "";

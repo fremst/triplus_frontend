@@ -194,7 +194,7 @@ export default {
   position: relative;
   width: 1080px;
   margin: 20px auto;
-  height: 350px;
+  height: 500px;
 }
 .hAddr {
   position: absolute;

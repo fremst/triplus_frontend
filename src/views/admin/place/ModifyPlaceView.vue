@@ -78,6 +78,7 @@
           <Button class="p-button-secondary mr-2" label="목록으로" @click="goDetail()" />
         </div>
       </div>
+      <Toast />
     </div>
   </div>
 </template>
@@ -245,20 +246,18 @@ export default {
       }`;
 
       const resp = await axios.put(putUrl, updateParam, putOptions).catch(err => {
-        this.serverError();
-        console.log(err);
+        this.$toast.add({
+          severity: "error",
+          summary: "",
+          detail: err,
+          life: 3000
+        });
       });
       if (resp.data.result === "success") {
         this.$router.push(`/admin/place/${this.mcatNameToEng(updateParam.mcatName)}`);
       } else {
-        this.showError();
+        this.$toast.add({ severity: "error", summary: "Error Message", detail: "장소수정 실패", life: 3000 });
       }
-    },
-    showError() {
-      this.$toast.add({ severity: "error", summary: "Error Message", detail: "장소수정 실패", life: 3000 });
-    },
-    serverError() {
-      this.$toast.add({ severity: "error", summary: "Error Message", detail: "서버에러", life: 3000 });
     },
     onCancel() {
       this.title = "";

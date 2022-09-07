@@ -5,6 +5,12 @@ import AdminView from "@/views/admin/AdminView";
 
 import AddPlaceView from "@/views/admin/place/AddPlaceView";
 import ModifyPlaceView from "@/views/admin/place/ModifyPlaceView";
+import AdminAttractionListView from "@/views/section/place/attraction/AttractionListView";
+import AdminAttractionDetailView from "@/views/section/place/attraction/AttractionDetailView";
+import AdminRestaurantListView from "@/views/section/place/restaurant/RestaurantListView";
+import AdminRestaurantDetailView from "@/views/section/place/restaurant/RestaurantDetailView";
+import AdminAccommodationListView from "@/views/section/place/accommodation/AccommodationListView";
+import AdminAccommodationDetailView from "@/views/section/place/accommodation/AccommodationDetailView";
 import AdminPackageListView from "@/views/admin/item/AdminPackageListView";
 import AdminPackageWriteView from "@/views/admin/item/AdminPackageWriteView";
 import AdminReservationView from "@/views/admin/reservation/AdminReservationView";
@@ -94,19 +100,37 @@ const routes = [
   {
     path: "/admin/place/attraction",
     name: "admin-attraction-list",
-    component: AttractionListView
+    component: AdminAttractionListView
+  },
+  //관리자 명소 상세페이지
+  {
+    path: "/admin/place/attraction/:brdNum",
+    name: "admin-attraction-detail",
+    component: AdminAttractionDetailView
   },
   //관리자 맛집 리스트
   {
     path: "/admin/place/restaurant",
     name: "admin-restaurant-list",
-    component: RestaurantListView
+    component: AdminRestaurantListView
+  },
+  //관리자 맛집 상세페이지
+  {
+    path: "/admin/place/restaurant/:brdNum",
+    name: "admin-restaurant-detail",
+    component: AdminRestaurantDetailView
   },
   //관리자 숙소 리스트
   {
     path: "/admin/place/accommodation",
     name: "admin-accommodation-list",
-    component: AccommodationListView
+    component: AdminAccommodationListView
+  },
+  //관리자 숙소 상세페이지
+  {
+    path: "/admin/place/accommodation/:brdNum",
+    name: "admin-accommodation-detail",
+    component: AdminAccommodationDetailView
   },
   //관리자 장소 수정
   {
@@ -114,6 +138,7 @@ const routes = [
     name: "place-modify",
     component: ModifyPlaceView
   },
+
   {
     path: "/admin/packages",
     name: "admin-packages",
@@ -305,13 +330,13 @@ const routes = [
     name: "restaurant-detail",
     component: RestaurantDetailView
   },
-  //숙박 리스트
+  //숙소 리스트
   {
     path: "/section/place/accommodation",
     name: "accommodation-list",
     component: AccommodationListView
   },
-  //숙박 상세페이지
+  //숙소 상세페이지
   {
     path: "/section/place/accommodation/:brdNum",
     name: "accommodation-detail",

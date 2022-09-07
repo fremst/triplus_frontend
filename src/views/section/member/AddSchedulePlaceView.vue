@@ -69,6 +69,7 @@
       <Button class="p-button-text" icon="pi pi-check" label="추가" @click="addSchedulePlace(selectedProducts)" />
     </template>
   </Dialog>
+  <Toast />
 </template>
 
 <script>
@@ -131,7 +132,12 @@ export default {
     async getList() {
       const getUrl = `${process.env.VUE_APP_API_URL || ""}/section/places/myplaces/${localStorage.getItem("id")}`;
       const res = await axios.get(getUrl, defaultOptions).catch(err => {
-        alert("서버 연결 실패", err);
+        this.$toast.add({
+          severity: "error",
+          summary: "",
+          detail: err,
+          life: 3000
+        });
       });
       this.products = res.data;
     },

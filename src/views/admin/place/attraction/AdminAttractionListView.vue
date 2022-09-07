@@ -1,5 +1,6 @@
 <template>
   <div class="wrap">
+    <AdminPageSidebar />
     <div class="inner">
       <div class="card">
         <DataTable
@@ -11,7 +12,8 @@
           :rowsPerPageOptions="[5, 10, 25]"
           :value="products"
           dataKey="brdNum"
-          paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink "
+          paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink"
+          responsiveLayout="scroll"
           style="text-align: center"
         >
           <template #header>
@@ -23,7 +25,7 @@
               <h5 class="mb-2 md:m-0 p-as-md-center">&nbsp;</h5>
             </div>
           </template>
-          <Column header="숙소이미지" style="min-width: 8rem">
+          <Column header="명소이미지" style="min-width: 8rem">
             <template #body="slotProps">
               <img
                 :alt="slotProps.data.title"
@@ -37,10 +39,10 @@
               <span class="product-category">{{ slotProps.data.scatName }}</span>
             </template>
           </Column>
-          <Column :sortable="true" field="title" header="숙소명" style="min-width: 16rem; text-align: center">
+          <Column :sortable="true" field="title" header="명소명" style="min-width: 16rem; text-align: center">
             <template #body="slotProps">
               <span class="product-category">
-                <router-link :to="`/section/place/accommodation/` + slotProps.data.brdNum">
+                <router-link :to="`/section/place/attraction/` + slotProps.data.brdNum">
                   {{ slotProps.data.title }}
                 </router-link>
               </span>
@@ -66,8 +68,9 @@
 
 <script>
 import { FilterMatchMode } from "primevue/api";
-import { defaultOptions } from "@/constant/axios.js";
+import AdminPageSidebar from "@/components/admin/AdminPageSidebar";
 import axios from "axios";
+import { defaultOptions } from "@/constant/axios";
 
 export default {
   data() {
@@ -82,6 +85,9 @@ export default {
       submitted: false
     };
   },
+  components: {
+    AdminPageSidebar
+  },
   productService: null,
   created() {
     this.initFilters();
@@ -91,10 +97,11 @@ export default {
   },
   methods: {
     async getList() {
-      const getUrl = `${process.env.VUE_APP_API_URL || ""}/section/places/accommodation/`;
+      const getUrl = `${process.env.VUE_APP_API_URL || ""}/section/places/attraction/`;
       const resp = await axios.get(getUrl, defaultOptions).catch(err => {
-        alert("서버연결 실패", err);
+        alert("서버 연결 실패", err);
       });
+
       this.products = resp.data;
     },
     initFilters() {

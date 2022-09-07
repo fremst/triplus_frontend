@@ -4,24 +4,34 @@
       <div class="main-table">
         <PlanNavigator />
         <PlaceMapView :events="events" />
-        <table class="schedule-table">
+        <div>
           <AddScheduleDialog
             v-model:visible="showConfirmDialog"
             @addMarker="addMySchedule"
             @closeDialog="closePlaceDialog"
-            :skdNum="this.$route.params.skdNum"
+            :skdNum="parseInt(this.$route.params.skdNum)"
           />
-          <Button
-            lable="일정추가"
-            class="p-button-outlined p-button-primary p-button-sm mb-3"
-            @click="openDialog('addPlace', true, i)"
-            >일정추가</Button
-          >
-          <tr v-for="(day, i) in list.days" :key="i">
-            <td class="add-schedule">
-              day{{ day }} / {{ dateCalc(i) }}<br />
-              <div class="card">
-                <Timeline :value="events">
+          <div>
+            <Dropdown
+              v-model="selectedDay"
+              :options="days"
+              optionLabel="name"
+              optionValue="value"
+              placeholder="-- 일정일 선택 --"
+              style="width: 200px"
+            >
+            </Dropdown>
+            <Button lable="일정추가" class="p-button-outlined p-button-primary" @click="openDialog('addPlace', true)"
+              >일정추가</Button
+            >
+            <div v-for="(event, i) in events" :key="i" class="timeline">
+              <div v-if="event.length > 0">
+                {{
+                  this.$getFormattedDate(
+                    new Date(new Date(this.list.sDate).setDate(new Date(this.list.sDate).getDate() + i))
+                  )
+                }}
+                <Timeline :value="event">
                   <template #opposite="slotProps">
                     <small class="p-text-secondary">{{ slotProps.item.date }}</small>
                   </template>
@@ -29,19 +39,16 @@
                     {{ slotProps.item.status }}
                   </template>
                 </Timeline>
+                <Toast />
               </div>
-            </td>
-          </tr>
-        </table>
-        <Button lable="일정저장" class="p-button p-button-primary p-button-sm mb-3" @click="saveMySchedule"
-          >일정저장</Button
-        >
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </template>
 <script>
-//import day from "public/demo/data/day.json";
 import axios from "axios";
 import router from "@/router";
 import PlanNavigator from "@/components/member/plan/PlanHeader.vue";
@@ -51,12 +58,28 @@ import { defaultOptions } from "@/constant/axios";
 export default {
   data() {
     return {
-      list: [{ sDate: "", eDate: "", days: "", destination: "" }],
+      list: [{ sDate: null, eDate: "", days: "", destination: "" }],
       week: ["일", "월", "화", "수", "목", "금", "토"],
       showConfirmDialog: false,
       events: [],
-      schduleDialog: false
+      schduleDialog: false,
+      selectedDay: null
     };
+  },
+  computed: {
+    days() {
+      let result = [];
+      if (this.list.sDate) {
+        let sDate = this.list.sDate;
+        for (let day = 0; day < this.list.days; day++) {
+          result.push({
+            name: this.$getFormattedDate(new Date(new Date(sDate).setDate(new Date(sDate).getDate() + day))),
+            value: day
+          });
+        }
+      }
+      return result;
+    }
   },
   components: {
     PlanNavigator,
@@ -65,16 +88,40 @@ export default {
   },
   created() {
     this.getDate();
-    this.dateCalc();
+    this.getDateList();
   },
   methods: {
     async getDate() {
       const getUrl = `${process.env.VUE_APP_API_URL || ""}/section/schedules/${this.$route.params.skdNum}`;
       const resp = await axios.get(getUrl, defaultOptions).catch(err => {
-        this.serverError(err);
+        this.$toast.add({
+          severity: "error",
+          summary: "",
+          detail: err,
+          life: 3000
+        });
       });
 
       this.list = resp.data;
+
+      for (let i = 0; i < this.list.days; i++) {
+        this.events.push([]);
+      }
+    },
+    async getDateList() {
+      const getUrl = `${process.env.VUE_APP_API_URL || ""}/section/schedules/spots/${this.$route.params.skdNum}`;
+      const resp = await axios.get(getUrl, defaultOptions).catch(err => {
+        this.$toast.add({
+          severity: "error",
+          summary: "",
+          detail: err,
+          life: 3000
+        });
+      });
+
+      console.log("aa", resp.data.data);
+
+      this.list = resp.data.data;
     },
     getFormattedDate(date) {
       if (date) {
@@ -82,11 +129,6 @@ export default {
       } else {
         return "";
       }
-    },
-    dateCalc(i) {
-      let calcDate = new Date(this.list.sDate);
-      calcDate.setDate(calcDate.getDate() + i);
-      return this.getFormattedDate(calcDate);
     },
     openDialog(dialogType, show) {
       if (dialogType === "addPlace") {
@@ -106,16 +148,59 @@ export default {
     goWeather() {
       router.push("/section/member/schedule/weather");
     },
-    addMySchedule(selectedProducts, date) {
-      console.log(this.events);
-      this.events.push({
-        status: selectedProducts.title,
-        date: date.getHours() + ":" + date.getMinutes() + " / " + this.memo,
+    async addMySchedule(selectedPlaceInfo, date, memo) {
+      // console.log(this.events);
+      // console.log("추가될 때 선택된 day", this.selectedDay);
+      console.log("sp", selectedPlaceInfo);
+
+      const event = {
+        status: selectedPlaceInfo.title,
+        date: "일정시간 : " + date.getHours() + ":" + date.getMinutes() + " / 메모 : " + memo,
         icon: "pi pi-cog",
         color: "#673AB7",
-        mapx: selectedProducts.mapx,
-        mapy: selectedProducts.mapy
+        mapx: selectedPlaceInfo.mapx,
+        mapy: selectedPlaceInfo.mapy
+      };
+      // if (!this.event[this.selectedDay]) {
+      // this.events[this.selectedDay] = event;
+      // } else {
+      console.log(this.events);
+      this.events[this.selectedDay].push(event);
+      // }
+
+      const params = new URLSearchParams();
+      params.append("skdNum", this.$route.params.skdNum);
+      params.append("day", this.selectedDay);
+      params.append("memo", event.date);
+      params.append("brdNum", selectedPlaceInfo.brdNum);
+
+      const postUrl = `${process.env.VUE_APP_API_URL || ""}/section/schedules/spot/`;
+
+      const res = await axios.post(postUrl, params, defaultOptions).catch(err => {
+        this.$toast.add({
+          severity: "error",
+          summary: "",
+          detail: err,
+          life: 3000
+        });
       });
+
+      if (res.data.result === "success") {
+        this.$toast.add({
+          severity: "success",
+          summary: "",
+          detail: "일정 등록 성공",
+          life: 3000
+        });
+      } else {
+        this.$toast.add({
+          severity: "error",
+          summary: "",
+          detail: "일정 등록 실패",
+          life: 3000
+        });
+      }
+
       this.showConfirmDialog = false;
     },
     saveMySchedule() {
@@ -125,6 +210,8 @@ export default {
       params.append("memo", this.memo);
       params.append("brdNum", this.brdNum);
 
+      console.log(this.$route.params.skdNum);
+      console.log(this.day);
       console.log(params);
     }
   }
@@ -154,15 +241,10 @@ export default {
   height: auto;
   padding-top: 30px;
 }
-Button {
-  margin-top: 5px;
-  margin-bottom: 10px;
+.timeline {
+  min-height: 100px;
 }
-.p-button-outlined {
-  width: 220px;
-  margin-left: 50px;
-  display: inline;
-  text-align: center;
-  align-items: center;
+.save-button {
+  float: right;
 }
 </style>

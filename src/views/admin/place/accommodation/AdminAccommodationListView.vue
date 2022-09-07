@@ -1,5 +1,6 @@
 <template>
   <div class="wrap">
+    <AdminPageSidebar />
     <div class="inner">
       <div class="card">
         <DataTable
@@ -12,6 +13,7 @@
           :value="products"
           dataKey="brdNum"
           paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink "
+          responsiveLayout="scroll"
           style="text-align: center"
         >
           <template #header>
@@ -67,6 +69,7 @@
 <script>
 import { FilterMatchMode } from "primevue/api";
 import { defaultOptions } from "@/constant/axios.js";
+import AdminPageSidebar from "@/components/admin/AdminPageSidebar";
 import axios from "axios";
 
 export default {
@@ -81,6 +84,9 @@ export default {
       filters: {},
       submitted: false
     };
+  },
+  components: {
+    AdminPageSidebar
   },
   productService: null,
   created() {
