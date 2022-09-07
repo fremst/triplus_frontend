@@ -22,7 +22,7 @@
             />
           </div>
           <h4>내용</h4>
-          <Editor v-model="contents" editorStyle="height: 320px"> </Editor>
+          <Editor v-model="contents" editorStyle="height: 600px"> </Editor>
         </div>
         <div class="board-footer">
           <Button @click="onCancel">취소</Button>
@@ -118,7 +118,7 @@ a {
   justify-content: center;
   align-items: center;
   width: 1080px;
-  border: 1px solid lightgray;
+  border: 0px solid lightgray;
 }
 .board {
   display: flex;
@@ -126,7 +126,7 @@ a {
   justify-content: center;
   align-items: center;
   width: 1080px;
-  border: 1px solid lightgray;
+  border: 0px solid lightgray;
 }
 .board-header {
   display: flex;

@@ -24,7 +24,7 @@
             />
           </div>
           <h4>내용</h4>
-          <Editor v-model="contents" editorStyle="height: 320px"> </Editor>
+          <Editor v-model="contents" editorStyle="height: 600px"> </Editor>
           <div class="file-box">
             <input type="file" id="tImgFile" accept="image/*" @change="changeTImg" />
             <label for="tImgFile" class="p-button p-component p-button-label" style="width: 130px; margin-top: 5px"

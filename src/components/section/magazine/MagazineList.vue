@@ -13,9 +13,9 @@
             />
           </div>
           <div class="col-6" style="text-align: right">
-            <Button v-if="this.tempAuth === 'admin'" color="#67AB9F" @click="onWrite" style="margin-top: 10px"
-              >매거진등록</Button
-            >
+            <Button v-if="this.tempAuth === 'admin'" color="#67AB9F" @click="onWrite" style="margin-top: 10px">
+              매거진등록
+            </Button>
           </div>
         </div>
       </template>
