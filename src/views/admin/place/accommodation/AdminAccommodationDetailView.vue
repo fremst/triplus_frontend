@@ -108,7 +108,7 @@ export default {
     },
     //목록으로 가기
     goList() {
-      router.push("/section/place/accommodation");
+      router.push("/admin/place/accommodation");
     }
   }
 };

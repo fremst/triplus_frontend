@@ -103,7 +103,7 @@ export default {
     },
     //목록으로 가기
     goList() {
-      router.push("/section/place/attraction");
+      router.push("/admin/place/attraction");
     }
   }
 };

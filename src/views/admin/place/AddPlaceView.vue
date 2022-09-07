@@ -93,8 +93,8 @@
         </div>
         <div class="button-group">
           <Toast />
-          <Button class="p-button-primary mr-2" label="Save" @click="onSave" />
-          <Button class="p-button-secondary mr-2" label="Cancel" @click="onCancel" />
+          <Button class="p-button-primary mr-2" label="저장하기" @click="onSave" />
+          <Button class="p-button-secondary mr-2" label="취소하기" @click="onCancel" />
         </div>
       </div>
     </div>
@@ -297,7 +297,6 @@ export default {
       return this.category != "";
     },
     mcatNameToEng(mcatName) {
-      console.log(mcatName);
       if (mcatName == "명소") {
         return "attraction";
       } else if (mcatName == "맛집") {

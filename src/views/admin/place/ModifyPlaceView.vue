@@ -91,8 +91,8 @@
           </div>
         </div>
         <div class="button-group">
-          <Button class="p-button-primary mr-2" label="Save" @click="onSave" />
-          <Button class="p-button-secondary mr-2" label="Cancel" @click="onCancel" />
+          <Button class="p-button-primary mr-2" label="수정하기" @click="onSave" />
+          <Button class="p-button-secondary mr-2" label="취소하기" @click="onCancel" />
           <Button class="p-button-secondary mr-2" label="목록으로" @click="goDetail()" />
         </div>
       </div>
@@ -280,21 +280,6 @@ export default {
       formData.append("homepage", this.homepage);
       formData.append("tImgFile", this.tImgFile);
       formData.append("overview", this.overview);
-
-      // formData = {
-      //   userId: "admin",
-      //   mcatName: this.selectedOptions.value,
-      //   scatName: this.selectedOptions.scatName,
-      //   title: this.title,
-      //   region: this.region,
-      //   tel: this.tel,
-      //   addr: this.addr,
-      //   mapx: this.mapx,
-      //   mapy: this.mapy,
-      //   homepage: this.homepage,
-      //   tImgFile: this.tImgFile,
-      //   overview: this.overview
-      // };
 
       const putUrl = `${process.env.VUE_APP_API_URL || ""}/section/places/${this.mcatNameToEng(formData.mcatName)}/${
         this.$route.params.brdNum
