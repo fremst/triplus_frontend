@@ -126,7 +126,7 @@ a {
   justify-content: center;
   align-items: center;
   width: 1080px;
-  border: 1px solid lightgray;
+  border: 0px solid lightgray;
 }
 .board {
   display: flex;
@@ -134,7 +134,7 @@ a {
   justify-content: center;
   align-items: center;
   width: 1080px;
-  border: 1px solid lightgray;
+  border: 0px solid lightgray;
 }
 .board-header {
   display: flex;

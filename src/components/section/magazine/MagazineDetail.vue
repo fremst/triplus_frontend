@@ -143,7 +143,6 @@ export default {
         );
     },
     deleteComm(brdCmtNum) {
-      console.log(brdCmtNum);
       axios
         .delete(`http://localhost:8082/triplus/api/section/magazines/comments/${brdCmtNum}`, {
           headers: {

@@ -29,7 +29,7 @@
             paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink"
             :value="list"
             responsiveLayout="scroll"
-            :rows="10"
+            :rows="5"
             :filters="filters"
           >
             <Column field="tImg" header="썸네일" style="min-width: 9rem; text-align: center">
