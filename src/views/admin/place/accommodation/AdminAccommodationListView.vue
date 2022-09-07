@@ -42,7 +42,7 @@
           <Column :sortable="true" field="title" header="숙소명" style="min-width: 16rem; text-align: center">
             <template #body="slotProps">
               <span class="product-category">
-                <router-link :to="`/section/place/accommodation/` + slotProps.data.brdNum">
+                <router-link :to="`/admin/place/accommodation/` + slotProps.data.brdNum">
                   {{ slotProps.data.title }}
                 </router-link>
               </span>

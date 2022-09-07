@@ -1,5 +1,6 @@
 <template>
   <div class="wrap">
+    <AdminPageSidebar />
     <div class="inner">
       <h1>숙소 상세정보</h1>
       <table border="1px solid #333333" class="list-table">
@@ -56,6 +57,7 @@
 import axios from "axios";
 import router from "@/router";
 import ConfirmDialog from "@/views/admin/place/ConfirmDialog.vue";
+import AdminPageSidebar from "@/components/admin/AdminPageSidebar";
 import { defaultOptions } from "@/constant/axios";
 
 export default {
@@ -68,7 +70,8 @@ export default {
     };
   },
   components: {
-    ConfirmDialog
+    ConfirmDialog,
+    AdminPageSidebar
   },
   mounted() {
     this.getDetail();

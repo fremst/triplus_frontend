@@ -63,11 +63,29 @@
             <h3>홈페이지</h3>
             <InputText v-model="homepage" class="form-control field col-4" placeholder="홈페이지를 입력해주세요." />
             <h3>상세 이미지</h3>
-            <InputText
-              v-model="firstimage"
-              class="form-control field col-4"
-              placeholder="상세이미지URL을 입력해주세요."
-            />
+            <table>
+              <tr>
+                <td>
+                  <div class="file-box">
+                    <input type="file" id="tImgFile" accept="image/*" @change="changeTImg" />
+                    <label for="tImgFile" class="p-button p-button-outlined p-button-label mb-2">파일 찾기</label>
+                    <small v-if="submitted && !this.tImgFile" class="p-error">썸네일 이미지를 등록해 주세요.</small>
+                  </div>
+                  <table v-if="tImgFile">
+                    <tr>
+                      <td>
+                        <img class="file-preview" :src="tImgPreview" />
+                      </td>
+                      <td class="fileName">
+                        {{ tImgFile.name }}
+                      </td>
+                      <td class="fileSize">{{ tImgFile.size / 1000 }} KB</td>
+                      <td></td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            </table>
             <h3>상세설명</h3>
             <Textarea v-model="overview" class="form-control field col-4" cols="50" rows="5" />
           </div>
@@ -87,7 +105,7 @@
 import axios from "axios";
 import router from "@/router";
 import { defaultOptions } from "@/constant/axios";
-import { putOptions } from "@/constant/axios";
+import { multipartOptions } from "@/constant/axios";
 
 export default {
   data() {
@@ -197,8 +215,9 @@ export default {
       mapx: "",
       mapy: "",
       homepage: "",
-      firstimage: "",
       overview: "",
+      tImgFile: null,
+      tImgPreview: null,
       submitted: false
     };
   },
@@ -206,10 +225,32 @@ export default {
     this.getDetail();
   },
   methods: {
+    changeTImg(e) {
+      let uploadFile = e.target.files[0];
+
+      this.setTImgFileAndPreview(uploadFile);
+    },
+    setTImgFileAndPreview(file) {
+      let reader = new FileReader();
+
+      reader.onload = e => {
+        let img = e.target.result;
+
+        this.tImgFile = file;
+        this.tImgPreview = img;
+      };
+
+      reader.readAsDataURL(file);
+    },
     async getDetail() {
       const getUrl = `${process.env.VUE_APP_API_URL || ""}/section/places/accommodation/${this.$route.params.brdNum}`;
       const res = await axios.get(getUrl, defaultOptions).catch(err => {
-        alert("서버 연결 실패", err);
+        this.$toast.add({
+          severity: "error",
+          summary: "",
+          detail: err,
+          life: 3000
+        });
       });
       this.data = res.data;
       this.scatName = this.data.scatName;
@@ -220,32 +261,46 @@ export default {
       this.mapx = this.data.mapx;
       this.mapy = this.data.mapy;
       this.homepage = this.data.homepage;
-      this.firstimage = this.data.firstimage;
+      this.tImgFile = this.data.tImgFile;
       this.overview = this.data.overview;
     },
     async onSave() {
       this.submitted = true;
+      const formData = new FormData();
 
-      const updateParam = {
-        userId: "admin",
-        mcatName: this.selectedOptions.value,
-        scatName: this.selectedOptions.scatName,
-        title: this.title,
-        region: this.region,
-        tel: this.tel,
-        addr: this.addr,
-        mapx: this.mapx,
-        mapy: this.mapy,
-        homepage: this.homepage,
-        firstimage: this.firstimage,
-        overview: this.overview
-      };
+      formData.append("userId", "admin");
+      formData.append("mcatName", this.selectedOptions.value);
+      formData.append("scatName", this.selectedOptions.scatName);
+      formData.append("title", this.title);
+      formData.append("region", this.region);
+      formData.append("tel", this.tel);
+      formData.append("addr", this.addr);
+      formData.append("mapx", this.mapx);
+      formData.append("mapy", this.mapy);
+      formData.append("homepage", this.homepage);
+      formData.append("tImgFile", this.tImgFile);
+      formData.append("overview", this.overview);
 
-      const putUrl = `${process.env.VUE_APP_API_URL || ""}/section/places/${this.mcatNameToEng(updateParam.mcatName)}/${
+      // formData = {
+      //   userId: "admin",
+      //   mcatName: this.selectedOptions.value,
+      //   scatName: this.selectedOptions.scatName,
+      //   title: this.title,
+      //   region: this.region,
+      //   tel: this.tel,
+      //   addr: this.addr,
+      //   mapx: this.mapx,
+      //   mapy: this.mapy,
+      //   homepage: this.homepage,
+      //   tImgFile: this.tImgFile,
+      //   overview: this.overview
+      // };
+
+      const putUrl = `${process.env.VUE_APP_API_URL || ""}/section/places/${this.mcatNameToEng(formData.mcatName)}/${
         this.$route.params.brdNum
       }`;
 
-      const resp = await axios.put(putUrl, updateParam, putOptions).catch(err => {
+      const resp = await axios.post(putUrl, formData, multipartOptions).catch(err => {
         this.$toast.add({
           severity: "error",
           summary: "",
@@ -254,7 +309,7 @@ export default {
         });
       });
       if (resp.data.result === "success") {
-        this.$router.push(`/admin/place/${this.mcatNameToEng(updateParam.mcatName)}`);
+        this.$router.push(`/admin/place/${this.mcatNameToEng(formData.mcatName)}`);
       } else {
         this.$toast.add({ severity: "error", summary: "Error Message", detail: "장소수정 실패", life: 3000 });
       }
@@ -267,7 +322,7 @@ export default {
       this.mapx = "";
       this.mapy = "";
       this.homepage = "";
-      this.firstimage = "";
+      this.tImgFile = "";
       this.overview = "";
 
       return this.submitted;
@@ -278,11 +333,11 @@ export default {
     goDetail() {
       let mcatName = this.selectedOptions.value;
       if (mcatName === "명소") {
-        return router.push(`/section/place/attraction/${this.$route.params.brdNum}`);
+        return router.push(`/admin/place/attraction/${this.$route.params.brdNum}`);
       } else if (mcatName === "맛집") {
-        return router.push(`/section/place/restaurant/${this.$route.params.brdNum}`);
+        return router.push(`/admin/place/restaurant/${this.$route.params.brdNum}`);
       } else {
-        return router.push(`/section/place/accommodation/${this.$route.params.brdNum}`);
+        return router.push(`/admin/place/accommodation/${this.$route.params.brdNum}`);
       }
     },
     mcatNameToEng(mcatName) {
@@ -326,7 +381,24 @@ export default {
 .form-group {
   margin: 20px;
 }
+.fileName {
+  padding-left: 20px;
+  width: 550px;
+}
 
+.fileSize {
+  padding-right: 50px;
+  width: 200px;
+  text-align: right;
+}
+
+.file-box input[type="file"] {
+  display: none;
+}
+
+.file-preview {
+  width: 200px;
+}
 input {
   margin-left: 10px;
   width: 650px;

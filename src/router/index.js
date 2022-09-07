@@ -5,12 +5,12 @@ import AdminView from "@/views/admin/AdminView";
 
 import AddPlaceView from "@/views/admin/place/AddPlaceView";
 import ModifyPlaceView from "@/views/admin/place/ModifyPlaceView";
-import AdminAttractionListView from "@/views/section/place/attraction/AttractionListView";
-import AdminAttractionDetailView from "@/views/section/place/attraction/AttractionDetailView";
-import AdminRestaurantListView from "@/views/section/place/restaurant/RestaurantListView";
-import AdminRestaurantDetailView from "@/views/section/place/restaurant/RestaurantDetailView";
-import AdminAccommodationListView from "@/views/section/place/accommodation/AccommodationListView";
-import AdminAccommodationDetailView from "@/views/section/place/accommodation/AccommodationDetailView";
+import AdminAttractionListView from "@/views/admin/place/attraction/AdminAttractionListView";
+import AdminAttractionDetailView from "@/views/admin/place/attraction/AdminAttractionDetailView";
+import AdminRestaurantListView from "@/views/admin/place/restaurant/AdminRestaurantListView";
+import AdminRestaurantDetailView from "@/views/admin/place/restaurant/AdminRestaurantDetailView";
+import AdminAccommodationListView from "@/views/admin/place/accommodation/AdminAccommodationListView";
+import AdminAccommodationDetailView from "@/views/admin/place/accommodation/AdminAccommodationDetailView";
 import AdminPackageListView from "@/views/admin/item/AdminPackageListView";
 import AdminPackageWriteView from "@/views/admin/item/AdminPackageWriteView";
 import AdminReservationView from "@/views/admin/reservation/AdminReservationView";

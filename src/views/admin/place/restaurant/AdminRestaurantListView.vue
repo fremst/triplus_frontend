@@ -42,7 +42,7 @@
           <Column :sortable="true" field="title" header="맛집명" style="min-width: 16rem; text-align: center">
             <template #body="slotProps">
               <span class="product-category">
-                <router-link :to="`/section/place/restaurant/` + slotProps.data.brdNum">
+                <router-link :to="`/admin/place/restaurant/` + slotProps.data.brdNum">
                   {{ slotProps.data.title }}
                 </router-link>
               </span>
