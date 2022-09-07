@@ -2,79 +2,81 @@
   <div class="wrap">
     <div class="inner">
       <h1 class="add-form-title">관리자 장소 수정</h1>
-      <div class="form-group">
-        <div class="field col-12 md:col-12">
-          <div>
-            <h3>제목</h3>
-            <span class="p-label">
-              <CascadeSelect
-                v-model="selectedOptions"
-                :class="{ 'p-invalid': submitted && !this.selectedOptions }"
-                :optionGroupChildren="['subCategory']"
-                :options="options"
-                optionGroupLabel="name"
-                optionLabel="scatName"
-                placeholder="카테고리"
-                style="min-width: 11rem; margin-right: 10px"
+      <div class="form">
+        <div class="form-group">
+          <div class="field col-12 md:col-12">
+            <div>
+              <h3>제목</h3>
+              <span class="p-label">
+                <CascadeSelect
+                  v-model="selectedOptions"
+                  :class="{ 'p-invalid': submitted && !this.selectedOptions }"
+                  :optionGroupChildren="['subCategory']"
+                  :options="options"
+                  optionGroupLabel="name"
+                  optionLabel="scatName"
+                  placeholder="카테고리"
+                  style="min-width: 11rem; margin-right: 10px"
+                />
+                <small v-if="submitted && !this.scatName" class="p-error">카테고리를 선택해 주세요.</small>
+                <label for="multiselect" />
+              </span>
+              <InputText
+                v-model="title"
+                :class="{ 'p-invalid': submitted && !this.title }"
+                class="form-control field md:col-4"
+                placeholder="제목을 입력해주세요."
+                style="width: 350px"
               />
-              <small v-if="submitted && !this.scatName" class="p-error">카테고리를 선택해 주세요.</small>
-              <label for="multiselect" />
-            </span>
-            <InputText
-              v-model="title"
-              :class="{ 'p-invalid': submitted && !this.title }"
-              class="form-control field md:col-4"
-              placeholder="제목을 입력해주세요."
-              style="width: 350px"
-            />
-            <small v-if="submitted && !this.title" class="p-error">제목을 입력해 주세요.</small>
-          </div>
-          <div>
-            <h3>지역번호</h3>
-            <InputText
-              v-model="region"
-              :class="{ 'p-invalid': submitted && !this.region }"
-              class="form-control field md:col-4"
-            />
-            <small v-if="submitted && !this.region" class="p-error">지역번호를 입력해 주세요.</small>
+              <small v-if="submitted && !this.title" class="p-error">제목을 입력해 주세요.</small>
+            </div>
+            <div>
+              <h3>지역번호</h3>
+              <InputText
+                v-model="region"
+                :class="{ 'p-invalid': submitted && !this.region }"
+                class="form-control field md:col-4"
+              />
+              <small v-if="submitted && !this.region" class="p-error">지역번호를 입력해 주세요.</small>
 
-            <h3>전화번호</h3>
+              <h3>전화번호</h3>
+              <InputText
+                v-model="tel"
+                :class="{ 'p-invalid': submitted && !this.tel }"
+                class="form-control field col-4"
+              />
+              <small v-if="submitted && !this.tel" class="p-error">전화번호를 입력해 주세요.</small>
+            </div>
+            <h3>주소</h3>
             <InputText
-              v-model="tel"
-              :class="{ 'p-invalid': submitted && !this.tel }"
+              v-model="addr"
+              :class="{ 'p-invalid': submitted && !this.addr }"
               class="form-control field col-4"
+              placeholder="주소를 입력해주세요."
             />
-            <small v-if="submitted && !this.tel" class="p-error">전화번호를 입력해 주세요.</small>
-          </div>
-          <h3>주소</h3>
-          <InputText
-            v-model="addr"
-            :class="{ 'p-invalid': submitted && !this.addr }"
-            class="form-control field col-4"
-            placeholder="주소를 입력해주세요."
-          />
-          <small v-if="submitted && !this.tel" class="p-error">주소를 입력해 주세요.</small>
+            <small v-if="submitted && !this.tel" class="p-error">주소를 입력해 주세요.</small>
 
-          <h3>경도</h3>
-          <InputText v-model="mapx" class="form-control field col-4" placeholder="경도를 입력해주세요." />
-          <h3>위도</h3>
-          <InputText v-model="mapy" class="form-control field col-4" placeholder="위도를 입력해주세요." />
-          <h3>홈페이지</h3>
-          <InputText v-model="homepage" class="form-control field col-4" placeholder="홈페이지를 입력해주세요." />
-          <h3>상세 이미지</h3>
-          <InputText
-            v-model="firstimage"
-            class="form-control field col-4"
-            placeholder="상세이미지URL을 입력해주세요."
-          />
-          <h3>상세설명</h3>
-          <Textarea v-model="overview" class="form-control field col-4" cols="50" rows="5" />
+            <h3>경도</h3>
+            <InputText v-model="mapx" class="form-control field col-4" placeholder="경도를 입력해주세요." />
+            <h3>위도</h3>
+            <InputText v-model="mapy" class="form-control field col-4" placeholder="위도를 입력해주세요." />
+            <h3>홈페이지</h3>
+            <InputText v-model="homepage" class="form-control field col-4" placeholder="홈페이지를 입력해주세요." />
+            <h3>상세 이미지</h3>
+            <InputText
+              v-model="firstimage"
+              class="form-control field col-4"
+              placeholder="상세이미지URL을 입력해주세요."
+            />
+            <h3>상세설명</h3>
+            <Textarea v-model="overview" class="form-control field col-4" cols="50" rows="5" />
+          </div>
         </div>
-      </div>
-      <div class="button-group">
-        <Button class="p-button-primary mr-2" label="Save" @click="onSave" />
-        <Button class="p-button-secondary mr-2" label="Cancel" @click="onCancel" />
-        <Button class="p-button-secondary mr-2" label="목록으로" @click="goDetail()" />
+        <div class="button-group">
+          <Button class="p-button-primary mr-2" label="Save" @click="onSave" />
+          <Button class="p-button-secondary mr-2" label="Cancel" @click="onCancel" />
+          <Button class="p-button-secondary mr-2" label="목록으로" @click="goDetail()" />
+        </div>
       </div>
     </div>
   </div>
@@ -312,5 +314,35 @@ export default {
 
 .button-group {
   margin-bottom: 20px;
+  text-align: center;
+}
+
+.form {
+  border: 1px solid lightgray;
+  margin-top: 30px;
+  margin-bottom: 100px;
+  align-items: center;
+}
+
+.form-group {
+  margin: 20px;
+}
+
+input {
+  margin-left: 10px;
+  width: 650px;
+}
+
+h1 {
+  margin-top: 20px;
+}
+
+h3 {
+  margin-top: 20px;
+  margin-bottom: 10px;
+  text-align: left;
+}
+textarea {
+  resize: none;
 }
 </style>
