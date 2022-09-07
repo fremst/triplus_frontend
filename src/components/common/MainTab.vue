@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="card">
-      <TabMenu :model="items" class="tabs" />
+      <TabMenu v-model:model="items" class="tabs" />
     </div>
   </div>
 </template>
@@ -47,11 +47,6 @@ export default {
           icon: "pi pi-fw pi-building",
           to: "/section/place/accommodation"
         },
-        // {
-        //     label: '커뮤니티',
-        //     icon: 'pi pi-fw pi-users',
-        //     to: '/section/community'
-        // },
         {
           label: "일정등록",
           icon: "pi pi-fw pi-calendar",
@@ -59,6 +54,28 @@ export default {
         }
       ]
     };
+  },
+  computed: {
+    loginAuth() {
+      if (this.$store.state.loginUser) {
+        return this.$store.state.loginUser.auth;
+      }
+      return null;
+    }
+  },
+  watch: {
+    loginAuth: function (auth) {
+      if (auth == "admin") {
+        this.items.push({
+          label: "관리",
+          icon: "pi pi-fw pi-cog",
+          to: "/admin/reservations",
+          auth: "admin"
+        });
+      } else {
+        this.items = this.items.filter(e => e.auth != "admin");
+      }
+    }
   }
 };
 </script>

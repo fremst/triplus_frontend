@@ -1,18 +1,18 @@
 <template>
-  <!-- <AdminPageSidebar /> -->
+  <AdminPageSidebar />
   <div class="home">
     <QnACounsel :title="title" :listLink="listLink" :URL="URL" />
   </div>
 </template>
 
 <script>
-// import AdminPageSidebar from "@/components/admin/AdminPageSidebar";
+import AdminPageSidebar from "@/components/admin/AdminPageSidebar";
 import QnACounsel from "@/components/admin/service/QnACounsel.vue";
 
 export default {
   name: "AdminQnACounselView",
   components: {
-    // AdminPageSidebar,
+    AdminPageSidebar,
     QnACounsel
   },
   data() {

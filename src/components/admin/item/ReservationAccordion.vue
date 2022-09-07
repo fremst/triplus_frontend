@@ -17,6 +17,7 @@
           paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink "
           responsiveLayout="scroll"
           style="text-align: center"
+          v-if="pkg.resList.length > 0"
         >
           <Column header="주문 번호" field="oid" :sortable="true" style="min-width: 9rem; text-align: center">
             <template #body="slotProps">
@@ -79,6 +80,7 @@
             </template>
           </Column>
         </DataTable>
+        <div v-else class="none"><br />예약 내역이 없습니다. <br /><br /></div>
       </div>
     </AccordionTab>
   </Accordion>
@@ -127,3 +129,11 @@ export default {
   }
 };
 </script>
+
+<style lang="scss" scoped>
+@import "@/scss/main.scss";
+
+.none {
+  @include c-center;
+}
+</style>

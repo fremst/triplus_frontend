@@ -165,7 +165,7 @@ export default {
       writeParam.append("writerId", tempId);
       writeParam.append("answerNum", this.replyBrdNum);
       writeParam.append("title", this.aTitle);
-      writeParam.append("category", this.category.code === undefined ? this.category.code : "REPLY");
+      writeParam.append("category", this.category.code === undefined ? this.category.code : "ETC");
       writeParam.append("tempEmail", this.tempEmail);
       writeParam.append("tempPwd", this.tempPwd);
       writeParam.append("contents", this.content);
@@ -326,6 +326,7 @@ export default {
             this.replyBrdNum = this.$route.query.qnaReplyNum;
             this.replyArticle = resp.data;
             this.isReply = true;
+            this.category = { name: "답글", code: "REPLY" };
           }.bind(this)
         );
     }

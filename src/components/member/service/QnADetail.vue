@@ -37,7 +37,7 @@
           class="article-main"
           style="height: 300px; flex-direction: column; justify-content: center; align-items: center"
         >
-          <h3>해당 글은 잠겨있습니다.</h3>
+          <h3>비밀글입니다.</h3>
           <br />
           <Password id="pwd" v-model="pwd" :feedback="false" />
           <br />
@@ -48,7 +48,7 @@
           class="article-main"
           style="height: 300px; flex-direction: column; justify-content: center; align-items: center"
         >
-          <h3>해당 글은 잠겨있습니다.</h3>
+          <h3>비밀글입니다.</h3>
         </div>
       </div>
       <div
