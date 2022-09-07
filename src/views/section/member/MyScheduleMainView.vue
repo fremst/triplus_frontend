@@ -119,9 +119,10 @@ export default {
         });
       });
 
-      console.log("aa", resp.data.data);
+      console.log(resp);
+      // console.log("aa", resp.data.data);
 
-      this.list = resp.data.data;
+      // this.list = resp.data.data;
     },
     getFormattedDate(date) {
       if (date) {

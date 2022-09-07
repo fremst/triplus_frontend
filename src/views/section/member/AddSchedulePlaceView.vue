@@ -34,8 +34,15 @@
             <Column header="장소이미지" style="min-width: 8rem">
               <template #body="slotProps">
                 <img
+                  v-if="slotProps.data.timg"
                   :alt="slotProps.data.title"
-                  :src="`data:image/jpeg;base64,${slotProps.data.firstimage}`"
+                  :src="`data:image/jpeg;base64,${slotProps.data.timg}`"
+                  class="product-image"
+                />
+                <img
+                  v-else
+                  :alt="slotProps.data.title"
+                  :src="require('@/assets/myPlaceImage.png')"
                   class="product-image"
                 />
               </template>
@@ -93,6 +100,7 @@ export default {
       container: null,
       test: true,
       place: null,
+      timg: null,
       addr: null,
       mapx: null,
       mapy: null,

@@ -1,66 +1,73 @@
 <template>
   <div class="wrap">
-    <AdminPageSidebar />
+    <div class="sidebar">
+      <AdminPageSidebar />
+    </div>
     <div class="inner">
-      <div class="card">
-        <DataTable
-          ref="dt"
-          v-model:selection="selectedProducts"
-          :filters="filters"
-          :paginator="true"
-          :rows="10"
-          :rowsPerPageOptions="[5, 10, 25]"
-          :value="products"
-          dataKey="brdNum"
-          paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink "
-          responsiveLayout="scroll"
-          style="text-align: center"
-        >
-          <template #header>
-            <div class="table-header flex flex-column md:flex-row md:justiify-content-between">
-              <span class="p-input-icon-left">
-                <i class="pi pi-search" />
-                <InputText v-model="filters['global'].value" placeholder="검색어를 입력해주세요." />
-              </span>
-              <h5 class="mb-2 md:m-0 p-as-md-center">&nbsp;</h5>
-            </div>
-          </template>
-          <Column header="맛집이미지" style="min-width: 8rem">
-            <template #body="slotProps">
-              <img
-                :alt="slotProps.data.title"
-                :src="`data:image/jpeg;base64,${slotProps.data.firstimage}`"
-                class="product-image"
-              />
+      <div class="title">
+        <h2 style="color: #009688">맛집 목록</h2>
+      </div>
+      <hr />
+      <div>
+        <div class="card">
+          <DataTable
+            ref="dt"
+            v-model:selection="selectedProducts"
+            :filters="filters"
+            :paginator="true"
+            :rows="10"
+            :rowsPerPageOptions="[5, 10, 25]"
+            :value="products"
+            dataKey="brdNum"
+            paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink "
+            style="text-align: center"
+          >
+            <template #header>
+              <div class="table-header flex flex-column md:flex-row md:justiify-content-between">
+                <span class="p-input-icon-left">
+                  <i class="pi pi-search" />
+                  <InputText v-model="filters['global'].value" placeholder="검색어를 입력해주세요." />
+                </span>
+                <h5 class="mb-2 md:m-0 p-as-md-center">&nbsp;</h5>
+              </div>
             </template>
-          </Column>
-          <Column :sortable="true" field="scatName" header="카테고리" style="min-width: 8rem; text-align: center">
-            <template #body="slotProps">
-              <span class="product-category">{{ slotProps.data.scatName }}</span>
-            </template>
-          </Column>
-          <Column :sortable="true" field="title" header="맛집명" style="min-width: 16rem; text-align: center">
-            <template #body="slotProps">
-              <span class="product-category">
-                <router-link :to="`/section/place/restaurant/` + slotProps.data.brdNum">
-                  {{ slotProps.data.title }}
-                </router-link>
-              </span>
-            </template>
-          </Column>
-          <Column :sortable="true" field="tel" header="전화번호" style="min-width: 16rem; text-align: center">
-            <template #body="slotProps">
-              <span class="product-category">
-                {{ slotProps.data.tel }}
-              </span>
-            </template>
-          </Column>
-          <Column :sortable="true" field="addr" header="주소" style="min-width: 20rem">
-            <template #body="slotProps">
-              <span class="product-category">{{ slotProps.data.addr }}</span>
-            </template>
-          </Column>
-        </DataTable>
+            <Column header="맛집이미지" style="min-width: 5rem">
+              <template #body="slotProps">
+                <img
+                  :alt="slotProps.data.title"
+                  :src="`data:image/jpeg;base64,${slotProps.data.firstimage}`"
+                  class="product-image"
+                />
+              </template>
+            </Column>
+            <Column :sortable="true" field="scatName" header="카테고리" style="min-width: 8rem; text-align: center">
+              <template #body="slotProps">
+                <span class="product-category">{{ slotProps.data.scatName }}</span>
+              </template>
+            </Column>
+            <Column :sortable="true" field="title" header="맛집명" style="min-width: 9rem; text-align: center">
+              <template #body="slotProps">
+                <span class="product-category">
+                  <router-link :to="`/admin/place/restaurant/` + slotProps.data.brdNum">
+                    {{ slotProps.data.title }}
+                  </router-link>
+                </span>
+              </template>
+            </Column>
+            <Column :sortable="true" field="tel" header="전화번호" style="min-width: 15rem; text-align: center">
+              <template #body="slotProps">
+                <span class="product-category">
+                  {{ slotProps.data.tel }}
+                </span>
+              </template>
+            </Column>
+            <Column :sortable="true" field="addr" header="주소" style="min-width: 20rem">
+              <template #body="slotProps">
+                <span class="product-category">{{ slotProps.data.addr }}</span>
+              </template>
+            </Column>
+          </DataTable>
+        </div>
       </div>
     </div>
   </div>
@@ -121,11 +128,30 @@ tr {
 
 .wrap {
   width: 100%;
+  min-height: 750px;
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
 }
 
 .inner {
   width: 1080px;
-  margin: 0 auto;
+}
+
+.sidebar {
+  margin-left: -220px;
+  margin-right: 20px;
+}
+
+.title {
+  margin-bottom: 10px;
+}
+
+hr {
+  border: 0;
+  height: 1px;
+  margin-bottom: 15px;
+  background: #aaa;
 }
 
 .table-header {
@@ -165,7 +191,7 @@ tr {
 }
 
 .product-image {
-  width: 100px;
+  width: 120px;
   height: 100px;
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
 }
@@ -192,6 +218,7 @@ tr {
     }
   }
 }
+
 .addlist-title {
   margin: 15px 0 10px 0;
 }

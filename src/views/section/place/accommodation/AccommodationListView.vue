@@ -53,7 +53,7 @@
               </span>
             </template>
           </Column>
-          <Column :sortable="true" field="addr" header="주소" style="min-width: 20rem">
+          <Column :sortable="true" field="addr" header="주소" style="min-width: 18rem">
             <template #body="slotProps">
               <span class="product-category">{{ slotProps.data.addr }}</span>
             </template>
@@ -158,7 +158,7 @@ tr {
 }
 
 .product-image {
-  width: 100px;
+  width: 120px;
   height: 100px;
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
 }
