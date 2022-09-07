@@ -4,22 +4,22 @@
       <h2 class="main-title">트리플러스 숙소 추천</h2>
       <ul>
         <li>
-          <a href="/">
+          <a href="http://localhost:8081/section/place/accommodation/438">
             <img :src="require('@/assets/hotel/1.png')" class="hotels" />
           </a>
         </li>
         <li>
-          <a href="/">
+          <a href="http://localhost:8081/section/place/accommodation/446">
             <img :src="require('@/assets/hotel/2.png')" class="hotels" />
           </a>
         </li>
         <li>
-          <a href="/">
+          <a href="http://localhost:8081/section/place/accommodation/448">
             <img :src="require('@/assets/hotel/3.png')" class="hotels" />
           </a>
         </li>
         <li>
-          <a href="/">
+          <a href="http://localhost:8081/section/place/accommodation/449">
             <img :src="require('@/assets/hotel/4.png')" class="hotels last-img" />
           </a>
         </li>
