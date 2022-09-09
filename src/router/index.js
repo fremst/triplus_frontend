@@ -65,25 +65,20 @@ const routes = [
   {
     path: "/admin/packages/write",
     name: "package-write",
-    component: AdminPackageWriteView
+    component: AdminPackageWriteView,
+    meta: { adminAuthRequired: true }
   },
   {
     path: "/admin/packages/:brdNum/update",
     name: "package-update",
-    component: AdminPackageWriteView
+    component: AdminPackageWriteView,
+    meta: { adminAuthRequired: true }
   },
   {
     path: "/admin",
     name: "admin",
     component: AdminView,
-    beforeEnter: function (to, from, next) {
-      if (store.state.loginUser.auth === "admin") {
-        next();
-      } else {
-        alert(store.state.loginUser.auth);
-        next("/");
-      }
-    }
+    meta: { adminAuthRequired: true }
   },
   {
     path: "/",
@@ -94,65 +89,76 @@ const routes = [
   {
     path: "/admin/place",
     name: "admin-place-add",
-    component: AddPlaceView
+    component: AddPlaceView,
+    meta: { adminAuthRequired: true }
   },
   //관리자 명소 리스트
   {
     path: "/admin/place/attraction",
     name: "admin-attraction-list",
-    component: AdminAttractionListView
+    component: AdminAttractionListView,
+    meta: { adminAuthRequired: true }
   },
   //관리자 명소 상세페이지
   {
     path: "/admin/place/attraction/:brdNum",
     name: "admin-attraction-detail",
-    component: AdminAttractionDetailView
+    component: AdminAttractionDetailView,
+    meta: { adminAuthRequired: true }
   },
   //관리자 맛집 리스트
   {
     path: "/admin/place/restaurant",
     name: "admin-restaurant-list",
-    component: AdminRestaurantListView
+    component: AdminRestaurantListView,
+    meta: { adminAuthRequired: true }
   },
   //관리자 맛집 상세페이지
   {
     path: "/admin/place/restaurant/:brdNum",
     name: "admin-restaurant-detail",
-    component: AdminRestaurantDetailView
+    component: AdminRestaurantDetailView,
+    meta: { adminAuthRequired: true }
   },
   //관리자 숙소 리스트
   {
     path: "/admin/place/accommodation",
     name: "admin-accommodation-list",
-    component: AdminAccommodationListView
+    component: AdminAccommodationListView,
+    meta: { adminAuthRequired: true }
   },
   //관리자 숙소 상세페이지
   {
     path: "/admin/place/accommodation/:brdNum",
     name: "admin-accommodation-detail",
-    component: AdminAccommodationDetailView
+    component: AdminAccommodationDetailView,
+    meta: { adminAuthRequired: true }
   },
   //관리자 장소 수정
   {
     path: "/admin/place/:brdNum",
     name: "place-modify",
-    component: ModifyPlaceView
+    component: ModifyPlaceView,
+    meta: { adminAuthRequired: true }
   },
 
   {
     path: "/admin/packages",
     name: "admin-packages",
-    component: AdminPackageListView
+    component: AdminPackageListView,
+    meta: { adminAuthRequired: true }
   },
   {
     path: "/admin/magazines",
     name: "admin-magazines",
-    component: () => import("@/views/admin/magazine/AdminMagazineListView.vue")
+    component: () => import("@/views/admin/magazine/AdminMagazineListView.vue"),
+    meta: { adminAuthRequired: true }
   },
   {
     path: "/admin/reservations",
     name: "admin-reservations",
-    component: AdminReservationView
+    component: AdminReservationView,
+    meta: { adminAuthRequired: true }
   },
   {
     path: "/service/notices",
@@ -162,7 +168,8 @@ const routes = [
   {
     path: "/service/notices/write",
     name: "notice-write",
-    component: () => import("@/views/admin/service/NoticeWriteView.vue")
+    component: () => import("@/views/admin/service/NoticeWriteView.vue"),
+    meta: { adminAuthRequired: true }
   },
   {
     path: "/service/notices/:brdNum",
@@ -172,13 +179,15 @@ const routes = [
   {
     path: "/service/notices/:brdNum/update",
     name: "notice-update",
-    component: () => import("@/views/admin/service/NoticeUpdateView.vue")
+    component: () => import("@/views/admin/service/NoticeUpdateView.vue"),
+    meta: { adminAuthRequired: true }
   },
   // 문의글
   {
     path: "/admin/service/qna/counsel",
     name: "admin-qna-counsel",
-    component: AdminQnACounselView
+    component: AdminQnACounselView,
+    meta: { adminAuthRequired: true }
   },
   {
     path: "/service/qna",
@@ -188,7 +197,8 @@ const routes = [
   {
     path: "/service/qna/write",
     name: "qna-write",
-    component: QnAWriteView
+    component: QnAWriteView,
+    meta: { adminAuthRequired: true }
   },
   {
     path: "/service/qna/:brdNum/detail",
@@ -345,12 +355,14 @@ const routes = [
   {
     path: "/admin/magazines/write",
     name: "magazine-write",
-    component: () => import("@/views/admin/magazine/AdminMagazineWriteView.vue")
+    component: () => import("@/views/admin/magazine/AdminMagazineWriteView.vue"),
+    meta: { adminAuthRequired: true }
   },
   {
     path: "/admin/magazines/:brdNum/update",
     name: "magazine-update",
-    component: () => import("@/views/admin/magazine/AdminMagazineWriteView.vue")
+    component: () => import("@/views/admin/magazine/AdminMagazineWriteView.vue"),
+    meta: { adminAuthRequired: true }
   },
   {
     path: "/section/magazines",
@@ -406,17 +418,20 @@ const routes = [
   {
     path: "/admin/service/faq/add",
     name: "faqs-add",
-    component: () => import("@/views/admin/service/AddFAQView.vue")
+    component: () => import("@/views/admin/service/AddFAQView.vue"),
+    meta: { adminAuthRequired: true }
   },
   {
     path: "/admin/service/faq/:faqNum",
     name: "faqs-modify",
-    component: ModifyFAQView
+    component: ModifyFAQView,
+    meta: { adminAuthRequired: true }
   },
   {
     path: "/admin/service/faq",
     name: "faqs-board",
-    component: () => import("@/views/admin/service/FAQAdminView.vue")
+    component: () => import("@/views/admin/service/FAQAdminView.vue"),
+    meta: { adminAuthRequired: true }
   }
 ];
 
@@ -425,19 +440,18 @@ const router = createRouter({
   routes
 });
 
-// //라우터 전역 가드 test
-// router.beforeEach(function (to, from, next) {
-//   if (
-//     to.matched.some(function (info) {
-//       return info.meta.member; // true
-//     })
-//   ) {
-//     // 회원만 가능페이지 라우터 meta 속성의  true이면
-//     alert("회원만 이용가능");
-//     next("/member/login"); // 리다이렉트
-//   } else {
-//     next();
-//   }
-// });
+router.beforeEach(function (to, from, next) {
+  if (
+    to.matched.some(function (routeInfo) {
+      return routeInfo.meta.adminAuthRequired;
+    }) &&
+    (!store._state.data.loginUser || store._state.data.loginUser.auth !== "admin")
+  ) {
+    alert("권한이 없습니다. 관리자라면 로그인하세요.");
+    next("/member/login");
+  } else {
+    next();
+  }
+});
 
 export default router;
