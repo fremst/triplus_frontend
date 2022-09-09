@@ -52,10 +52,21 @@ export default {
           icon: "pi pi-fw pi-calendar",
           to: "/section/member"
         }
-      ]
+      ],
+      adminItems: {
+        label: "관리",
+        icon: "pi pi-fw pi-cog",
+        to: "/admin/reservations",
+        auth: "admin"
+      }
     };
   },
+  created() {
+    // 로그인 상태로 새로고침
+    this.addAdminMenu();
+  },
   computed: {
+    // 로그인 상태 변경
     loginAuth() {
       if (this.$store.state.loginUser) {
         return this.$store.state.loginUser.auth;
@@ -64,14 +75,14 @@ export default {
     }
   },
   watch: {
-    loginAuth: function (auth) {
-      if (auth == "admin") {
-        this.items.push({
-          label: "관리",
-          icon: "pi pi-fw pi-cog",
-          to: "/admin/reservations",
-          auth: "admin"
-        });
+    loginAuth: function () {
+      this.addAdminMenu();
+    }
+  },
+  methods: {
+    addAdminMenu() {
+      if (this.$store.state.loginUser && this.$store.state.loginUser.auth == "admin") {
+        this.items.push(this.adminItems);
       } else {
         this.items = this.items.filter(e => e.auth != "admin");
       }

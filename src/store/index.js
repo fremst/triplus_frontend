@@ -1,4 +1,5 @@
 import { createStore } from "vuex";
+import createPersistedState from "vuex-persistedstate";
 
 export default createStore({
   state: {
@@ -42,5 +43,6 @@ export default createStore({
       context.commit("loginInfo", payload);
     }
   },
-  modules: {}
+  modules: {},
+  plugins: [createPersistedState({})]
 });
