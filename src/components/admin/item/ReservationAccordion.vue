@@ -66,14 +66,10 @@
           <Column header="관리" style="min-width: 9rem; text-align: center">
             <template #body="slotProps">
               <span class="product-category">
-                <Button
-                  v-if="slotProps.data.resSta == '대기'"
-                  @click="changeResSta(slotProps.data.oid, '확정', slotProps)"
+                <Button v-if="slotProps.data.resSta == '대기'" @click="openDialog('confirm', true, slotProps)"
                   >승인</Button
                 >
-                <Button
-                  v-if="slotProps.data.resSta == '결제전'"
-                  @click="changeResSta(slotProps.data.oid, '취소', slotProps)"
+                <Button v-if="slotProps.data.resSta == '결제전'" @click="openDialog('cancel', true, slotProps)"
                   >취소</Button
                 >
               </span>
@@ -84,21 +80,71 @@
       </div>
     </AccordionTab>
   </Accordion>
-  <Toast></Toast>
+  <ConfirmDialog
+    v-model:visible="displayConfirm"
+    title="승인하기"
+    :msg="'정말로 승인하시겠습니까?'"
+    @closeDialog="changeResStaToConfirm"
+  />
+  <ConfirmDialog
+    v-model:visible="displayCancel"
+    title="취소하기"
+    :msg="'정말로 취소하시겠습니까?'"
+    @closeDialog="changeResStaToCancel"
+  />
+  <Toast />
 </template>
 
 <script>
 import axios from "axios";
 import { putOptions } from "@/constant/axios";
+import ConfirmDialog from "@/views/admin/place/ConfirmDialog.vue";
 
 export default {
+  components: {
+    ConfirmDialog
+  },
+
+  data() {
+    return {
+      displayConfirm: false,
+      displayCancel: false,
+      selectedSlotProps: null
+    };
+  },
+
   props: {
     filteredPackages: Array
   },
 
   methods: {
-    async changeResSta(oid, resSta, slotProps) {
-      const putUrl = `${process.env.VUE_APP_API_URL || ""}/reservations/${oid}`;
+    openDialog(dialogType, show, slotProps) {
+      if (dialogType === "confirm") {
+        this.displayConfirm = show;
+        this.selectedSlotProps = slotProps;
+      }
+      if (dialogType === "cancel") {
+        this.displayCancel = show;
+        this.selectedSlotProps = slotProps;
+      }
+    },
+
+    changeResStaToConfirm(confirm) {
+      if (!confirm) {
+        return false;
+      }
+      this.changeResSta("확정");
+    },
+
+    changeResStaToCancel(confirm) {
+      if (!confirm) {
+        return false;
+      }
+      this.changeResSta("취소");
+    },
+
+    async changeResSta(resSta) {
+      const putUrl = `${process.env.VUE_APP_API_URL || ""}/reservations/${this.selectedSlotProps.data.oid}`;
       const params = { resSta: `${resSta}` };
       const res = await axios.put(putUrl, params, putOptions).catch(err => {
         this.$toast.add({
@@ -110,7 +156,7 @@ export default {
       });
 
       if (res.data.result === "success") {
-        slotProps.data.resSta = resSta;
+        this.selectedSlotProps.data.resSta = resSta;
         this.$toast.add({
           severity: "success",
           summary: "",

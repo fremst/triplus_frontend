@@ -64,7 +64,12 @@
             <td v-else>여성</td>
           </tr>
         </table>
-        <ConfirmDialog v-model:visible="displayConfirmation" :msg="'정말로 취소하시겠습니까?'" @closeDialog="refund" />
+        <ConfirmDialog
+          v-model:visible="displayConfirmation"
+          title="환불하기"
+          :msg="'정말로 취소하시겠습니까?'"
+          @closeDialog="refund"
+        />
         <Toast></Toast>
       </div>
     </div>
