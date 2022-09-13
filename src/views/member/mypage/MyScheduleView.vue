@@ -25,7 +25,7 @@
             </div>
           </template>
 
-          <Column header="이름" field="destination" :sortable="true" style="min-width: 19rem">
+          <Column header="여행장소" field="destination" :sortable="true" style="min-width: 12rem">
             <template #body="slotProps">
               <span class="product-category">
                 <router-link :to="`/section/member/schedule/main/` + slotProps.data.skdNum">
@@ -35,7 +35,7 @@
             </template>
           </Column>
 
-          <Column header="시작일" field="sDate" :sortable="true" style="min-width: 9rem">
+          <Column header="시작일" field="sDate" :sortable="true" style="min-width: 10rem">
             <template #body="slotProps">
               <span class="product-category">
                 {{ $getFormattedDate(new Date(slotProps.data.sdate)) }}
@@ -44,15 +44,29 @@
               </span>
             </template>
           </Column>
-
-          <Column header="종료일" field="eDate" :sortable="true" style="min-width: 9rem">
+          <Column header="종료일" field="eDate" :sortable="true" style="min-width: 10rem">
             <template #body="slotProps">
               <span class="product-category">
                 {{ $getFormattedDate(new Date(slotProps.data.edate)) }}
               </span>
             </template>
           </Column>
+          <Column header="삭제" field="delete" :sortable="false" style="min-width: 6rem">
+            <template #body="slotProps">
+              <Button
+                class="p-button-sm p-button-rounded p-button-danger ml-4"
+                label="삭제"
+                @click="openConfirmDialog('delete', true, slotProps.data.skdNum)"
+                >삭제</Button
+              >
+            </template>
+          </Column>
         </DataTable>
+        <ConfirmDialog
+          v-model:visible="showDeleteConfirmDialog"
+          :msg="'선택하신 일정을 삭제하시겠습니까?'"
+          @closeDialog="deleteSchedule"
+        />
       </div>
     </div>
   </div>
@@ -61,19 +75,26 @@
 <script>
 import axios from "axios";
 import MyPageSidebar from "@/components/member/mypage/MyPageSidebar";
+import ConfirmDialog from "@/views/admin/place/ConfirmDialog.vue";
+import { defaultOptions } from "@/constant/axios.js";
 
 export default {
   name: "MyScheduleView",
-  components: { MyPageSidebar },
+  components: { MyPageSidebar, ConfirmDialog },
   data() {
     return {
+      selectedProducts: null,
+      filters: null,
       id: localStorage.getItem("id"),
-      list: []
+      list: [],
+      showConfirmDialog: false,
+      showDeleteConfirmDialog: false,
+      skdNum: null
     };
   },
   mounted() {
     axios
-      .get("http://localhost:8082/triplus/api/member/mypage/myschedule", {
+      .get(`${process.env.VUE_APP_API_URL || ""}/member/mypage/myschedule`, {
         headers: {
           "Access-Control-Allow-Origin": "*"
         },
@@ -86,6 +107,51 @@ export default {
           this.list = resp.data.list;
         }.bind(this)
       );
+  },
+  methods: {
+    openConfirmDialog(dialogType, show, skdNum) {
+      if (dialogType === "delete") {
+        this.showDeleteConfirmDialog = show;
+        this.skdNum = skdNum;
+      }
+    },
+    async deleteSchedule(value) {
+      if (!value) {
+        return false;
+      } else {
+        const deleteUrl = `${process.env.VUE_APP_API_URL || ""}/section/schedules/${this.skdNum}`;
+        const resp = await axios.delete(deleteUrl, defaultOptions).catch(err => {
+          this.$toast.add({
+            severity: "error",
+            summary: "",
+            detail: err,
+            life: 3000
+          });
+        });
+        if (resp.data.result === "success") {
+          this.$toast.add({
+            severity: "success",
+            summary: "",
+            detail: "일정 삭제 성공",
+            life: 3000
+          });
+          this.$router.go();
+        }
+      }
+    },
+    getFormattedDate(date) {
+      if (date) {
+        return date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
+      } else {
+        return "";
+      }
+    },
+    showError() {
+      this.$toast.add({ severity: "error", summary: "Error Message", detail: "일정추가 실패", life: 3000 });
+    },
+    serverError() {
+      this.$toast.add({ severity: "error", summary: "Error Message", detail: "서버에러", life: 3000 });
+    }
   }
 };
 </script>
