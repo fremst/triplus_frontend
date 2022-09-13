@@ -69,7 +69,7 @@ export default {
         this.items.push({
           label: "관리",
           icon: "pi pi-fw pi-cog",
-          to: "/admin/reservations",
+          to: "/admin/dashboard",
           auth: "admin"
         });
       } else {
