@@ -136,20 +136,15 @@ export default {
   },
   watch: {
     $route(to, from) {
-      if (to != from)
-      {
-        if (store.state.loginUser != null)
-          this.showWidget = (store.state.loginUser.auth != 'admin');
-        else
-          this.showWidget = true;
+      if (to != from) {
+        if (store.state.loginUser != null) this.showWidget = store.state.loginUser.auth != "admin";
+        else this.showWidget = true;
       }
     }
   },
   created() {
-    if (store.state.loginUser != null)
-    {
-      if (store.state.loginUser.auth == 'admin')
-      {
+    if (store.state.loginUser != null) {
+      if (store.state.loginUser.auth == "admin") {
         this.showWidget = false;
         return;
       }

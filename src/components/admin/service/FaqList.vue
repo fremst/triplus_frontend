@@ -111,7 +111,7 @@ a {
 }
 
 .inner {
-   width: 1080px;
+  width: 1080px;
 }
 
 .title {
