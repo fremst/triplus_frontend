@@ -1,5 +1,5 @@
 <template>
-  <Dialog v-model:visible="showDialog" :modal="true" :style="{ width: '450px' }" header="Confirm">
+  <Dialog v-model:visible="showDialog" :modal="true" :style="{ width: '450px' }" :header="title">
     <div class="confirmation-content">
       <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem" />
       <span>{{ msg }}</span>
@@ -19,6 +19,12 @@ export default {
       type: Boolean,
       default() {
         return true;
+      }
+    },
+    title: {
+      type: String,
+      default() {
+        return "Confirm";
       }
     },
     msg: String

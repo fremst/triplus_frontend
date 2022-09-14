@@ -15,24 +15,11 @@ export default {
         {
           separator: true
         },
-        // {
-        //   label: "매출 현황",
-        //   icon: "pi pi-chart-line",
-        //   items: [
-        //     {
-        //       label: "인기 상품",
-        //       to: "admin/sales/bestitem"
-        //     },
-        //     {
-        //       label: "판매 내역",
-        //       to: "admin/sales/list"
-        //     },
-        //     {
-        //       label: "예약 현황 조회",
-        //       to: "admin/sales/reservation"
-        //     }
-        //   ]
-        // },
+        {
+          label: "대시보드",
+          icon: "pi pi-chart-line",
+          to: { name: "admin-dashboard" }
+        },
         {
           label: "예약 관리",
           icon: "pi pi-check-square",

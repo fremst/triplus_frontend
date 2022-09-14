@@ -94,6 +94,8 @@ import TreeTable from "primevue/treetable";
 import TriStateCheckbox from "primevue/tristatecheckbox";
 import VirtualScroller from "primevue/virtualscroller";
 
+import Chart from "primevue/chart";
+
 //테마설정
 import "primevue/resources/themes/lara-light-teal/theme.css";
 import "primevue/resources/primevue.min.css";
@@ -205,6 +207,8 @@ app.component("TreeSelect", TreeSelect);
 app.component("TreeTable", TreeTable);
 app.component("TriStateCheckbox", TriStateCheckbox);
 app.component("VirtualScroller", VirtualScroller);
+
+app.component("Chart", Chart);
 
 app.config.productionTip = false;
 app.mount("#app");

@@ -13,6 +13,7 @@ import AdminAccommodationListView from "@/views/admin/place/accommodation/AdminA
 import AdminAccommodationDetailView from "@/views/admin/place/accommodation/AdminAccommodationDetailView";
 import AdminPackageListView from "@/views/admin/item/AdminPackageListView";
 import AdminPackageWriteView from "@/views/admin/item/AdminPackageWriteView";
+import AdminDashBoardView from "@/views/admin/sales/AdminDashBoardView";
 import AdminReservationView from "@/views/admin/reservation/AdminReservationView";
 
 import AdminQnACounselView from "../views/admin/service/AdminQnACounselView.vue";
@@ -152,6 +153,12 @@ const routes = [
     path: "/admin/magazines",
     name: "admin-magazines",
     component: () => import("@/views/admin/magazine/AdminMagazineListView.vue"),
+    meta: { adminAuthRequired: true }
+  },
+  {
+    path: "/admin/dashboard",
+    name: "admin-dashboard",
+    component: AdminDashBoardView,
     meta: { adminAuthRequired: true }
   },
   {

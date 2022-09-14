@@ -19,7 +19,7 @@
         <ReservationAccordion :filteredPackages="completedPackages" />
       </div>
     </div>
-    <Toast></Toast>
+    <Toast />
   </div>
 </template>
 

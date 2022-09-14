@@ -34,6 +34,33 @@ export default {
         },
         {
           label: "관광명소",
+import TabMenu from "primevue/tabmenu";
+export default {
+  name: "MainTab",
+  components: {
+    TabMenu
+  },
+  data() {
+    return {
+      active: 3,
+      items: [
+        {
+          label: "홈",
+          icon: "pi pi-fw pi-home",
+          to: "/"
+        },
+        {
+          label: "패키지",
+          icon: "pi pi-fw pi-briefcase",
+          to: "/section/packages"
+        },
+        {
+          label: "매거진",
+          icon: "pi pi-fw pi-book",
+          to: "/section/magazines"
+        },
+        {
+          label: "관광명소",
           icon: "pi pi-fw pi-camera",
           to: "/section/place/attraction"
         },
@@ -52,21 +79,10 @@ export default {
           icon: "pi pi-fw pi-calendar",
           to: "/section/member"
         }
-      ],
-      adminItems: {
-        label: "관리",
-        icon: "pi pi-fw pi-cog",
-        to: "/admin/reservations",
-        auth: "admin"
-      }
+      ]
     };
   },
-  created() {
-    // 로그인 상태로 새로고침
-    this.addAdminMenu();
-  },
   computed: {
-    // 로그인 상태 변경
     loginAuth() {
       if (this.$store.state.loginUser) {
         return this.$store.state.loginUser.auth;
@@ -75,14 +91,14 @@ export default {
     }
   },
   watch: {
-    loginAuth: function () {
-      this.addAdminMenu();
-    }
-  },
-  methods: {
-    addAdminMenu() {
-      if (this.$store.state.loginUser && this.$store.state.loginUser.auth == "admin") {
-        this.items.push(this.adminItems);
+    loginAuth: function (auth) {
+      if (auth == "admin") {
+        this.items.push({
+          label: "관리",
+          icon: "pi pi-fw pi-cog",
+          to: "/admin/dashboard",
+          auth: "admin"
+        });
       } else {
         this.items = this.items.filter(e => e.auth != "admin");
       }

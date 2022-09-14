@@ -310,6 +310,8 @@ export default {
   },
 
   mounted() {
+    window.addEventListener("message", this.exec, false);
+
     for (let i = 0; i < this.$route.query.adultCnt - 1; i++) {
       this.list.push({ name: "", class: "성인", gender: "M" });
     }
@@ -324,6 +326,12 @@ export default {
       if (this.validateForm()) {
         this.iframeDisplay = "block";
         document.getElementById("payForm").submit();
+      }
+    },
+
+    exec(e) {
+      if (e.data.msg) {
+        this.$router.go();
       }
     },
 
