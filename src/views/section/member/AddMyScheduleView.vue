@@ -2,7 +2,7 @@
   <div class="wrap">
     <div class="inner">
       <div class="title-area">
-        <h3>일정에 따른 날씨예보, 여행 정보를 알려드립니다.</h3>
+        <h3>일정에 따른 여행 정보를 알려드립니다.</h3>
         <InputText
           style="width: 700px; text-align: center"
           class="mt-2 mb-3"

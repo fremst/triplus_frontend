@@ -1,8 +1,13 @@
 <template>
   <div class="wrap">
-    <AdminPageSidebar />
+    <div class="sidebar">
+      <AdminPageSidebar />
+    </div>
     <div class="inner">
-      <h1 class="add-form-title">관리자 장소 등록</h1>
+      <div class="title">
+        <h2 style="color: #009688">관리자 장소 등록</h2>
+      </div>
+      <hr />
       <div class="form">
         <div class="form-group">
           <div class="field col-12 md:col-12">
@@ -39,7 +44,6 @@
                 class="form-control field md:col-4"
               />
               <small v-if="submitted && !this.region" class="p-error">지역번호를 입력해 주세요.</small>
-
               <h3>전화번호</h3>
               <InputText
                 v-model="tel"
@@ -56,7 +60,6 @@
               placeholder="주소를 입력해주세요."
             />
             <small v-if="submitted && !this.tel" class="p-error">주소를 입력해 주세요.</small>
-
             <h3>경도</h3>
             <InputText v-model="mapx" class="form-control field col-4" placeholder="경도를 입력해주세요." />
             <h3>위도</h3>
@@ -93,19 +96,17 @@
         </div>
         <div class="button-group">
           <Toast />
-          <Button class="p-button-primary mr-2" label="저장하기" @click="onSave" />
-          <Button class="p-button-secondary mr-2" label="취소하기" @click="onCancel" />
+          <Button class="p-button-primary mr-2" label="Save" @click="onSave" />
+          <Button class="p-button-secondary mr-2" label="Cancel" @click="onCancel" />
         </div>
       </div>
     </div>
   </div>
 </template>
-
 <script>
 import axios from "axios";
 import { multipartOptions } from "@/constant/axios";
 import AdminPageSidebar from "@/components/admin/AdminPageSidebar";
-
 export default {
   name: "AddPlaceForm",
   data() {
@@ -227,26 +228,20 @@ export default {
   methods: {
     changeTImg(e) {
       let uploadFile = e.target.files[0];
-
       this.setTImgFileAndPreview(uploadFile);
     },
     setTImgFileAndPreview(file) {
       let reader = new FileReader();
-
       reader.onload = e => {
         let img = e.target.result;
-
         this.tImgFile = file;
         this.tImgPreview = img;
       };
-
       reader.readAsDataURL(file);
     },
     async onSave() {
       this.submitted = true;
-
       const formData = new FormData();
-
       // const addPlaceParam = new URLSearchParams();
       formData.append("userId", "admin");
       formData.append("mcatName", this.selectedOptions.value);
@@ -260,11 +255,9 @@ export default {
       formData.append("homepage", this.homepage);
       formData.append("tImgFile", this.tImgFile);
       formData.append("overview", this.overview);
-
       const postUrl = `${process.env.VUE_APP_API_URL || ""}/section/places/${this.mcatNameToEng(
         formData.get("mcatName")
       )}/`;
-
       const resp = await axios.post(postUrl, formData, multipartOptions).catch(err => {
         this.$toast.add({
           severity: "error",
@@ -273,7 +266,6 @@ export default {
           life: 3000
         });
       });
-
       if (resp.data.result === "success") {
         this.$toast.add({ severity: "success", summary: "Success Message", detail: "장소추가 성공", life: 3000 });
       } else {
@@ -290,13 +282,13 @@ export default {
       this.homepage = "";
       this.tImgFile = "";
       this.overview = "";
-
       return this.submitted;
     },
     checkCategory() {
       return this.category != "";
     },
     mcatNameToEng(mcatName) {
+      console.log(mcatName);
       if (mcatName == "명소") {
         return "attraction";
       } else if (mcatName == "맛집") {
@@ -311,24 +303,24 @@ export default {
 <style scoped>
 .wrap {
   width: 100%;
+  min-height: 750px;
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
 }
-
 .inner {
   width: 1080px;
-  margin: 0 auto;
+  /* margin: 0 auto; */
 }
-
 .form-control {
   width: 500px;
 }
-
 .button-group {
   margin-bottom: 20px;
   text-align: center;
 }
-
 .form {
-  border: 1px solid lightgray;
+  /* border: 1px solid lightgray; */
   margin-top: 30px;
   margin-bottom: 100px;
   align-items: center;
@@ -336,39 +328,31 @@ export default {
   display: flex;
   justify-content: center; */
 }
-
 .form-group {
   margin: 20px;
 }
-
 .fileName {
   padding-left: 20px;
   width: 550px;
 }
-
 .fileSize {
   padding-right: 50px;
   width: 200px;
   text-align: right;
 }
-
 .file-box input[type="file"] {
   display: none;
 }
-
 .file-preview {
   width: 200px;
 }
-
 input {
   margin-left: 10px;
   width: 650px;
 }
-
-h1 {
-  margin-top: 20px;
+.title {
+  margin-bottom: 10px;
 }
-
 h3 {
   margin-top: 20px;
   margin-bottom: 10px;
@@ -376,5 +360,15 @@ h3 {
 }
 textarea {
   resize: none;
+}
+.sidebar {
+  margin-left: -220px;
+  margin-right: 20px;
+}
+hr {
+  border: 0;
+  height: 1px;
+  margin-bottom: 15px;
+  background: #aaa;
 }
 </style>

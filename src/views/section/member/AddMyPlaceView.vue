@@ -1,4 +1,8 @@
 <template>
+  <div class="title-area">
+    <h1>나만의 장소 추가</h1>
+    <hr />
+  </div>
   <div class="map_wrap">
     <div id="map" style="width: 100%; height: 100%; position: relative; overflow: hidden"></div>
   </div>
@@ -52,10 +56,11 @@
       </div>
     </div>
   </div>
+  <Toast />
 </template>
 <script>
 import axios from "axios";
-import { defaultOptions } from "@/constant/axios.js";
+import { multipartOptions } from "@/constant/axios.js";
 import router from "@/router";
 
 export default {
@@ -104,27 +109,37 @@ export default {
   },
   methods: {
     async addMyPlace() {
-      const params = new URLSearchParams();
-      params.append("writerId", localStorage.getItem("id"));
-      params.append("title", this.title);
-      params.append("overview", this.memo);
-      params.append("mcatName", "내장소");
-      params.append("scatName", "전체");
-      params.append("region", this.title);
-      params.append("addr", this.detailAddr);
-      params.append("mapx", this.mapx);
-      params.append("mapy", this.mapy);
+      const formData = new FormData();
+
+      formData.append("writerId", localStorage.getItem("id"));
+      formData.append("title", this.title);
+      formData.append("overview", this.memo);
+      formData.append("mcatName", "내장소");
+      formData.append("scatName", "전체");
+      formData.append("region", this.title);
+      formData.append("addr", this.detailAddr);
+      formData.append("mapx", this.mapx);
+      formData.append("mapy", this.mapy);
 
       const postUrl = `${process.env.VUE_APP_API_URL || ""}/section/places/myplaces/`;
-      const response = await axios.post(postUrl, params, defaultOptions).catch(err => {
-        this.serverError(err);
+      const response = await axios.post(postUrl, formData, multipartOptions).catch(err => {
+        this.$toast.add({
+          severity: "error",
+          summary: "",
+          detail: err,
+          life: 3000
+        });
       });
-      console.log(response);
 
       if (response.data.result === "success") {
         this.$router.push({ name: "add-schedule-main", params: { skdNum: this.$route.params.skdNum } });
       } else {
-        this.showError();
+        this.$toast.add({
+          severity: "error",
+          summary: "",
+          detail: "오류",
+          life: 3000
+        });
       }
     },
     onCancel() {
@@ -180,6 +195,10 @@ export default {
 </script>
 <style lang="scss" scoped>
 @import "@/scss/main.scss";
+.title-area {
+  width: 1080px;
+  margin: 20px auto;
+}
 
 .wrap {
   @include center;
