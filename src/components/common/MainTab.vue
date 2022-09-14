@@ -34,6 +34,33 @@ export default {
         },
         {
           label: "관광명소",
+import TabMenu from "primevue/tabmenu";
+export default {
+  name: "MainTab",
+  components: {
+    TabMenu
+  },
+  data() {
+    return {
+      active: 3,
+      items: [
+        {
+          label: "홈",
+          icon: "pi pi-fw pi-home",
+          to: "/"
+        },
+        {
+          label: "패키지",
+          icon: "pi pi-fw pi-briefcase",
+          to: "/section/packages"
+        },
+        {
+          label: "매거진",
+          icon: "pi pi-fw pi-book",
+          to: "/section/magazines"
+        },
+        {
+          label: "관광명소",
           icon: "pi pi-fw pi-camera",
           to: "/section/place/attraction"
         },
