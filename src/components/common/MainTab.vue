@@ -5,35 +5,7 @@
     </div>
   </div>
 </template>
-
 <script>
-import TabMenu from "primevue/tabmenu";
-export default {
-  name: "MainTab",
-  components: {
-    TabMenu
-  },
-  data() {
-    return {
-      active: 3,
-      items: [
-        {
-          label: "홈",
-          icon: "pi pi-fw pi-home",
-          to: "/"
-        },
-        {
-          label: "패키지",
-          icon: "pi pi-fw pi-briefcase",
-          to: "/section/packages"
-        },
-        {
-          label: "매거진",
-          icon: "pi pi-fw pi-book",
-          to: "/section/magazines"
-        },
-        {
-          label: "관광명소",
 import TabMenu from "primevue/tabmenu";
 export default {
   name: "MainTab",
@@ -79,8 +51,17 @@ export default {
           icon: "pi pi-fw pi-calendar",
           to: "/section/member"
         }
-      ]
+      ],
+      adminItems: {
+        label: "관리",
+        icon: "pi pi-fw pi-cog",
+        to: "/admin/dashboard",
+        auth: "admin"
+      }
     };
+  },
+  created() {
+    this.addAdminMenu();
   },
   computed: {
     loginAuth() {
@@ -91,14 +72,14 @@ export default {
     }
   },
   watch: {
-    loginAuth: function (auth) {
-      if (auth == "admin") {
-        this.items.push({
-          label: "관리",
-          icon: "pi pi-fw pi-cog",
-          to: "/admin/dashboard",
-          auth: "admin"
-        });
+    loginAuth: function () {
+      this.addAdminMenu();
+    }
+  },
+  methods: {
+    addAdminMenu() {
+      if (this.$store.state.loginUser && this.$store.state.loginUser.auth == "admin") {
+        this.items.push(this.adminItems);
       } else {
         this.items = this.items.filter(e => e.auth != "admin");
       }
@@ -106,7 +87,6 @@ export default {
   }
 };
 </script>
-
 <style lang="scss">
 .p-tabmenu .p-tabmenu-nav {
   width: 100%;
