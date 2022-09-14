@@ -26,7 +26,7 @@
         </div>
         <div>
           <h2>매출 BEST 3</h2>
-          <Card style="width: 750px; margin-bottom: 2em">
+          <Card style="width: 760px; margin-bottom: 2em">
             <template #content>
               <table>
                 <tr v-for="(item, i) in bestItems" :key="i">
@@ -37,7 +37,7 @@
                       style="width: 60px; height: 42px; display: block"
                     />
                   </td>
-                  <td style="text-align: left">{{ item.title }}</td>
+                  <td style="text-align: left; width: 550px">{{ item.title }}</td>
                   <td>{{ $getFormattedCurrency(item.totSales) }}</td>
                 </tr>
               </table>
@@ -51,7 +51,7 @@
             <h2>월별 매출</h2>
             <Card>
               <template #content>
-                <Chart type="bar" :data="basicData" :width="650" :height="300" />
+                <Chart type="bar" :data="basicData" :width="660" :height="300" />
               </template>
             </Card>
           </div>
@@ -205,6 +205,7 @@ tr {
   width: 100%;
   min-height: 750px;
   margin-top: 20px;
+  margin-bottom: 100px;
   display: flex;
   justify-content: center;
 }
