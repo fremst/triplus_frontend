@@ -2,44 +2,48 @@
   <div class="wrap">
     <div class="inner">
       <h1>맛집 상세정보</h1>
-      <table border="1px solid #333333" class="list-table">
-        <tr>
-          <td>맛집이미지</td>
-          <td><img :src="`data:image/jpeg;base64,${data.firstimage}`" /></td>
-        </tr>
-        <tr>
-          <td>맛집명</td>
-          <td>{{ data.title }}</td>
-        </tr>
-        <tr>
-          <td>주소</td>
-          <td>{{ data.addr }}</td>
-        </tr>
-        <tr>
-          <td>경도</td>
-          <td>{{ data.mapx }}</td>
-        </tr>
-        <tr>
-          <td>위도</td>
-          <td>{{ data.mapy }}</td>
-        </tr>
-        <tr>
-          <td>전화번호</td>
-          <td>{{ data.tel }}</td>
-        </tr>
-        <tr>
-          <td>url</td>
-          <td>
-            <a :href="data.homepage">{{ data.homepage }}</a>
-          </td>
-        </tr>
-        <tr>
-          <td>상세설명</td>
-          <td>{{ data.overview }}</td>
-        </tr>
-      </table>
-      <div class="list-button">
-        <Button label="목록으로" class="p-button-secondary mr-2" @click="goList" />
+      <div class="detail">
+        <div class="form">
+          <table class="list-table">
+            <tr height="350px">
+              <td width="150px">맛집이미지</td>
+              <td><img :src="`data:image/jpeg;base64,${data.firstimage}`" /></td>
+            </tr>
+            <tr height="100px">
+              <td>맛집명</td>
+              <td>{{ data.title }}</td>
+            </tr>
+            <tr height="100px">
+              <td>주소</td>
+              <td>{{ data.addr }}</td>
+            </tr>
+            <tr height="100px">
+              <td>경도</td>
+              <td>{{ data.mapx }}</td>
+            </tr>
+            <tr height="100px">
+              <td>위도</td>
+              <td>{{ data.mapy }}</td>
+            </tr>
+            <tr height="100px">
+              <td>전화번호</td>
+              <td>{{ data.tel }}</td>
+            </tr>
+            <tr height="100px">
+              <td>url</td>
+              <td>
+                <a :href="data.homepage">{{ data.homepage }}</a>
+              </td>
+            </tr>
+            <tr>
+              <td>상세설명</td>
+              <td width="550px" class="overview">{{ data.overview }}</td>
+            </tr>
+          </table>
+          <div class="list-button">
+            <Button label="목록으로" class="p-button-secondary mr-2" @click="goList" />
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -80,15 +84,47 @@ export default {
 </script>
 <style scoped>
 .wrap {
-  width: 100%;
+  min-height: 750px;
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
 }
+
 .inner {
   width: 1080px;
   margin: 0 auto;
 }
+
 .list-button {
-  margin-top: 20px;
+  margin-top: 100px;
+  margin-bottom: 50px;
+  text-align: center;
+}
+
+img {
+  width: 500px;
+  height: 300px;
+  text-align: center;
+}
+
+h1 {
   margin-bottom: 20px;
-  margin-left: 760px;
+}
+
+td {
+  text-align: center;
+  border-bottom: 1px solid lightgray;
+}
+
+.detail {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.list-table {
+  border-top: 1px solid lightgray;
+}
+.overview {
+  padding: 20px;
 }
 </style>

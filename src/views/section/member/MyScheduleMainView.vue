@@ -12,35 +12,43 @@
             :skdNum="parseInt(this.$route.params.skdNum)"
           />
           <div>
-            <Dropdown
-              v-model="selectedDay"
-              :options="days"
-              optionLabel="name"
-              optionValue="value"
-              placeholder="-- 일정일 선택 --"
-              style="width: 200px"
-            >
+            <Dropdown v-model="selectedDay" :options="days" optionLabel="name" optionValue="value" style="width: 200px">
             </Dropdown>
             <Button lable="일정추가" class="p-button-outlined p-button-primary" @click="openDialog('addPlace', true)"
               >일정추가</Button
             >
-            <div v-for="(event, i) in events" :key="i" class="timeline">
-              <div v-if="event.length > 0">
+            <div v-for="(event, i) in events" :key="i" class="timeline" style="margin-top: 30px">
+              <div style="padding-left: 200px">
                 {{
                   this.$getFormattedDate(
                     new Date(new Date(this.list.sDate).setDate(new Date(this.list.sDate).getDate() + i))
                   )
                 }}
-                <Timeline :value="event">
+                <hr style="width: 700px" />
+              </div>
+              <div style="margin-top: 30px">
+                <Timeline :value="event" v-if="event.length > 0">
                   <template #opposite="slotProps">
-                    <small class="p-text-secondary">{{ slotProps.item.date }}</small>
+                    <Text class="p-text-secondary">{{ slotProps.item.date }}</Text>
                   </template>
                   <template #content="slotProps">
                     {{ slotProps.item.status }}
+                    <Button
+                      class="p-button-sm p-button-rounded ml-4"
+                      label="삭제"
+                      @click="openConfirmDialog('delete', true, slotProps.item.spotNum)"
+                      >삭제</Button
+                    >
+                    <ConfirmDialog
+                      v-model:visible="showDeleteConfirmDialog"
+                      :msg="'선택하신 일정을 삭제하시겠습니까?'"
+                      @closeDialog="deleteMySchedule"
+                    />
                   </template>
                 </Timeline>
-                <Toast />
+                <p v-else style="display: flex; justify-content: center">등록된 일정이 없습니다.</p>
               </div>
+              <Toast />
             </div>
           </div>
         </div>
@@ -54,6 +62,7 @@ import router from "@/router";
 import PlanNavigator from "@/components/member/plan/PlanHeader.vue";
 import PlaceMapView from "@/views/section/member/PlaceMapView.vue";
 import AddScheduleDialog from "@/views/section/member/AddSchedulePlaceView.vue";
+import ConfirmDialog from "@/views/admin/place/ConfirmDialog.vue";
 import { defaultOptions } from "@/constant/axios";
 export default {
   data() {
@@ -61,9 +70,11 @@ export default {
       list: [{ sDate: null, eDate: "", days: "", destination: "" }],
       week: ["일", "월", "화", "수", "목", "금", "토"],
       showConfirmDialog: false,
+      showDeleteConfirmDialog: false,
       events: [],
       schduleDialog: false,
-      selectedDay: null
+      selectedDay: 0,
+      selectedSpotNum: null
     };
   },
   computed: {
@@ -84,7 +95,8 @@ export default {
   components: {
     PlanNavigator,
     PlaceMapView,
-    AddScheduleDialog
+    AddScheduleDialog,
+    ConfirmDialog
   },
   created() {
     this.getDate();
@@ -103,26 +115,45 @@ export default {
       });
 
       this.list = resp.data;
+      // this.selectedDay = this.list.sDate;
 
       for (let i = 0; i < this.list.days; i++) {
         this.events.push([]);
       }
     },
-    async getDateList() {
-      const getUrl = `${process.env.VUE_APP_API_URL || ""}/section/schedules/spots/${this.$route.params.skdNum}`;
-      const resp = await axios.get(getUrl, defaultOptions).catch(err => {
-        this.$toast.add({
-          severity: "error",
-          summary: "",
-          detail: err,
-          life: 3000
+    openConfirmDialog(dialogType, show, spotNum) {
+      if (dialogType === "delete") {
+        this.showDeleteConfirmDialog = show;
+        this.selectedSpotNum = spotNum;
+      }
+    },
+    async deleteMySchedule(value) {
+      if (!value) {
+        return false;
+      } else {
+        console.log(this.$route.params.spotNum);
+        const deleteUrl = `${process.env.VUE_APP_API_URL || ""}/section/schedules/spots/${this.selectedSpotNum}`;
+        const resp = await axios.delete(deleteUrl, defaultOptions).catch(err => {
+          this.$toast.add({
+            severity: "error",
+            summary: "",
+            detail: err,
+            life: 3000
+          });
         });
-      });
-
-      console.log(resp);
-      // console.log("aa", resp.data.data);
-
-      // this.list = resp.data.data;
+        if (resp.data.result === "success") {
+          this.$toast.add({
+            severity: "success",
+            summary: "",
+            detail: "일정 삭제 성공",
+            life: 3000
+          });
+          this.$router.go();
+        }
+        // this.list = resp.data.data;
+        // console.log("list", this.list);
+        // this.$router.push({ name: "add-schedule-main", params: { brdNum: this.brdNum } });
+      }
     },
     getFormattedDate(date) {
       if (date) {
@@ -150,24 +181,16 @@ export default {
       router.push("/section/member/schedule/weather");
     },
     async addMySchedule(selectedPlaceInfo, date, memo) {
-      // console.log(this.events);
-      // console.log("추가될 때 선택된 day", this.selectedDay);
-      console.log("sp", selectedPlaceInfo);
-
-      const event = {
+      let event = {
         status: selectedPlaceInfo.title,
-        date: "일정시간 : " + date.getHours() + ":" + date.getMinutes() + " / 메모 : " + memo,
+        date: date.toLocaleTimeString().substring(0, 7) + " / 메모 : " + memo,
         icon: "pi pi-cog",
         color: "#673AB7",
         mapx: selectedPlaceInfo.mapx,
         mapy: selectedPlaceInfo.mapy
       };
-      // if (!this.event[this.selectedDay]) {
-      // this.events[this.selectedDay] = event;
-      // } else {
-      console.log(this.events);
-      this.events[this.selectedDay].push(event);
-      // }
+
+      // this.events[this.selectedDay].push(event);
 
       const params = new URLSearchParams();
       params.append("skdNum", this.$route.params.skdNum);
@@ -187,6 +210,13 @@ export default {
       });
 
       if (res.data.result === "success") {
+        event.spotNum = res.data.spotNum;
+        this.events[this.selectedDay].push(event);
+
+        this.events[this.selectedDay].sort(function (a, b) {
+          return a.date < b.date ? -1 : a.date > b.date ? 1 : 0;
+        });
+
         this.$toast.add({
           severity: "success",
           summary: "",
@@ -204,16 +234,31 @@ export default {
 
       this.showConfirmDialog = false;
     },
-    saveMySchedule() {
-      const params = new URLSearchParams();
-      params.append("skdNum", this.$route.params.skdNum);
-      params.append("day", this.day);
-      params.append("memo", this.memo);
-      params.append("brdNum", this.brdNum);
+    async getDateList() {
+      const getUrl = `${process.env.VUE_APP_API_URL || ""}/section/schedules/spots/${this.$route.params.skdNum}`;
+      const resp = await axios.get(getUrl, defaultOptions).catch(err => {
+        this.$toast.add({
+          severity: "error",
+          summary: "",
+          detail: err,
+          life: 3000
+        });
+      });
 
-      console.log(this.$route.params.skdNum);
-      console.log(this.day);
-      console.log(params);
+      for (let i = 0; i < this.days.length; i++) {
+        const ithData = resp.data.data.filter(e => e.day == i);
+        ithData.forEach(e => {
+          this.events[i].push({
+            color: "#673AB7",
+            date: e.memo,
+            icon: "pi pi-cog",
+            mapx: e.mapx,
+            mapy: e.mapy,
+            status: e.title,
+            spotNum: e.spotNum
+          });
+        });
+      }
     }
   }
 };

@@ -5,7 +5,7 @@
         <div class="card">
           <DataTable
             ref="dt"
-            v-model:selection="selectedProducts"
+            v-model:selection="selectedPlace"
             :filters="filters"
             :paginator="true"
             :rows="10"
@@ -23,14 +23,14 @@
                   <InputText v-model="filters['global'].value" placeholder="검색어를 입력해주세요." />
                 </span>
                 <Button
-                  label="나만의 장소 추가"
-                  icon="pi pi-plus"
                   class="p-button-rounded p-button-help p-button-sm"
+                  icon="pi pi-plus"
+                  label="나만의 장소 추가"
                   @click="goAddMyPlace"
                 />
               </div>
             </template>
-            <Column selectionMode="single" style="width: 3rem" :exportable="false"></Column>
+            <Column :exportable="false" selectionMode="single" style="width: 3rem"></Column>
             <Column header="장소이미지" style="min-width: 8rem">
               <template #body="slotProps">
                 <img
@@ -66,14 +66,25 @@
       </div>
     </div>
     <template #footer>
-      <div class="field col-12 md:col-7">
-        <label for="time">일정에 대한 시간을 입력해 주세요.</label>
-        <Calendar id="time" v-model="date" :timeOnly="true" hourFormat="12" />
-        <label for="memo">일정에 대한 메모를 입력해 주세요</label>
-        <Textarea id="memo" v-model="memo" />
+      <div>
+        <div class="label-area">
+          <label for="time">시간 입력 </label><br />
+          <Calendar
+            id="time"
+            v-model="date"
+            :timeOnly="true"
+            hourFormat="12"
+            placeholder="일정 시간을 입력하세요"
+            style="width: 320px"
+          />
+        </div>
+        <div class="label-area col-12">
+          <label for="memo">메모 입력</label>
+          <Textarea id="memo" v-model="memo" placeholder="일정에 대한 메모를 입력해 주세요" rows="5" cols="30" />
+        </div>
       </div>
       <Button class="p-button-text" icon="pi pi-times" label="취소" @click="closeDialog(false)" />
-      <Button class="p-button-text" icon="pi pi-check" label="추가" @click="addSchedulePlace(selectedProducts)" />
+      <Button class="p-button-text" icon="pi pi-check" label="추가" @click="addSchedulePlace(selectedPlace)" />
     </template>
   </Dialog>
   <Toast />
@@ -83,6 +94,7 @@
 import { FilterMatchMode } from "primevue/api";
 import { defaultOptions } from "@/constant/axios.js";
 import axios from "axios";
+
 export default {
   name: "AddScheduleDialog",
   props: {
@@ -113,7 +125,7 @@ export default {
       deleteProductDialog: false,
       deleteProductsDialog: false,
       product: {},
-      selectedProducts: null,
+      selectedPlace: null,
       filters: {},
       submitted: false,
       productService: null
@@ -161,8 +173,8 @@ export default {
       this.showDialog = false;
       this.$emit("closeDialog", returnValue);
     },
-    addSchedulePlace(selectedProducts) {
-      this.$emit("addMarker", selectedProducts, this.date, this.memo);
+    addSchedulePlace(selectedPlace) {
+      this.$emit("addMarker", selectedPlace, this.date, this.memo);
     }
   }
 };
@@ -171,10 +183,12 @@ export default {
 .wrap {
   width: 100%;
 }
+
 .inner {
   width: 90%;
   margin: 0 auto;
 }
+
 @media screen and (max-width: 960px) {
   ::v-deep(.p-toolbar) {
     flex-wrap: wrap;
@@ -184,6 +198,7 @@ export default {
     }
   }
 }
+
 #map {
   width: 400px;
   height: 350px;
@@ -196,6 +211,7 @@ export default {
 button {
   margin: 0 3px;
 }
+
 .table-header {
   display: flex;
   align-items: center;
@@ -252,5 +268,12 @@ button {
       margin-bottom: 0.25rem;
     }
   }
+}
+.label-area {
+  margin-top: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: left;
+  margin-left: 50px;
 }
 </style>
