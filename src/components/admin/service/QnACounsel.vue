@@ -35,7 +35,7 @@
       </Column>
     </DataTable>
     <div class="qna-chat-ground">
-      <div style="overflow: auto; height: 100%">
+      <div class="chatScroll" style="overflow: auto; height: 100%">
         <div v-for="chat of chatData" :key="chat">
           <div
             class="qna-chat-element"
@@ -175,6 +175,11 @@ export default {
         content: chat.content,
         date: this.parseDate(chat.date)
       });
+      setTimeout(() => {
+        let scr = document.querySelector('.chatScroll');
+        if (scr != null)
+          scr.scrollTop = scr.scrollHeight + 51;
+      }, 10);
     },
     parseDate(time) {
       let result = new Date(time + 1000 * 60 * 60 * 9);
