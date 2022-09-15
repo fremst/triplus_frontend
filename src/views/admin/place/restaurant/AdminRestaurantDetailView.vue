@@ -66,6 +66,7 @@
 <script>
 import axios from "axios";
 import router from "@/router";
+import AdminPageSidebar from "@/components/admin/AdminPageSidebar";
 import ConfirmDialog from "@/views/admin/place/ConfirmDialog.vue";
 import { defaultOptions } from "@/constant/axios";
 
@@ -79,7 +80,8 @@ export default {
     };
   },
   components: {
-    ConfirmDialog
+    ConfirmDialog,
+    AdminPageSidebar
   },
   mounted() {
     this.getDetail();
