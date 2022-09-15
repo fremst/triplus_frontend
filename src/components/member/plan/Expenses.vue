@@ -419,7 +419,7 @@ export default {
       selectedCategory: "전체 보기",
       // 일정 데이터
       scheduleData: {
-        skdNum: 1,
+        skdNum: this.$route.params.skdNum,
         sDate: new Date(2022, 8, 1).getTime(),
         eDate: new Date(2022, 8, 5).getTime(),
         site: "",
@@ -518,7 +518,7 @@ export default {
           }
           for (let arr of this.expenseData) {
             for (let expense of arr) {
-              if (expense.expNum > this.expNum) this.expNum = expense.expNum + 1;
+              if (expense.expNum >= this.expNum) this.expNum = expense.expNum + 1;
             }
           }
           this.filteredExpenseData = this.getFilteredExpenseData(this.selectedCategory);
@@ -591,9 +591,12 @@ export default {
       this.updateExpenseData();
     },
     deleteExpense(exp) {
+      // console.log(this.expenseData);
       for (let expArr of this.expenseData) {
         let index = expArr.findIndex(item => item.expNum == exp.expNum);
-        if (index > -1) expArr.splice(index, 1);
+        if (index > -1)
+          // console.log(expArr);
+          expArr.splice(index, 1);
       }
       // 업데이트
       this.updateExpenseData();
@@ -630,6 +633,11 @@ export default {
     },
     // 서버에 업데이트
     updateExpenseData() {
+      // 통계 정리
+      this.summaryData.data = this.getChartData();
+      // 정산 정리
+      this.calculateData = this.calculate();
+      
       axios
         .put(
           `${this.apiURL}/${this.scheduleData.skdNum}/expense`,

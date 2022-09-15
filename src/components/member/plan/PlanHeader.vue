@@ -52,7 +52,7 @@ export default {
     },
     goExpenses() {
       // TODO 일정번호 임시값
-      router.push({ name: "member-expenses", params: { skdNum: 1 } });
+      router.push({ name: "member-expenses", params: { skdNum: this.$route.params.skdNum } });
       // router.push("/member/plan/expenses");
     },
     goWeather() {
