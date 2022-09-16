@@ -137,8 +137,7 @@ const routes = [
   {
     path: "/service/qna/write",
     name: "qna-write",
-    component: () => import("@/views/member/service/QnAWriteView.vue"),
-    meta: { adminAuthRequired: true }
+    component: () => import("@/views/member/service/QnAWriteView.vue")
   },
   {
     path: "/service/qna/:brdNum/detail",
