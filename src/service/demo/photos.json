@@ -1,0 +1,29 @@
+{
+  "data": [
+    {
+      "itemImageSrc": "triplus-slide01.png",
+      "alt": "Description for Image 1",
+      "title": "Title 1"
+    },
+    {
+      "itemImageSrc": "triplus-slide02.png",
+      "alt": "Description for Image 2",
+      "title": "Title 2"
+    },
+    {
+      "itemImageSrc": "triplus-slide03.png",
+      "alt": "Description for Image 3",
+      "title": "Title 3"
+    },
+    {
+      "itemImageSrc": "triplus-slide04.png",
+      "alt": "Description for Image 4",
+      "title": "Title 4"
+    },
+    {
+      "itemImageSrc": "triplus-slide05.png",
+      "alt": "Description for Image 5",
+      "title": "Title 5"
+    }
+  ]
+}
